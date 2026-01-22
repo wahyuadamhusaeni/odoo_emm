@@ -1,0 +1,85 @@
+From 67736491134b56599744af4512e4afcf1dec5f36 Mon Sep 17 00:00:00 2001
+From: Ivan Wirawan <ivan.wirawan@infi-nity.com>
+Date: Thu, 2 Apr 2015 14:52:44 +0700
+Subject: [PATCH 2/4] [FIX:via_service] Ticket #869 Enhancement of To Invoice
+ menu.
+
+---
+ via_service/__openerp__.py   |  6 +++---
+ via_service/service_view.xml | 10 +++++-----
+ 2 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/via_service/__openerp__.py b/via_service/__openerp__.py
+index 1cf9eb1..c19bc21 100644
+--- a/via_service/__openerp__.py
++++ b/via_service/__openerp__.py
+@@ -2,7 +2,7 @@
+ ##############################################################################
+ #
+ #    OpenERP, Open Source Management Solution
+-#    Copyright (c) 2011 - 2014 Vikasa Infinity Anugrah <http://www.infi-nity.com>
++#    Copyright (c) 2011 - 2015 Vikasa Infinity Anugrah <http://www.infi-nity.com>
+ #
+ #    This program is free software: you can redistribute it and/or modify
+ #    it under the terms of the GNU Affero General Public License as
+@@ -21,9 +21,9 @@
+ 
+ {
+     'name': 'VIA Service Request',
+-    'version': '1.2',
++    'version': '1.3',
+     'description': """
+-    This module provides Service Request functionality.
++This module provides Service Request functionality.
+     """,
+     'author': 'Vikasa Infinity Anugrah, PT',
+     'website': 'http://www.infi-nity.com',
+diff --git a/via_service/service_view.xml b/via_service/service_view.xml
+index 5a8e709..4e5e532 100644
+--- a/via_service/service_view.xml
++++ b/via_service/service_view.xml
+@@ -38,7 +38,7 @@
+             name="To Invoice"
+             res_model="service.invoice.line"
+             view_type="form"
+-            view_mode="tree"
++            view_mode="tree,form"
+             domain="[('has_invoiced','!=','True'),('origin','!=','')]"/>
+ 
+         <!-- Sub Menu Item -->
+@@ -390,7 +390,7 @@
+             <field name="model">service.invoice.line</field>
+             <field name="type">tree</field>
+             <field name="arch" type="xml">
+-                <tree string="Service Request Invoice Line">
++                <tree string="Service Request Invoice Line" create="false">
+                     <field name="origin"/>
+                     <field name="product_id"/>
+                     <field name="uos_id"/>
+@@ -405,12 +405,12 @@
+             </field>
+         </record>
+ 
+-        <!-- <record id="view_service_request_invoice_line_form" model="ir.ui.view">
++        <record id="view_service_request_invoice_line_form" model="ir.ui.view">
+             <field name="name">view.service.request.invoice.line.form</field>
+             <field name="model">service.invoice.line</field>
+             <field name="type">form</field>
+             <field name="arch" type="xml">
+-                <form string="Service Request Invoice Line">
++                <form string="Service Request Invoice Line" create="false" edit="false">
+                     <field name="origin"/>
+                     <field name="product_id"/>
+                     <field name="uos_id"/>
+@@ -424,7 +424,7 @@
+                     <field name="has_invoiced"/>
+                 </form>
+             </field>
+-        </record> -->
++        </record>
+ 
+         <record id="view_service_make_invoice" model="ir.ui.view">
+             <field name="name">Create invoices</field>
+-- 
+1.9.1
+

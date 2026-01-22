@@ -1,0 +1,355 @@
+From 691dd33f6f9a090ccccadd394bfcb6e59624a6aa Mon Sep 17 00:00:00 2001
+From: Iwan Prasetya <iwan.prasetya@infi-nity.com>
+Date: Wed, 24 Jun 2015 16:59:05 +0700
+Subject: [PATCH] [ADD] Issue #1041: Enable notification triggering from
+ approval.
+
+---
+ via_approval/via_approval.py              |   2 +-
+ via_approval_message/__init__.py          |  23 ++++++
+ via_approval_message/__openerp__.py       |  45 +++++++++++
+ via_approval_message/approval_message.py  | 130 ++++++++++++++++++++++++++++++
+ via_approval_message/approval_view.xml    |  25 ++++++
+ via_approval_message/res_company.py       |  32 ++++++++
+ via_approval_message/res_company_view.xml |  26 ++++++
+ 7 files changed, 282 insertions(+), 1 deletion(-)
+ create mode 100644 via_approval_message/__init__.py
+ create mode 100644 via_approval_message/__openerp__.py
+ create mode 100644 via_approval_message/approval_message.py
+ create mode 100644 via_approval_message/approval_view.xml
+ create mode 100644 via_approval_message/res_company.py
+ create mode 100644 via_approval_message/res_company_view.xml
+
+diff --git a/via_approval/via_approval.py b/via_approval/via_approval.py
+index a30f423..9c48093 100644
+--- a/via_approval/via_approval.py
++++ b/via_approval/via_approval.py
+@@ -453,7 +453,7 @@ class approval_list(orm.Model):
+                         self.copy(cr, uid, approval.id, {'doc_id': vals.get('doc_id'), 'state': approval.state}, context=context)
+ 
+     # This method is used when there is some changes in the related document
+-    def write_obj(self, cr, uid, ids, model, vals, context=None):
++    def write_obj(self, cr, uid, ids, model, vals, context=None, **kwargs):
+         if context is None:
+             context = {}
+         if not isinstance(ids, (list, tuple)):
+diff --git a/via_approval_message/__init__.py b/via_approval_message/__init__.py
+new file mode 100644
+index 0000000..8c8dc18
+--- /dev/null
++++ b/via_approval_message/__init__.py
+@@ -0,0 +1,23 @@
++# -*- encoding: utf-8 -*-
++##############################################################################
++#
++#    OpenERP, Open Source Management Solution
++#    Copyright (c) 2011 - 2015 Vikasa Infinity Anugrah <http://www.infi-nity.com>
++#
++#    This program is free software: you can redistribute it and/or modify
++#    it under the terms of the GNU Affero General Public License as
++#    published by the Free Software Foundation, either version 3 of the
++#    License, or (at your option) any later version.
++#
++#    This program is distributed in the hope that it will be useful,
++#    but WITHOUT ANY WARRANTY; without even the implied warranty of
++#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++#    GNU Affero General Public License for more details.
++#
++#    You should have received a copy of the GNU Affero General Public License
++#    along with this program.  If not, see http://www.gnu.org/licenses/.
++#
++##############################################################################
++
++import approval_message
++import res_company
+diff --git a/via_approval_message/__openerp__.py b/via_approval_message/__openerp__.py
+new file mode 100644
+index 0000000..5aff3c1
+--- /dev/null
++++ b/via_approval_message/__openerp__.py
+@@ -0,0 +1,45 @@
++# -*- encoding: utf-8 -*-
++##############################################################################
++#
++#    OpenERP, Open Source Management Solution
++#    Copyright (c) 2011 - 2015 Vikasa Infinity Anugrah <http://www.infi-nity.com>
++#
++#    This program is free software: you can redistribute it and/or modify
++#    it under the terms of the GNU Affero General Public License as
++#    published by the Free Software Foundation, either version 3 of the
++#    License, or (at your option) any later version.
++#
++#    This program is distributed in the hope that it will be useful,
++#    but WITHOUT ANY WARRANTY; without even the implied warranty of
++#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++#    GNU Affero General Public License for more details.
++#
++#    You should have received a copy of the GNU Affero General Public License
++#    along with this program.  If not, see http://www.gnu.org/licenses/.
++#
++##############################################################################
++
++{
++    'name': 'Multi Approval Message',
++    'version': '1.0',
++    'description': """
++    This module adding message and notification functions into multi approval module.
++    """,
++    'author': 'Vikasa Infinity Anugrah, PT',
++    'website': 'http://www.infi-nity.com',
++    'depends': [
++        'via_approval',
++        'mail',
++    ],
++    'data': [
++        'approval_view.xml',
++        'res_company_view.xml',
++    ],
++    'test': [
++    ],
++    'demo': [
++    ],
++    'installable': True,
++    'auto_install': False,
++    'application': False,
++}
+diff --git a/via_approval_message/approval_message.py b/via_approval_message/approval_message.py
+new file mode 100644
+index 0000000..04add93
+--- /dev/null
++++ b/via_approval_message/approval_message.py
+@@ -0,0 +1,130 @@
++# -*- encoding: utf-8 -*-
++##############################################################################
++#
++#    OpenERP, Open Source Management Solution
++#    Copyright (c) 2011 - 2015 Vikasa Infinity Anugrah <http://www.infi-nity.com>
++#
++#    This program is free software: you can redistribute it and/or modify
++#    it under the terms of the GNU Affero General Public License as
++#    published by the Free Software Foundation, either version 3 of the
++#    License, or (at your option) any later version.
++#
++#    This program is distributed in the hope that it will be useful,
++#    but WITHOUT ANY WARRANTY; without even the implied warranty of
++#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++#    GNU Affero General Public License for more details.
++#
++#    You should have received a copy of the GNU Affero General Public License
++#    along with this program.  If not, see http://www.gnu.org/licenses/.
++#
++##############################################################################
++
++from osv import orm, fields
++from openerp.tools.translate import _
++from via_approval.via_approval import get_local_dict, formula_eval
++from openerp import SUPERUSER_ID
++
++
++class approval_items(orm.Model):
++    _inherit = 'approval.items'
++
++    _columns = {
++        'notification': fields.boolean('Notification'),
++        'notification_approved': fields.boolean('Approved'),
++        'notification_rejected': fields.boolean('Rejected'),
++        'notification_ignored': fields.boolean('Ignored'),
++        'notification_reset': fields.boolean('Reset'),
++    }
++
++    _defaults = {
++        'notification': False,
++    }
++
++approval_items()
++
++
++class approval_list(orm.Model):
++    _inherit = 'approval.list'
++
++    def write_obj(self, cr, uid, ids, model, vals, old_value=None, new_value=None, context=None):
++        approval_list_ids = self.pool.get('approval.list').search(cr, uid, [('doc_id', 'in', ids), ('model', 'in', model)], context=context)
++        for approval in self.pool.get('approval.list').browse(cr, uid, approval_list_ids, context=context):
++            locals_dict = get_local_dict(self, cr, uid, approval.doc_id, approval.model.id, context=context)
++            locals_dict.update({
++                'old_value': old_value and old_value.get(approval.doc_id, {}) or {},
++                'new_value': new_value and new_value.get(approval.doc_id, {}) or {},
++                'approval_obj': approval,
++            })
++            visibility_bool = formula_eval(approval.approval_rule, datatype='bool', locals_dict=locals_dict, mode="eval")
++            hash_value = str(formula_eval(approval.hash_code, datatype='str', locals_dict=locals_dict, mode="eval"))
++
++            message = {}
++
++            if approval.hash_value != hash_value and approval.approval_type == 'standard':
++                if visibility_bool:
++                    message = {'state': 'pending'}
++                else:
++                    message = {'state': 'na'}
++            else:
++                pass
++
++            # Create a message when variable message is not False
++            if message.get('state', False):
++                self.create_message(cr, SUPERUSER_ID, [approval.id], message.get('state'), context=context)
++            else:
++                pass
++
++        return super(approval_list, self).write_obj(cr, uid, ids, model, vals, old_value=old_value, new_value=new_value, context=context)
++
++    # This method will automatically create message regarding the action of the user on the approval
++    def create_message(self, cr, uid, ids, action, context=None):
++        res = {}
++        body = ""
++        for approval_list in self.browse(cr, uid, ids, context=context):
++            if approval_list.approval_items_id.notification:
++                if action in ['pending', 'na'] and approval_list.approval_items_id.notification_reset:
++                    if approval_list.state in ['approved', 'reject', 'ignore']:
++                        body = _("<p>Approval " + str(approval_list.approval_items_id.name) + " state has been reset due to different hash value.</p>")
++                    else:
++                        return True
++                elif action == 'approved' and approval_list.approval_items_id.notification_approved or action == 'rejected' and approval_list.approval_items_id.notification_rejected or action == 'ignored' and approval_list.approval_items_id.notification_ignored:
++                    body = _("<p>Approval " + str(approval_list.approval_items_id.name) + " has been " + str(action) + ".</p>")
++
++                # Getting the subtype from company configuration else put the subtype to be false
++                default_message_type = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.default_message_type
++                if default_message_type:
++                    if default_message_type == 'message':
++                        subtype = 'mail.mt_comment'
++                    else:
++                        subtype = False
++                else:
++                    subtype = False
++
++                context.update({'thread_model': approval_list.model.model})
++                if body:
++                    res = self.pool.get('mail.thread').message_post(cr, uid, approval_list.doc_id, body=body, type='comment', subtype=subtype, context=context)
++                else:
++                    pass
++            else:
++                pass
++        return res
++
++    # This method will change the state to approved and create audit record
++    def approve(self, cr, uid, ids, context=None):
++        res = super(approval_list, self).approve(cr, uid, ids, context=context)
++        self.create_message(cr, uid, ids, 'approved', context=context)
++        return res
++
++    # This method will change the state to reject and create audit record
++    def reject(self, cr, uid, ids, context=None):
++        res = super(approval_list, self).reject(cr, uid, ids, context=context)
++        self.create_message(cr, uid, ids, 'rejected', context=context)
++        return res
++
++    # This method will change the state to ignore and create audit record
++    def ignore(self, cr, uid, ids, context=None):
++        res = super(approval_list, self).ignore(cr, uid, ids, context=context)
++        self.create_message(cr, uid, ids, 'ignored', context=context)
++        return res
++
++approval_list()
+diff --git a/via_approval_message/approval_view.xml b/via_approval_message/approval_view.xml
+new file mode 100644
+index 0000000..284d540
+--- /dev/null
++++ b/via_approval_message/approval_view.xml
+@@ -0,0 +1,25 @@
++<?xml version="1.0"?>
++<openerp>
++    <data>
++
++        <record id="view_approval_items_message_form" model="ir.ui.view">
++            <field name="name">view.approval.items.message.form</field>
++            <field name="model">approval.items</field>
++            <field name="inherit_id" ref="via_approval.view_approval_items_form"/>
++            <field name="type">form</field>
++            <field name="arch" type="xml">
++                <xpath expr="//field[@name='hook']" position="after">
++                    <field name="notification"/>
++                    <group colspan="4" col="4">
++                        <field name="notification_approved" attrs="{'invisible': [('notification','=',False)]}"/>
++                        <field name="notification_rejected" attrs="{'invisible': [('notification','=',False)]}"/>
++                        <field name="notification_ignored" attrs="{'invisible': [('notification','=',False)]}"/>
++                        <field name="notification_reset" attrs="{'invisible': [('notification','=',False)]}"/>
++                    </group>
++                </xpath>
++            </field>
++        </record>
++
++    </data>
++</openerp>
++
+diff --git a/via_approval_message/res_company.py b/via_approval_message/res_company.py
+new file mode 100644
+index 0000000..3506400
+--- /dev/null
++++ b/via_approval_message/res_company.py
+@@ -0,0 +1,32 @@
++# -*- encoding: utf-8 -*-
++##############################################################################
++#
++#    OpenERP, Open Source Management Solution
++#    Copyright (c) 2011 - 2015 Vikasa Infinity Anugrah <http://www.infi-nity.com>
++#
++#    This program is free software: you can redistribute it and/or modify
++#    it under the terms of the GNU Affero General Public License as
++#    published by the Free Software Foundation, either version 3 of the
++#    License, or (at your option) any later version.
++#
++#    This program is distributed in the hope that it will be useful,
++#    but WITHOUT ANY WARRANTY; without even the implied warranty of
++#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++#    GNU Affero General Public License for more details.
++#
++#    You should have received a copy of the GNU Affero General Public License
++#    along with this program.  If not, see http://www.gnu.org/licenses/.
++#
++##############################################################################
++
++from osv import orm, fields
++
++
++class res_company(orm.Model):
++    _inherit = "res.company"
++
++    _columns = {
++        'default_message_type': fields.selection([('message', 'Message'), ('note', 'Note')], 'Default Approval Message Type'),
++    }
++
++res_company()
+diff --git a/via_approval_message/res_company_view.xml b/via_approval_message/res_company_view.xml
+new file mode 100644
+index 0000000..5295d52
+--- /dev/null
++++ b/via_approval_message/res_company_view.xml
+@@ -0,0 +1,26 @@
++<?xml version="1.0"?>
++<openerp>
++    <data>
++
++        <!-- Company Form View -->
++
++        <record id="view_company_approval_form" model="ir.ui.view">
++            <field name="name">view.company.approval.form</field>
++            <field name="model">res.company</field>
++            <field name="inherit_id" ref="base.view_company_form"/>
++            <field name="type">form</field>
++            <field name="arch" type="xml">
++                <notebook position="inside">
++                    <page string="Approval Message">
++                        <form string="Approval" version="7.0">
++                            <group col="4" colspan="4">
++                                <field name="default_message_type"/>
++                            </group>
++                        </form>
++                    </page>
++                </notebook>
++            </field>
++        </record>
++
++    </data>
++</openerp>
+-- 
+1.9.1
+

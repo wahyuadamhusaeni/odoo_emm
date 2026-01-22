@@ -1,0 +1,43 @@
+From 20c23fdcacd3cda0d08e05fd35954b24e1fd2030 Mon Sep 17 00:00:00 2001
+From: Ivan Wirawan <ivan.wirawan@infi-nity.com>
+Date: Tue, 17 Mar 2015 15:31:14 +0700
+Subject: [PATCH 1/2] [FIX;via_product_enhancements] Enhance the inheritance of
+ the view displaying the Product Category Code.
+
+---
+ emm_stock_enhancements/product_category_view.xml | 18 ++++++++----------
+ 1 file changed, 8 insertions(+), 10 deletions(-)
+
+diff --git a/emm_stock_enhancements/product_category_view.xml b/emm_stock_enhancements/product_category_view.xml
+index 11261da..ac24206 100644
+--- a/emm_stock_enhancements/product_category_view.xml
++++ b/emm_stock_enhancements/product_category_view.xml
+@@ -6,17 +6,15 @@
+             <field name="model">product.category</field>
+             <field name="inherit_id" ref="product.product_category_form_view"/>
+             <field name="arch" type="xml">
+-            	<xpath expr="//group[@name='parent']" position="replace">
+-            		<group name="parent" col="4">
+-            			<group colspan="2" col="2">
+-            				<field name="parent_id"/>
+-            			</group>
+-            			<group colspan="2" col="2">
+-            				<field name="code"/>
+-            				<field name="type"/>
+-            			</group>
+-                    </group>
++                <xpath expr="//field[@name='name']/../.." position="attributes">
++                    <attribute name="class"></attribute>
+                 </xpath>
++                <field name="name" position="attributes">
++                    <attribute name="class">oe_inline</attribute>
++                </field>
++                <field name="name" position="after">
++                    <span class="oe_inline" attrs="{'invisible':[('code','=',False)]}">[</span><field name="code" class="oe_inline" placeholder="Enter Category Code Here..."/><span class="oe_inline" attrs="{'invisible':[('code','=',False)]}">]</span>
++                </field>
+             </field>
+         </record>
+         <record id="category_code_config_form_view" model="ir.ui.view">
+-- 
+1.9.1
+

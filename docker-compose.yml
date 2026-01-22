@@ -1,0 +1,34 @@
+version: '2'
+services:
+  odoo_py2:
+    image: odoo-python2
+    container_name: odoo_py2
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+      - "8070:8070"
+      - "8071:8071"
+    volumes:
+      - /srv/apps/odoo:/opt/odoo
+    environment:
+      - HOST=db_legacy
+      - USER=adam
+      - PASSWORD=S8RHHH42dBTDKbkV9tlO
+    depends_on:
+      - db_legacy
+    # Kita override command agar yakin path-nya benar
+    command: python /opt/odoo/odoo/openerp-server --config=/opt/odoo/Setup/odoo_prod.conf --addons-path=/opt/odoo/odoo/addons,/opt/odoo/emm --logfile=False --update=web --load=web
+
+  db_legacy:
+    image: postgres:10
+    container_name: postgres_legacy
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=adam
+      - POSTGRES_PASSWORD=S8RHHH42dBTDKbkV9tlO
+      - POSTGRES_DB=postgres
+    volumes:
+      - pgdata_legacy:/var/lib/postgresql/data
+
+volumes:
+  pgdata_legacy:

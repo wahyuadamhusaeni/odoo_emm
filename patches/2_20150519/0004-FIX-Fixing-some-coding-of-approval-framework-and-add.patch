@@ -1,0 +1,1062 @@
+From d7f211c1be5276f761475b2feedd2125c0a5f839 Mon Sep 17 00:00:00 2001
+From: Ivan Wirawan <ivan.wirawan@infi-nity.com>
+Date: Wed, 13 May 2015 14:33:14 +0700
+Subject: [PATCH 4/4] [FIX] Fixing some coding of approval framework and add
+ menu for approval scheme line.
+
+---
+ via_approval/approval_scheme_view.xml     |  76 +++++++++++--
+ via_approval/via_approval.py              | 114 ++++++++++++-------
+ via_approval_account/account_invoice.py   |  76 ++++++-------
+ via_approval_purchase/purchase.py         |  30 ++---
+ via_approval_report/approval_report.py    |   3 +-
+ via_approval_report/via_form_templates.py |   3 +-
+ via_approval_sale/sale.py                 |  16 +--
+ via_approval_service/service.py           |   5 +-
+ via_approval_stock/product.py             |  10 +-
+ via_approval_stock/stock.py               | 178 +++++++++++++++---------------
+ 10 files changed, 305 insertions(+), 206 deletions(-)
+
+diff --git a/via_approval/approval_scheme_view.xml b/via_approval/approval_scheme_view.xml
+index d6b9c63..7fedd98 100644
+--- a/via_approval/approval_scheme_view.xml
++++ b/via_approval/approval_scheme_view.xml
+@@ -63,7 +63,10 @@
+     <field name="model">approval.scheme</field>
+     <field name="type">form</field>
+     <field name="arch" type="xml">
+-        <form string="Approval Scheme">
++        <form string="Approval Scheme" version="7.0">
++            <header>
++                <button name="update_scheme_line" type="object" string="Update" class="oe_highlight"/>
++            </header>
+             <separator colspan="4" string="Scheme Details"/>
+             <group col="4" colspan="4">
+                 <field name="name"/>
+@@ -75,21 +78,64 @@
+             <separator colspan="4" string="Approval Items List"/>
+             <field name="approval_scheme_line" nolabel="1" colspan="4">
+                 <tree string="Approval List" editable="bottom">
+-                    <field name="approval_items_id" on_change="approval_items_id_change(approval_items_id)" domain="[('model','=',parent.model)]"/>
+-                    <field name="model"/>
+-                    <field name="approval_rule"/>
+-                    <field name="approver"/>
+-                    <field name="approver_user"/>
+-                    <field name="description"/>
+-                    <field name="hash_code"/>
+-                    <field name="hook"/>
+-                    <field name="approval_type"/>
++                    <field name="approval_items_id" on_change="approval_items_id_change(approval_items_id)" domain="[('model','=',parent.model)]" required="True"/>
++                    <field name="model" readonly="True"/>
++                    <field name="approval_rule" readonly="True"/>
++                    <field name="approver" readonly="True"/>
++                    <field name="approver_user" readonly="True"/>
++                    <field name="description" readonly="True"/>
++                    <field name="hash_code" readonly="True"/>
++                    <field name="hook" readonly="True"/>
++                    <field name="approval_type" readonly="True"/>
+                 </tree>
+             </field>
+         </form>
+     </field>
+ </record>
+ 
++<record id="view_approval_scheme_line_tree" model="ir.ui.view">
++    <field name="name">approval.scheme.line.tree</field>
++    <field name="model">approval.scheme.line</field>
++    <field name="type">tree</field>
++    <field name="arch" type="xml">
++        <tree string="Approval Scheme Line">
++            <field name="approval_scheme_id"/>
++            <field name="approval_items_id"/>
++            <field name="model"/>
++            <field name="approval_rule"/>
++            <field name="approver"/>
++            <field name="approver_user"/>
++            <field name="description"/>
++            <field name="hash_code"/>
++            <field name="hook"/>
++            <field name="approval_type"/>
++        </tree>
++    </field>
++</record>
++
++<record id="view_approval_scheme_line_form" model="ir.ui.view">
++    <field name="name">approval.scheme.line.form</field>
++    <field name="model">approval.scheme.line</field>
++    <field name="type">form</field>
++    <field name="arch" type="xml">
++        <form string="Approval Scheme Line">
++            <separator colspan="4" string="Approval Line Details"/>
++            <group col="2" colspan="4">
++                <field name="approval_scheme_id"/>
++                <field name="approval_items_id"/>
++                <field name="model"/>
++                <field name="approval_type"/>
++                <field name="approval_rule"/>
++                <field name="approver"/>
++                <field name="approver_user"/>
++                <field name="description"/>
++                <field name="hash_code"/>
++                <field name="hook"/>
++            </group>
++        </form>
++    </field>
++</record>
++
+ <record id="view_approval_audit_tree" model="ir.ui.view">
+     <field name="name">approval.audit.tree</field>
+     <field name="model">approval.audit</field>
+@@ -193,6 +239,12 @@
+     view_type="form"
+     view_mode="tree,form"/>
+ 
++<act_window id="act_approval_scheme_line"
++    name="Approval Scheme Line"
++    res_model="approval.scheme.line"
++    view_type="form"
++    view_mode="tree"/>
++
+ <act_window id="act_approval_list"
+     name="Approval List"
+     res_model="approval.list"
+@@ -212,6 +264,10 @@
+     parent="menu_document_control" action="act_approval_scheme"/>
+ 
+ <menuitem
++    id="menu_approval_scheme_line" name="Approval Scheme Line"
++    parent="menu_document_control" action="act_approval_scheme_line"/>
++
++<menuitem
+     id="menu_approval_list" name="Approval List"
+     parent="menu_document_control" action="act_approval_list"/>
+ 
+diff --git a/via_approval/via_approval.py b/via_approval/via_approval.py
+index f42bb91..a30f423 100644
+--- a/via_approval/via_approval.py
++++ b/via_approval/via_approval.py
+@@ -172,6 +172,31 @@ class approval_scheme(orm.Model):
+             'domain': {'approval_items_id': [('model', '=', model)]}
+         }
+ 
++    # This method is used to update any scheme line to be the same with related approval items if any changes happened in approval item
++    def update_scheme_line(self, cr, uid, ids, context=None):
++        scheme_line_obj = self.pool.get('approval.scheme.line')
++        scheme_line_ids = scheme_line_obj.search(cr, uid, [('approval_scheme_id', 'in', ids)], context=context)
++        for scheme_line in scheme_line_obj.browse(cr, uid, scheme_line_ids, context=context):
++            vals = {}
++            approval_obj = scheme_line.approval_items_id
++            approver_id = [approver.id for approver in approval_obj.approver]
++            hook_id = [hook.id for hook in approval_obj.hook]
++
++            vals.update({
++                'model': approval_obj.model.id,
++                'approval_rule': approval_obj.rule,
++                'approver': [(6, 0, approver_id)],
++                'approver_user': approval_obj.approver_user.id,
++                'description': approval_obj.description,
++                'hash_code': approval_obj.hash_code,
++                'hook': [(6, 0, hook_id)],
++                'approval_type': approval_obj.approval_type,
++            })
++
++            scheme_line_obj.write(cr, uid, scheme_line.id, vals, context=context)
++
++        return True
++
+ approval_scheme()
+ 
+ 
+@@ -179,59 +204,72 @@ class approval_scheme_line(orm.Model):
+     _name = 'approval.scheme.line'
+     _description = 'Approval Scheme Line'
+ 
++    # This method is used to get any information related to given approval_items_id and return the vals as dictionary
++    def update_vals(self, cr, uid, vals, context=None):
++        if vals.get('approval_items_id'):
++            approval_obj = self.pool.get('approval.items').browse(cr, uid, vals.get('approval_items_id'), context=context)
++            approver_id = [approver.id for approver in approval_obj.approver]
++            hook_id = [hook.id for hook in approval_obj.hook]
++
++            vals.update({
++                'model': approval_obj.model.id,
++                'approval_rule': approval_obj.rule,
++                'approver': [(6, 0, approver_id)],
++                'approver_user': approval_obj.approver_user.id,
++                'description': approval_obj.description,
++                'hash_code': approval_obj.hash_code,
++                'hook': [(6, 0, hook_id)],
++                'approval_type': approval_obj.approval_type,
++            })
++        else:
++            pass
++
++        return vals
++
+     # This method is used to store and write the new value when the object is created
+     def create(self, cr, uid, vals, context=None):
++        self.update_vals(cr, uid, vals, context=context)
+         res = super(approval_scheme_line, self).create(cr, uid, vals, context=context)
++        return res
+ 
+-        scheme_obj = self.pool.get('approval.scheme.line').browse(cr, uid, res, context=context)
+-        approver_id = [approver.id for approver in scheme_obj.approval_items_id.approver]
+-        hook_id = [hook.id for hook in scheme_obj.approval_items_id.hook]
+-
+-        value = {
+-            'model': scheme_obj.approval_items_id.model.id,
+-            'approval_rule': scheme_obj.approval_items_id.rule,
+-            'approver': [(6, 0, approver_id)],
+-            'approver_user': scheme_obj.approval_items_id.approver_user.id,
+-            'description': scheme_obj.approval_items_id.description,
+-            'hash_code': scheme_obj.approval_items_id.hash_code,
+-            'hook': [(6, 0, hook_id)],
+-            'approval_type': scheme_obj.approval_items_id.approval_type,
+-        }
+-
+-        self.pool.get('approval.scheme.line').write(cr, uid, res, value, context=context)
+-
++    def write(self, cr, uid, ids, vals, context=None):
++        self.update_vals(cr, uid, vals, context=context)
++        res = super(approval_scheme_line, self).write(cr, uid, ids, vals, context=context)
+         return res
+ 
+     _columns = {
+-        'approval_scheme_id': fields.many2one('approval.scheme', 'Approval Scheme ID', required=True, ondelete='cascade', select=True, readonly=True),
++        'approval_scheme_id': fields.many2one('approval.scheme', 'Approval Scheme ID', required=True, ondelete='cascade', select=True),
+         'approval_items_id': fields.many2one('approval.items', 'Approval', change_default=True),
+-        'model': fields.many2one('ir.model', 'Model', readonly=True),
+-        'approval_rule': fields.text('Rule', readonly=True),
+-        'approver': fields.many2many('res.groups', 'approval_scheme_line_group_rel', 'approval_scheme_line_id', 'group_id', 'Approver', readonly=True),
+-        'approver_user': fields.many2one('res.users', 'Approver User', readonly=True),
++        'model': fields.many2one('ir.model', 'Model'),
++        'approval_rule': fields.text('Rule'),
++        'approver': fields.many2many('res.groups', 'approval_scheme_line_group_rel', 'approval_scheme_line_id', 'group_id', 'Approver'),
++        'approver_user': fields.many2one('res.users', 'Approver User'),
+         'approval_sequence': fields.integer('Sequence', required=False),
+-        'description': fields.text('Description', readonly=True),
+-        'hash_code': fields.text('Hash Code', readonly=True),
+-        'hook': fields.many2many('approval.hook', 'approval_scheme_line_hook_rel', 'approval_scheme_line_id', 'approval_hook_id', 'Hook', readonly=True),
+-        'approval_type': fields.selection([('standard', 'Standard'), ('auto', 'Auto')], 'Approval Type', readonly=True),
++        'description': fields.text('Description'),
++        'hash_code': fields.text('Hash Code'),
++        'hook': fields.many2many('approval.hook', 'approval_scheme_line_hook_rel', 'approval_scheme_line_id', 'approval_hook_id', 'Hook'),
++        'approval_type': fields.selection([('standard', 'Standard'), ('auto', 'Auto')], 'Approval Type'),
+     }
+ 
+     # This method is used to automatically fill certain fields when approval_items_id field is changing
+     def approval_items_id_change(self, cr, uid, ids, approval_items_id, context=None):
+         result = {}
+ 
+-        obj_pool = self.pool.get('approval.items').browse(cr, uid, approval_items_id, context=context)
+-        approver_id = [approver.id for approver in obj_pool.approver]
+-        hook_id = [hook.id for hook in obj_pool.hook]
+-
+-        result['approval_rule'] = obj_pool.rule
+-        result['model'] = obj_pool.model.id
+-        result['approver'] = approver_id
+-        result['approver_user'] = obj_pool.approver_user.id
+-        result['description'] = obj_pool.description
+-        result['hash_code'] = obj_pool.hash_code
+-        result['hook'] = hook_id
+-        result['approval_type'] = obj_pool.approval_type
++        if approval_items_id:
++            obj_pool = self.pool.get('approval.items').browse(cr, uid, approval_items_id, context=context)
++            approver_id = [approver.id for approver in obj_pool.approver]
++            hook_id = [hook.id for hook in obj_pool.hook]
++
++            result['approval_rule'] = obj_pool.rule
++            result['model'] = obj_pool.model.id
++            result['approver'] = approver_id
++            result['approver_user'] = obj_pool.approver_user.id
++            result['description'] = obj_pool.description
++            result['hash_code'] = obj_pool.hash_code
++            result['hook'] = hook_id
++            result['approval_type'] = obj_pool.approval_type
++        else:
++            pass
+ 
+         return {'value': result}
+ 
+diff --git a/via_approval_account/account_invoice.py b/via_approval_account/account_invoice.py
+index b2ea109..1d6077f 100644
+--- a/via_approval_account/account_invoice.py
++++ b/via_approval_account/account_invoice.py
+@@ -36,9 +36,9 @@ class account_invoice(orm.Model):
+                 approval_list = obj.approval_list
+                 for approval in approval_list:
+                     if approval.approval_type == 'auto':
+-                        if obj.auto_approval == False:
++                        if not obj.auto_approval:
+                             res_return = self.pool.get('account.invoice').write(cr, uid, obj.id, {'auto_approval': True}, context=context)
+-                        elif obj.auto_approval == True:
++                        elif obj.auto_approval:
+                             res_return = self.pool.get('account.invoice').write(cr, uid, obj.id, {'auto_approval': False}, context=context)
+                 res[obj.id] = res_return
+         except:
+@@ -65,12 +65,11 @@ class account_invoice(orm.Model):
+         'auto_approval': False,
+     }
+ 
+-
+     #this method is used when the document is being created
+     def create(self, cr, uid, vals, context=None):
+-        res =  super(account_invoice, self).create(cr, uid, vals, context=context)
++        res = super(account_invoice, self).create(cr, uid, vals, context=context)
+         obj = self.pool.get('account.invoice').browse(cr, uid, res, context=context)
+-        model = self.pool.get('ir.model').search(cr, uid, [('model','=','account.invoice')], context=context)
++        model = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'account.invoice')], context=context)
+ 
+         if not model:
+             raise orm.except_orm(_('Error!'), _('Account Invoice model cannot be found !!!'))
+@@ -88,7 +87,7 @@ class account_invoice(orm.Model):
+     #this method is used when the document is being edited
+     def write(self, cr, uid, ids, vals, context=None):
+         res = super(account_invoice, self).write(cr, uid, ids, vals, context=context)
+-        model = self.pool.get('ir.model').search(cr, uid, [('model','=','account.invoice')], context=context)
++        model = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'account.invoice')], context=context)
+ 
+         if not model:
+             raise orm.except_orm(_('Error!'), _('Account Invoice model cannot be found !!!'))
+@@ -99,18 +98,18 @@ class account_invoice(orm.Model):
+ 
+     #this method is used to initially create a record in approval_hook when the module is being installed / upgraded
+     def init(self, cr):
+-        model = self.pool.get('ir.model').search(cr, SUPERUSER_ID, [('model','=','account.invoice')])
++        model = self.pool.get('ir.model').search(cr, SUPERUSER_ID, [('model', '=', 'account.invoice')])
+ 
+         if not model:
+             raise orm.except_orm(_('Error!'), _('Account Invoice model cannot be found !!!'))
+ 
+         value = [
+-            ['action_invoice_sent','Send by Email'],
+-            ['invoice_print','Print'],
+-            ['invoice_print','Print Invoice'],
+-            ['invoice_open','Validate'],
+-            ['invoice_cancel','Cancel Invoice'],
+-            ['action_cancel_draft','Reset to Draft'],
++            ['action_invoice_sent', 'Send by Email'],
++            ['invoice_print', 'Print'],
++            ['invoice_print', 'Print Invoice'],
++            ['invoice_open', 'Validate'],
++            ['invoice_cancel', 'Cancel Invoice'],
++            ['action_cancel_draft', 'Reset to Draft'],
+             ['invoice_pay_customer', 'Register Payment'],
+             ['account_invoice_refund', 'Ask Refund'],
+             ['account_state_open', 'Re-Open'],
+@@ -123,7 +122,7 @@ class account_invoice(orm.Model):
+                 'method_name': obj[0],
+             }
+ 
+-            valid = self.pool.get('approval.hook').search(cr, SUPERUSER_ID, [('name','=',obj[1]),('method_name','=',obj[0]),('model','=',model[0])])
++            valid = self.pool.get('approval.hook').search(cr, SUPERUSER_ID, [('name', '=', obj[1]), ('method_name', '=', obj[0]), ('model', '=', model[0])])
+             if not valid:
+                 self.pool.get('approval.hook').create(cr, SUPERUSER_ID, vals, context=None)
+ 
+@@ -163,27 +162,27 @@ class account_invoice(orm.Model):
+         self.pool.get('approval.list').hook_validation(cr, uid, ids, 'account_invoice_refund', context=context)
+         view_id = self.pool.get('ir.model.data').get_object(cr, uid, 'account', 'view_account_invoice_refund', context=context).id
+         return {
+-           'type': 'ir.actions.act_window',
+-           'name': 'Refund Invoice',
+-           'view_mode': 'form',
+-           'view_type': 'form',
+-           'res_model': 'account.invoice.refund',
+-           'target': 'new',
+-           'view_id': view_id,
++            'type': 'ir.actions.act_window',
++            'name': 'Refund Invoice',
++            'view_mode': 'form',
++            'view_type': 'form',
++            'res_model': 'account.invoice.refund',
++            'target': 'new',
++            'view_id': view_id,
+         }
+ 
+     def account_state_open(self, cr, uid, ids, context=None):
+         self.pool.get('approval.list').hook_validation(cr, uid, ids, 'account_invoice_refund', context=context)
+         view_id = self.pool.get('ir.model.data').get_object(cr, uid, 'account', 'view_account_state_open', context=context).id
+         return {
+-           'type': 'ir.actions.act_window',
+-           'name': 'Account State Open',
+-           'view_mode': 'form',
+-           'view_type': 'form',
+-           'res_model': 'account.state.open',
+-           'target': 'new',
+-           'view_id': view_id,
+-           'context': {},
++            'type': 'ir.actions.act_window',
++            'name': 'Account State Open',
++            'view_mode': 'form',
++            'view_type': 'form',
++            'res_model': 'account.state.open',
++            'target': 'new',
++            'view_id': view_id,
++            'context': {},
+         }
+ 
+     def invoice_proforma2(self, cr, uid, ids, context=None):
+@@ -194,6 +193,7 @@ class account_invoice(orm.Model):
+ 
+ account_invoice()
+ 
++
+ class account_period(orm.Model):
+     _inherit = 'account.period'
+ 
+@@ -205,9 +205,9 @@ class account_period(orm.Model):
+                 approval_list = obj.approval_list
+                 for approval in approval_list:
+                     if approval.approval_type == 'auto':
+-                        if obj.auto_approval == False:
++                        if not obj.auto_approval:
+                             res_return = self.pool.get('account.period').write(cr, uid, obj.id, {'auto_approval': True}, context=context)
+-                        elif obj.auto_approval == True:
++                        elif obj.auto_approval:
+                             res_return = self.pool.get('account.period').write(cr, uid, obj.id, {'auto_approval': False}, context=context)
+                 res[obj.id] = res_return
+         except:
+@@ -236,9 +236,9 @@ class account_period(orm.Model):
+ 
+     #this method is used when the document is being created
+     def create(self, cr, uid, vals, context=None):
+-        res =  super(account_period, self).create(cr, uid, vals, context=context)
++        res = super(account_period, self).create(cr, uid, vals, context=context)
+         obj = self.pool.get('account.period').browse(cr, uid, res, context=context)
+-        model = self.pool.get('ir.model').search(cr, uid, [('model','=','account.period')], context=context)
++        model = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'account.period')], context=context)
+ 
+         if not model:
+             raise orm.except_orm(_('Error!'), _('Account Period model cannot be found !!!'))
+@@ -256,7 +256,7 @@ class account_period(orm.Model):
+     #this method is used when the document is being edited
+     def write(self, cr, uid, ids, vals, context=None):
+         res = super(account_period, self).write(cr, uid, ids, vals, context=context)
+-        model = self.pool.get('ir.model').search(cr, uid, [('model','=','account.period')], context=context)
++        model = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'account.period')], context=context)
+ 
+         if not model:
+             raise orm.except_orm(_('Error!'), _('Account Period model cannot be found !!!'))
+@@ -266,13 +266,13 @@ class account_period(orm.Model):
+ 
+     #this method is used to initially create a record in approval_hook when the module is being installed / upgraded
+     def init(self, cr):
+-        model = self.pool.get('ir.model').search(cr, SUPERUSER_ID, [('model','=','account.period')])
++        model = self.pool.get('ir.model').search(cr, SUPERUSER_ID, [('model', '=', 'account.period')])
+ 
+         if not model:
+             raise orm.except_orm(_('Error!'), _('Account Period model cannot be found !!!'))
+ 
+         value = [
+-            ['action_draft','Re-Open Period'],
++            ['action_draft', 'Re-Open Period'],
+         ]
+         for obj in value:
+             vals = {
+@@ -281,7 +281,7 @@ class account_period(orm.Model):
+                 'method_name': obj[0],
+             }
+ 
+-            valid = self.pool.get('approval.hook').search(cr, SUPERUSER_ID, [('name','=',obj[1]),('method_name','=',obj[0]),('model','=',model[0])])
++            valid = self.pool.get('approval.hook').search(cr, SUPERUSER_ID, [('name', '=', obj[1]), ('method_name', '=', obj[0]), ('model', '=', model[0])])
+             if not valid:
+                 self.pool.get('approval.hook').create(cr, SUPERUSER_ID, vals, context=None)
+ 
+@@ -293,4 +293,4 @@ class account_period(orm.Model):
+         self.pool.get('approval.list').hook_validation(cr, uid, ids, 'action_draft', context=args[0])
+         return super(account_period, self).action_draft(cr, uid, ids, *args)
+ 
+-account_period()
+\ No newline at end of file
++account_period()
+diff --git a/via_approval_purchase/purchase.py b/via_approval_purchase/purchase.py
+index 95bb1a1..30a5a1f 100644
+--- a/via_approval_purchase/purchase.py
++++ b/via_approval_purchase/purchase.py
+@@ -36,9 +36,9 @@ class purchase_order(orm.Model):
+                 approval_list = obj.approval_list
+                 for approval in approval_list:
+                     if approval.approval_type == 'auto':
+-                        if obj.auto_approval == False:
++                        if not obj.auto_approval:
+                             res_return = self.pool.get('purchase.order').write(cr, uid, obj.id, {'auto_approval': True}, context=context)
+-                        elif obj.auto_approval == True:
++                        elif obj.auto_approval:
+                             res_return = self.pool.get('purchase.order').write(cr, uid, obj.id, {'auto_approval': False}, context=context)
+                 res[obj.id] = res_return
+         except:
+@@ -67,9 +67,9 @@ class purchase_order(orm.Model):
+ 
+     #this method is used when the document is being created
+     def create(self, cr, uid, vals, context=None):
+-        res =  super(purchase_order, self).create(cr, uid, vals, context=context)
++        res = super(purchase_order, self).create(cr, uid, vals, context=context)
+         obj = self.pool.get('purchase.order').browse(cr, uid, res, context=context)
+-        model = self.pool.get('ir.model').search(cr, uid, [('model','=','purchase.order')], context=context)
++        model = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'purchase.order')], context=context)
+ 
+         if not model:
+             raise orm.except_orm(_('Error!'), _('Purchase Order model cannot be found !!!'))
+@@ -87,7 +87,7 @@ class purchase_order(orm.Model):
+     #this method is used when the document is being edited
+     def write(self, cr, uid, ids, vals, context=None):
+         res = super(purchase_order, self).write(cr, uid, ids, vals, context=context)
+-        model = self.pool.get('ir.model').search(cr, uid, [('model','=','purchase.order')], context=context)
++        model = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'purchase.order')], context=context)
+ 
+         if not model:
+             raise orm.except_orm(_('Error!'), _('Purchase Order model cannot be found !!!'))
+@@ -97,20 +97,20 @@ class purchase_order(orm.Model):
+ 
+     #this method is used to initially create a record in approval_hook when the module is being installed / upgraded
+     def init(self, cr):
+-        model = self.pool.get('ir.model').search(cr, SUPERUSER_ID, [('model','=','purchase.order')])
++        model = self.pool.get('ir.model').search(cr, SUPERUSER_ID, [('model', '=', 'purchase.order')])
+ 
+         if not model:
+             raise orm.except_orm(_('Error!'), _('Purchase Order model cannot be found !!!'))
+ 
+         value = [
+-            ['wkf_send_rfq','Send by Email'],
+-            ['print_quotation','Print'],
+-            ['wkf_confirm_order','Confirm Order'],
+-            ['action_cancel_draft','Set to Draft'],
+-            ['action_cancel','Cancel Order'],
+-            ['purchase_cancel','Cancel Order'],
+-            ['picking_ok','Manually Corrected'],
+-            ['invoice_ok','Manually Corrected'],
++            ['wkf_send_rfq', 'Send by Email'],
++            ['print_quotation', 'Print'],
++            ['wkf_confirm_order', 'Confirm Order'],
++            ['action_cancel_draft', 'Set to Draft'],
++            ['action_cancel', 'Cancel Order'],
++            ['purchase_cancel', 'Cancel Order'],
++            ['picking_ok', 'Manually Corrected'],
++            ['invoice_ok', 'Manually Corrected'],
+             ['purchase_confirm', 'Confirm Order'],
+             ['purchase_approve', 'Approve Order'],
+             ['view_picking', 'Receive Products'],
+@@ -123,7 +123,7 @@ class purchase_order(orm.Model):
+                 'method_name': obj[0],
+             }
+ 
+-            valid = self.pool.get('approval.hook').search(cr, SUPERUSER_ID, [('name','=',obj[1]),('method_name','=',obj[0]),('model','=',model[0])])
++            valid = self.pool.get('approval.hook').search(cr, SUPERUSER_ID, [('name', '=', obj[1]), ('method_name', '=', obj[0]), ('model', '=', model[0])])
+             if not valid:
+                 self.pool.get('approval.hook').create(cr, SUPERUSER_ID, vals, context=None)
+ 
+diff --git a/via_approval_report/approval_report.py b/via_approval_report/approval_report.py
+index 3812348..7c195e2 100644
+--- a/via_approval_report/approval_report.py
++++ b/via_approval_report/approval_report.py
+@@ -21,13 +21,14 @@
+ 
+ from openerp.osv import fields, orm
+ 
++
+ class report_xml(orm.Model):
+     _inherit = 'ir.actions.report.xml'
+ 
+     def _report_sxw(self, cursor, user, ids, name, arg, context=None):
+         for report in self.browse(cursor, user, ids, context=context):
+             report_name = report.report_name
+-        self.pool.get('approval.list').hook_validation(cursor, user, context.get('active_ids',[]), report_name, context=context)
++        self.pool.get('approval.list').hook_validation(cursor, user, context.get('active_ids', []), report_name, context=context)
+         return super(report_xml, self)._report_sxw(cursor, user, ids, name, arg, context=context)
+ 
+     _columns = {
+diff --git a/via_approval_report/via_form_templates.py b/via_approval_report/via_form_templates.py
+index 4448606..9740e90 100644
+--- a/via_approval_report/via_form_templates.py
++++ b/via_approval_report/via_form_templates.py
+@@ -21,6 +21,7 @@
+ 
+ from openerp.osv import orm
+ 
++
+ class via_form_templates(orm.Model):
+     _inherit = 'via.form.templates'
+ 
+@@ -35,7 +36,7 @@ class via_form_templates(orm.Model):
+                 'model': rpt.model_id.id,
+             }
+             # Finding the same record that has the same method_name
+-            hook_ids = _hook_obj.search(cr, uid, [('method_name','=',rpt.internal_name)], context=context)
++            hook_ids = _hook_obj.search(cr, uid, [('method_name', '=', rpt.internal_name)], context=context)
+ 
+             # If there is the same record with the same method_name, update those record with the new ones. Else, create a new record
+             if hook_ids:
+diff --git a/via_approval_sale/sale.py b/via_approval_sale/sale.py
+index 3794487..e69d6ae 100644
+--- a/via_approval_sale/sale.py
++++ b/via_approval_sale/sale.py
+@@ -36,9 +36,9 @@ class sale_order(orm.Model):
+                 approval_list = obj.approval_list
+                 for approval in approval_list:
+                     if approval.approval_type == 'auto':
+-                        if obj.auto_approval == False:
++                        if not obj.auto_approval:
+                             res_return = self.pool.get('sale.order').write(cr, uid, obj.id, {'auto_approval': True}, context=context)
+-                        elif obj.auto_approval == True:
++                        elif obj.auto_approval:
+                             res_return = self.pool.get('sale.order').write(cr, uid, obj.id, {'auto_approval': False}, context=context)
+                 res[obj.id] = res_return
+         except:
+@@ -177,12 +177,12 @@ class sale_order(orm.Model):
+     def view_sale_advance_payment_inv(self, cr, uid, ids, context=None):
+         self.pool.get('approval.list').hook_validation(cr, uid, ids, 'view_sale_advance_payment_inv', context=context)
+         return {
+-           'type': 'ir.actions.act_window',
+-           'name': 'Invoice Order',
+-           'view_mode': 'form',
+-           'view_type': 'form',
+-           'res_model': 'sale.advance.payment.inv',
+-           'target': 'new',
++            'type': 'ir.actions.act_window',
++            'name': 'Invoice Order',
++            'view_mode': 'form',
++            'view_type': 'form',
++            'res_model': 'sale.advance.payment.inv',
++            'target': 'new',
+         }
+ 
+ sale_order()
+diff --git a/via_approval_service/service.py b/via_approval_service/service.py
+index bef9728..8f342ae 100644
+--- a/via_approval_service/service.py
++++ b/via_approval_service/service.py
+@@ -20,7 +20,6 @@
+ ##############################################################################
+ 
+ from osv import orm, fields
+-from openerp import netsvc
+ from openerp import SUPERUSER_ID
+ from openerp.tools.translate import _
+ 
+@@ -36,9 +35,9 @@ class service_request(orm.Model):
+                 approval_list = obj.approval_list
+                 for approval in approval_list:
+                     if approval.approval_type == 'auto':
+-                        if obj.auto_approval == False:
++                        if not obj.auto_approval:
+                             res_return = self.pool.get('service.request').write(cr, uid, obj.id, {'auto_approval': True}, context=context)
+-                        elif obj.auto_approval == True:
++                        elif obj.auto_approval:
+                             res_return = self.pool.get('service.request').write(cr, uid, obj.id, {'auto_approval': False}, context=context)
+                 res[obj.id] = res_return
+         except:
+diff --git a/via_approval_stock/product.py b/via_approval_stock/product.py
+index d79058a..d6969bf 100644
+--- a/via_approval_stock/product.py
++++ b/via_approval_stock/product.py
+@@ -27,7 +27,7 @@ class product_product(orm.Model):
+     _inherit = "product.product"
+ 
+     def percentage_validation(self, cr, uid, ids, limit_delivery, vals=None, context=None):
+-    	if limit_delivery == 'percentage':
++        if limit_delivery == 'percentage':
+             if ids:
+                 for product in self.browse(cr, uid, ids, context=context):
+                     if vals.get('limit_percentage'):
+@@ -37,7 +37,7 @@ class product_product(orm.Model):
+             else:
+                 limit_percentage = vals.get('limit_percentage', 0.00)
+             if limit_percentage > 100 or limit_percentage < 0:
+-    			raise orm.except_orm(_('Error !!!'), _('Percentage of Limit Quantity is not valid'))
++                raise orm.except_orm(_('Error !!!'), _('Percentage of Limit Quantity is not valid'))
+         elif limit_delivery == 'fix_qty':
+             if ids:
+                 for product in self.browse(cr, uid, ids, context=context):
+@@ -51,8 +51,8 @@ class product_product(orm.Model):
+                 raise orm.except_orm(_('Error !!!'), _('Limit Quantity is not valid'))
+ 
+     def create(self, cr, uid, vals, context=None):
+-    	limit_delivery = vals.get('limit_delivery', False)
+-    	self.percentage_validation(cr, uid, False, limit_delivery, vals, context=context)
++        limit_delivery = vals.get('limit_delivery', False)
++        self.percentage_validation(cr, uid, False, limit_delivery, vals, context=context)
+         return super(product_product, self).create(cr, uid, vals, context=context)
+ 
+     def write(self, cr, uid, ids, vals, context=None):
+@@ -60,7 +60,7 @@ class product_product(orm.Model):
+             if vals.get('limit_delivery'):
+                 limit_delivery = vals.get('limit_delivery')
+             else:
+-        	   limit_delivery = self.browse(cr, uid, product.id, context=context).limit_delivery
++                limit_delivery = self.browse(cr, uid, product.id, context=context).limit_delivery
+             self.percentage_validation(cr, uid, ids, limit_delivery, vals, context=context)
+         return super(product_product, self).write(cr, uid, ids, vals, context=context)
+ 
+diff --git a/via_approval_stock/stock.py b/via_approval_stock/stock.py
+index 1066405..1dacbc6 100644
+--- a/via_approval_stock/stock.py
++++ b/via_approval_stock/stock.py
+@@ -36,9 +36,9 @@ class stock_inventory(orm.Model):
+                 approval_list = obj.approval_list
+                 for approval in approval_list:
+                     if approval.approval_type == 'auto':
+-                        if obj.auto_approval == False:
++                        if not obj.auto_approval:
+                             res_return = self.pool.get('stock.inventory').write(cr, uid, obj.id, {'auto_approval': True}, context=context)
+-                        elif obj.auto_approval == True:
++                        elif obj.auto_approval:
+                             res_return = self.pool.get('stock.inventory').write(cr, uid, obj.id, {'auto_approval': False}, context=context)
+                 res[obj.id] = res_return
+         except:
+@@ -67,9 +67,9 @@ class stock_inventory(orm.Model):
+ 
+     #this method is used when the document is being created
+     def create(self, cr, uid, vals, context=None):
+-        res =  super(stock_inventory, self).create(cr, uid, vals, context=context)
++        res = super(stock_inventory, self).create(cr, uid, vals, context=context)
+         obj = self.pool.get('stock.inventory').browse(cr, uid, res, context=context)
+-        model = self.pool.get('ir.model').search(cr, uid, [('model','=','stock.inventory')], context=context)
++        model = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'stock.inventory')], context=context)
+ 
+         if not model:
+             raise orm.except_orm(_('Error!'), _('Stock Inventory model cannot be found !!!'))
+@@ -87,7 +87,7 @@ class stock_inventory(orm.Model):
+     #this method is used when the document is being edited
+     def write(self, cr, uid, ids, vals, context=None):
+         res = super(stock_inventory, self).write(cr, uid, ids, vals, context=context)
+-        model = self.pool.get('ir.model').search(cr, uid, [('model','=','stock.inventory')], context=context)
++        model = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'stock.inventory')], context=context)
+ 
+         if not model:
+             raise orm.except_orm(_('Error!'), _('Stock Inventory model cannot be found !!!'))
+@@ -97,16 +97,16 @@ class stock_inventory(orm.Model):
+ 
+     #this method is used to initially create a record in approval_hook when the module is being installed / upgraded
+     def init(self, cr):
+-        model = self.pool.get('ir.model').search(cr, SUPERUSER_ID, [('model','=','stock.inventory')])
++        model = self.pool.get('ir.model').search(cr, SUPERUSER_ID, [('model', '=', 'stock.inventory')])
+ 
+         if not model:
+             raise orm.except_orm(_('Error!'), _('Stock Inventory model cannot be found !!!'))
+ 
+         value = [
+-            ['action_confirm','Confirm Inventory'],
+-            ['action_done','Validate Inventory'],
+-            ['action_cancel_draft','Set to Draft'],
+-            ['action_cancel_inventory','Cancel Inventory'],
++            ['action_confirm', 'Confirm Inventory'],
++            ['action_done', 'Validate Inventory'],
++            ['action_cancel_draft', 'Set to Draft'],
++            ['action_cancel_inventory', 'Cancel Inventory'],
+         ]
+         for obj in value:
+             vals = {
+@@ -115,7 +115,7 @@ class stock_inventory(orm.Model):
+                 'method_name': obj[0],
+             }
+ 
+-            valid = self.pool.get('approval.hook').search(cr, SUPERUSER_ID, [('name','=',obj[1]),('method_name','=',obj[0]),('model','=',model[0])])
++            valid = self.pool.get('approval.hook').search(cr, SUPERUSER_ID, [('name', '=', obj[1]), ('method_name', '=', obj[0]), ('model', '=', model[0])])
+             if not valid:
+                 self.pool.get('approval.hook').create(cr, SUPERUSER_ID, vals, context=None)
+ 
+@@ -141,6 +141,7 @@ class stock_inventory(orm.Model):
+ 
+ stock_inventory()
+ 
++
+ class stock_picking(orm.Model):
+     _inherit = 'stock.picking'
+ 
+@@ -152,9 +153,9 @@ class stock_picking(orm.Model):
+                 approval_list = obj.approval_list
+                 for approval in approval_list:
+                     if approval.approval_type == 'auto':
+-                        if obj.auto_approval == False:
++                        if not obj.auto_approval:
+                             res_return = self.pool.get('stock.picking').write(cr, uid, obj.id, {'auto_approval': True}, context=context)
+-                        elif obj.auto_approval == True:
++                        elif obj.auto_approval:
+                             res_return = self.pool.get('stock.picking').write(cr, uid, obj.id, {'auto_approval': False}, context=context)
+                 res[obj.id] = res_return
+         except:
+@@ -172,7 +173,7 @@ class stock_picking(orm.Model):
+         return super(stock_picking, self).copy_data(cr, uid, id, default=std_default, context=context)
+ 
+     _columns = {
+-        'approval_list': fields.one2many('approval.list', 'doc_id', 'Approval List', domain=[('model', 'in', ['stock.picking','stock.picking.in','stock.picking.out'])]),
++        'approval_list': fields.one2many('approval.list', 'doc_id', 'Approval List', domain=[('model', 'in', ['stock.picking', 'stock.picking.in', 'stock.picking.out'])]),
+         'auto_approval_func': fields.function(auto_approval_func, string='Auto Approval Function', method=True, type='boolean', readonly=True),
+         'auto_approval': fields.boolean('Auto Approval', readonly=True),
+     }
+@@ -183,9 +184,9 @@ class stock_picking(orm.Model):
+ 
+     #this method is used when the document is being created
+     def create(self, cr, uid, vals, context=None):
+-        res =  super(stock_picking, self).create(cr, uid, vals, context=context)
++        res = super(stock_picking, self).create(cr, uid, vals, context=context)
+         obj = self.pool.get('stock.picking').browse(cr, uid, res, context=context)
+-        model = self.pool.get('ir.model').search(cr, uid, [('model','=','stock.picking')], context=context)
++        model = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'stock.picking')], context=context)
+ 
+         if not model:
+             raise orm.except_orm(_('Error!'), _('Stock Picking model cannot be found !!!'))
+@@ -203,7 +204,7 @@ class stock_picking(orm.Model):
+     #this method is used when the document is being edited
+     def write(self, cr, uid, ids, vals, context=None):
+         res = super(stock_picking, self).write(cr, uid, ids, vals, context=context)
+-        model = self.pool.get('ir.model').search(cr, uid, [('model','=','stock.picking')], context=context)
++        model = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'stock.picking')], context=context)
+ 
+         if not model:
+             raise orm.except_orm(_('Error!'), _('Stock Picking model cannot be found !!!'))
+@@ -213,24 +214,24 @@ class stock_picking(orm.Model):
+ 
+     #this method is used to initially create a record in approval_hook when the module is being installed / upgraded
+     def init(self, cr):
+-        model = self.pool.get('ir.model').search(cr, SUPERUSER_ID, [('model','=','stock.picking')])
++        model = self.pool.get('ir.model').search(cr, SUPERUSER_ID, [('model', '=', 'stock.picking')])
+         value = [
+-            ['draft_force_assign','Confirm (IM)'],
+-            ['draft_validate','Confirm & Transfer (IM)'],
+-            ['force_assign','Force Availability (IM)'],
+-            ['action_process','Confirm & Transfer (IM)'],
+-            ['button_cancel','Cancel Transfer (IM)'],
+-            ['draft_validate','Confirm & Receive (IS)'],
+-            ['action_process','Receive (IS)'],
+-            ['button_cancel','Cancel Transfer (IS)'],
+-            ['stock_return_picking','Return Products (IS)'],
+-            ['draft_validate','Confirm & Deliver (DO)'],
+-            ['action_assign','Check Availability (DO)'],
+-            ['action_process','Deliver (DO)'],
+-            ['force_assign','Force Availability (DO)'],
+-            ['stock_return_picking','Return Products (DO)'],
+-            ['button_cancel','Cancel Transfer (DO)'],
+-            ['split_process','Split (DO)'],
++            ['draft_force_assign', 'Confirm (IM)'],
++            ['draft_validate', 'Confirm & Transfer (IM)'],
++            ['force_assign', 'Force Availability (IM)'],
++            ['action_process', 'Confirm & Transfer (IM)'],
++            ['button_cancel', 'Cancel Transfer (IM)'],
++            ['draft_validate', 'Confirm & Receive (IS)'],
++            ['action_process', 'Receive (IS)'],
++            ['button_cancel', 'Cancel Transfer (IS)'],
++            ['stock_return_picking', 'Return Products (IS)'],
++            ['draft_validate', 'Confirm & Deliver (DO)'],
++            ['action_assign', 'Check Availability (DO)'],
++            ['action_process', 'Deliver (DO)'],
++            ['force_assign', 'Force Availability (DO)'],
++            ['stock_return_picking', 'Return Products (DO)'],
++            ['button_cancel', 'Cancel Transfer (DO)'],
++            ['split_process', 'Split (DO)'],
+             ['stock_invoice_onshipping', 'Create Invoice/Refund'],
+             ['stock_return_picking', 'Reverse Transfer (IM)'],
+         ]
+@@ -241,7 +242,7 @@ class stock_picking(orm.Model):
+                 'method_name': obj[0],
+             }
+ 
+-            valid = self.pool.get('approval.hook').search(cr, SUPERUSER_ID, [('name','=',obj[1]),('method_name','=',obj[0]),('model','=',model[0])])
++            valid = self.pool.get('approval.hook').search(cr, SUPERUSER_ID, [('name', '=', obj[1]), ('method_name', '=', obj[0]), ('model', '=', model[0])])
+             if not valid:
+                 self.pool.get('approval.hook').create(cr, SUPERUSER_ID, vals, context=None)
+ 
+@@ -281,14 +282,14 @@ class stock_picking(orm.Model):
+     def stock_return_picking(self, cr, uid, ids, context=None):
+         self.pool.get('approval.list').hook_validation(cr, uid, ids, 'stock_return_picking', context=context)
+         return {
+-           'type': 'ir.actions.act_window',
+-           'name': 'Return Shipment',
+-           'view_mode': 'form',
+-           'res_model': 'stock.return.picking',
+-           'src_model': 'stock.picking',
+-           'target': 'new',
+-           'key2': 'client_action_multi',
+-           'multi': True,
++            'type': 'ir.actions.act_window',
++            'name': 'Return Shipment',
++            'view_mode': 'form',
++            'res_model': 'stock.return.picking',
++            'src_model': 'stock.picking',
++            'target': 'new',
++            'key2': 'client_action_multi',
++            'multi': True,
+         }
+ 
+     def action_assign(self, cr, uid, ids, *args):
+@@ -301,6 +302,7 @@ class stock_picking(orm.Model):
+ 
+ stock_picking()
+ 
++
+ class stock_picking_in(orm.Model):
+     _inherit = 'stock.picking.in'
+ 
+@@ -312,9 +314,9 @@ class stock_picking_in(orm.Model):
+                 approval_list = obj.approval_list
+                 for approval in approval_list:
+                     if approval.approval_type == 'auto':
+-                        if obj.auto_approval == False:
++                        if not obj.auto_approval:
+                             res_return = self.pool.get('stock.picking').write(cr, uid, obj.id, {'auto_approval': True}, context=context)
+-                        elif obj.auto_approval == True:
++                        elif obj.auto_approval:
+                             res_return = self.pool.get('stock.picking').write(cr, uid, obj.id, {'auto_approval': False}, context=context)
+                 res[obj.id] = res_return
+         except:
+@@ -343,9 +345,9 @@ class stock_picking_in(orm.Model):
+ 
+     #this method is used when the document is being created
+     def create(self, cr, uid, vals, context=None):
+-        res =  super(stock_picking_in, self).create(cr, uid, vals, context=context)
++        res = super(stock_picking_in, self).create(cr, uid, vals, context=context)
+         obj = self.pool.get('stock.picking.in').browse(cr, uid, res, context=context)
+-        model = self.pool.get('ir.model').search(cr, uid, [('model','=','stock.picking')], context=context)
++        model = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'stock.picking')], context=context)
+ 
+         if not model:
+             raise orm.except_orm(_('Error!'), _('Stock Picking In model cannot be found !!!'))
+@@ -363,7 +365,7 @@ class stock_picking_in(orm.Model):
+     #this method is used when the document is being edited
+     def write(self, cr, uid, ids, vals, context=None):
+         res = super(stock_picking_in, self).write(cr, uid, ids, vals, context=context)
+-        model = self.pool.get('ir.model').search(cr, uid, [('model','=','stock.picking')], context=context)
++        model = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'stock.picking')], context=context)
+ 
+         if not model:
+             raise orm.except_orm(_('Error!'), _('Stock Picking In model cannot be found !!!'))
+@@ -395,32 +397,33 @@ class stock_picking_in(orm.Model):
+     def stock_return_picking(self, cr, uid, ids, context=None):
+         self.pool.get('approval.list').hook_validation(cr, uid, ids, 'stock_return_picking', context=context)
+         return {
+-           'type': 'ir.actions.act_window',
+-           'name': 'Return Shipment',
+-           'view_mode': 'form',
+-           'res_model': 'stock.return.picking',
+-           'src_model': 'stock.picking.in',
+-           'target': 'new',
+-           'key2': 'client_action_multi',
+-           'multi': True,
++            'type': 'ir.actions.act_window',
++            'name': 'Return Shipment',
++            'view_mode': 'form',
++            'res_model': 'stock.return.picking',
++            'src_model': 'stock.picking.in',
++            'target': 'new',
++            'key2': 'client_action_multi',
++            'multi': True,
+         }
+ 
+     def stock_invoice_onshipping(self, cr, uid, ids, context=None):
+         self.pool.get('approval.list').hook_validation(cr, uid, ids, 'stock_invoice_onshipping', context=context)
+         return {
+-           'type': 'ir.actions.act_window',
+-           'name': 'Create Draft Invoices',
+-           'view_mode': 'form',
+-           'view_type': 'form',
+-           'res_model': 'stock.invoice.onshipping',
+-           'src_model': 'stock.picking.in',
+-           'target': 'new',
+-           'key2': 'client_action_multi',
+-           'multi': True,
++            'type': 'ir.actions.act_window',
++            'name': 'Create Draft Invoices',
++            'view_mode': 'form',
++            'view_type': 'form',
++            'res_model': 'stock.invoice.onshipping',
++            'src_model': 'stock.picking.in',
++            'target': 'new',
++            'key2': 'client_action_multi',
++            'multi': True,
+         }
+ 
+ stock_picking_in()
+ 
++
+ class stock_picking_out(orm.Model):
+     _inherit = 'stock.picking.out'
+ 
+@@ -432,9 +435,9 @@ class stock_picking_out(orm.Model):
+                 approval_list = obj.approval_list
+                 for approval in approval_list:
+                     if approval.approval_type == 'auto':
+-                        if obj.auto_approval == False:
++                        if not obj.auto_approval:
+                             res_return = self.pool.get('stock.picking').write(cr, uid, obj.id, {'auto_approval': True}, context=context)
+-                        elif obj.auto_approval == True:
++                        elif obj.auto_approval:
+                             res_return = self.pool.get('stock.picking').write(cr, uid, obj.id, {'auto_approval': False}, context=context)
+                 res[obj.id] = res_return
+         except:
+@@ -463,9 +466,9 @@ class stock_picking_out(orm.Model):
+ 
+     #this method is used when the document is being created
+     def create(self, cr, uid, vals, context=None):
+-        res =  super(stock_picking_out, self).create(cr, uid, vals, context=context)
++        res = super(stock_picking_out, self).create(cr, uid, vals, context=context)
+         obj = self.pool.get('stock.picking.out').browse(cr, uid, res, context=context)
+-        model = self.pool.get('ir.model').search(cr, uid, [('model','=','stock.picking')], context=context)
++        model = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'stock.picking')], context=context)
+ 
+         if not model:
+             raise orm.except_orm(_('Error!'), _('Stock Picking Out model cannot be found !!!'))
+@@ -483,7 +486,7 @@ class stock_picking_out(orm.Model):
+     #this method is used when the document is being edited
+     def write(self, cr, uid, ids, vals, context=None):
+         res = super(stock_picking_out, self).write(cr, uid, ids, vals, context=context)
+-        model = self.pool.get('ir.model').search(cr, uid, [('model','=','stock.picking')], context=context)
++        model = self.pool.get('ir.model').search(cr, uid, [('model', '=', 'stock.picking')], context=context)
+ 
+         if not model:
+             raise orm.except_orm(_('Error!'), _('Stock Picking Out model cannot be found !!!'))
+@@ -523,14 +526,14 @@ class stock_picking_out(orm.Model):
+     def stock_return_picking(self, cr, uid, ids, context=None):
+         self.pool.get('approval.list').hook_validation(cr, uid, ids, 'stock_return_picking', context=context)
+         return {
+-           'type': 'ir.actions.act_window',
+-           'name': 'Return Shipment',
+-           'view_mode': 'form',
+-           'res_model': 'stock.return.picking',
+-           'src_model': 'stock.picking.out',
+-           'target': 'new',
+-           'key2': 'client_action_multi',
+-           'multi': True,
++            'type': 'ir.actions.act_window',
++            'name': 'Return Shipment',
++            'view_mode': 'form',
++            'res_model': 'stock.return.picking',
++            'src_model': 'stock.picking.out',
++            'target': 'new',
++            'key2': 'client_action_multi',
++            'multi': True,
+         }
+ 
+     def split_process(self, cr, uid, ids, context=None):
+@@ -540,19 +543,20 @@ class stock_picking_out(orm.Model):
+     def stock_invoice_onshipping(self, cr, uid, ids, context=None):
+         self.pool.get('approval.list').hook_validation(cr, uid, ids, 'stock_invoice_onshipping', context=context)
+         return {
+-           'type': 'ir.actions.act_window',
+-           'name': 'Create Draft Invoices',
+-           'view_mode': 'form',
+-           'view_type': 'form',
+-           'res_model': 'stock.invoice.onshipping',
+-           'src_model': 'stock.picking.out',
+-           'target': 'new',
+-           'key2': 'client_action_multi',
+-           'multi': True,
++            'type': 'ir.actions.act_window',
++            'name': 'Create Draft Invoices',
++            'view_mode': 'form',
++            'view_type': 'form',
++            'res_model': 'stock.invoice.onshipping',
++            'src_model': 'stock.picking.out',
++            'target': 'new',
++            'key2': 'client_action_multi',
++            'multi': True,
+         }
+ 
+ stock_picking_out()
+ 
++
+ class stock_return_picking(orm.TransientModel):
+     _inherit = 'stock.return.picking'
+ 
+-- 
+1.9.1
+

@@ -1,0 +1,87 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:		odoo
+# Required-Start:	$remote_fs $syslog
+# Required-Stop:	$remote_fs $syslog
+# Should-Start:		$network
+# Should-Stop:		$network
+# Default-Start:	2 3 4 5
+# Default-Stop:		0 1 6
+# Short-Description:	Enterprise Resource Management software
+# Description:		Open ERP is a complete ERP and CRM software.
+### END INIT INFO
+
+# Specify the user name (Default: openerp).
+USER="ubuntu"
+
+VERSION=7.0
+OERP_HOME=/home/${USER}/Projects/odoo_prod/odoo
+PATH=/sbin:/bin:/usr/sbin:/usr/bin:${OERP_HOME}
+DAEMON=${OERP_HOME}/openerp-server
+NAME=odoo-prod$VERSION
+DESC=odoo-prod$VERSION
+
+# Specify an alternate config file (Default: /etc/openerp-web.cfg).
+CONFIGFILE="/etc/odoo_prod.${VERSION}.conf"
+
+# pidfile
+PIDFILE=/var/run/$NAME.pid
+
+# logfile
+LOGFILE=/var/log/odoo_prod.${VERSION}/odoo.${VERSION}.log
+
+# Additional options that are passed to the Daemon.
+ADDONS_PATH="${OERP_HOME}/addons,${OERP_HOME}/../emm"
+# ADDONS_PATH="${OERP_HOME}/addons"
+# DAEMON_OPTS="--config=${CONFIGFILE} --addons-path=${ADDONS_PATH} --logfile=${LOGFILE} --load=web,via_web"
+DAEMON_OPTS="--config=${CONFIGFILE} --addons-path=${ADDONS_PATH} --logfile=${LOGFILE} --load=web"
+
+test -x ${DAEMON} || exit 0
+
+set -e
+
+case "${1}" in
+	start)
+		echo -n "Starting ${DESC}: "
+
+		start-stop-daemon --start --quiet --pidfile ${PIDFILE} \
+			--chuid ${USER} --background --make-pidfile \
+			--exec ${DAEMON} -- $DAEMON_OPTS
+
+		echo "${NAME}."
+		;;
+
+	stop)
+		echo -n "Stopping ${DESC}: "
+
+		start-stop-daemon --stop --quiet --pidfile ${PIDFILE} \
+			--oknodo
+
+		echo "${NAME}."
+		;;
+
+	restart|force-reload)
+		echo -n "Restarting ${DESC}: "
+
+		start-stop-daemon --stop --quiet --pidfile ${PIDFILE} \
+			--oknodo
+
+		sleep 1
+
+		start-stop-daemon --start --quiet --pidfile ${PIDFILE} \
+			--chuid ${USER} --background --make-pidfile \
+			--exec ${DAEMON} -- ${DAEMON_OPTS}
+
+		echo "${NAME}."
+		;;
+
+	*)
+		N=/etc/init.d/${NAME}
+		echo "Usage: ${NAME} {start|stop|restart|force-reload}" >&2
+		exit 1
+		;;
+esac
+
+exit 0
+

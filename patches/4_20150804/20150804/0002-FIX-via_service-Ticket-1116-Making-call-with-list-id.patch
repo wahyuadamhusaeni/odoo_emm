@@ -1,0 +1,122 @@
+From 807871fc6152ba63a0931591c0af6b6564e56486 Mon Sep 17 00:00:00 2001
+From: iwan <iwan.prasetya@infi-nity.com>
+Date: Wed, 29 Jul 2015 15:52:38 +0700
+Subject: [PATCH 2/2] [FIX:via_service] Ticket #1116: Making call with list
+ 'ids' arguments instead of integer 'ids'.
+
+---
+ via_service/service_fee.py     |  4 ++--
+ via_service/service_invoice.py |  2 +-
+ via_service/service_task.py    |  2 +-
+ via_service/spare_parts.py     | 16 ++++++++--------
+ 4 files changed, 12 insertions(+), 12 deletions(-)
+
+diff --git a/via_service/service_fee.py b/via_service/service_fee.py
+index 5597f01..3424062 100644
+--- a/via_service/service_fee.py
++++ b/via_service/service_fee.py
+@@ -40,7 +40,7 @@ class service_fee_wizard(orm.TransientModel):
+     #     service_fee = context.get('service_fee_id',[])
+     #     service_fee_ids = [service_fee_id[1] for service_fee_id in service_fee]
+     #     for service_fee in service_fee_ids:
+-    #         res = self.pool.get('service.request').write(cr, uid, context.get('active_id'), {'service_request': [(4, service_fee)]})
++    #         res = self.pool.get('service.request').write(cr, uid, [context.get('active_id')], {'service_request': [(4, service_fee)]})
+     #     return True
+ 
+     #this method will get service_fee_ids, change the service type to 'execute' and then link it with the service request document
+@@ -49,7 +49,7 @@ class service_fee_wizard(orm.TransientModel):
+         service_fee_ids = service_fee[0][2]
+         for service_fee in service_fee_ids:
+             self.pool.get('service.fee').write(cr, uid, service_fee, {'service_type': 'execute'}, context=context)
+-            res = self.pool.get('service.request').write(cr, uid, context.get('sr_id'), {'service_execute': [(4, service_fee)]}, context=context)
++            res = self.pool.get('service.request').write(cr, uid, [context.get('sr_id')], {'service_execute': [(4, service_fee)]}, context=context)
+ 
+             #create service invoice line based on service fee
+             service_fee_obj = self.pool.get('service.fee').browse(cr, uid, service_fee, context=context)
+diff --git a/via_service/service_invoice.py b/via_service/service_invoice.py
+index b7ebd96..5d931dd 100644
+--- a/via_service/service_invoice.py
++++ b/via_service/service_invoice.py
+@@ -117,7 +117,7 @@ class service_invoice(orm.TransientModel):
+             service_invoice_line_ids = self.pool.get('service.invoice.line').search(cr, uid, [('model','=',model),('document_id','=',service_fee)], context=context)
+             self.pool.get('service.invoice.line').write(cr, uid, service_invoice_line_ids, {'has_invoiced': True}, context=context)
+ 
+-        self.pool.get('service.request').write(cr, uid, context.get('active_id'), {'service_invoice': [(4, res)]}, context=context)
++        self.pool.get('service.request').write(cr, uid, [context.get('active_id')], {'service_invoice': [(4, res)]}, context=context)
+         return res
+ 
+ service_invoice()
+diff --git a/via_service/service_task.py b/via_service/service_task.py
+index b3caacf..d53181e 100644
+--- a/via_service/service_task.py
++++ b/via_service/service_task.py
+@@ -127,7 +127,7 @@ class service_task_wizard(orm.TransientModel):
+                     'user_id': employee.user_id.id,
+                 }
+                 new_id = self.pool.get('project.task').create(cr, uid, vals, context=context)
+-                res = self.pool.get('service.request').write(cr, uid, context.get('active_id'), {'service_task': [(4, new_id)]}, context=context)
++                res = self.pool.get('service.request').write(cr, uid, [context.get('active_id')], {'service_task': [(4, new_id)]}, context=context)
+                 # task_ids.append(res)
+ 
+             # user_id = self.pool.get('res.users').browse(cr, uid, employee_obj, context=context)
+diff --git a/via_service/spare_parts.py b/via_service/spare_parts.py
+index 47ac7a2..375535d 100644
+--- a/via_service/spare_parts.py
++++ b/via_service/spare_parts.py
+@@ -357,9 +357,9 @@ class spare_parts_wizard(orm.TransientModel):
+         }
+         # Link stock move into service request
+         for move_id in move_ids:
+-            self.pool.get('service.request').write(cr, uid, context.get('active_id'), {'spare_parts_planning_move': [(4, move_id)]}, context=context)
++            self.pool.get('service.request').write(cr, uid, [context.get('active_id')], {'spare_parts_planning_move': [(4, move_id)]}, context=context)
+         # Link stock picking created into service request
+-        res = self.pool.get('service.request').write(cr, uid, context.get('active_id'), {'spare_parts_planning': [(0, 0, vals)]}, context=context)
++        res = self.pool.get('service.request').write(cr, uid, [context.get('active_id')], {'spare_parts_planning': [(0, 0, vals)]}, context=context)
+         return res
+ 
+     # This method is used to create a new stock move based on the selected stock move and create new stock picking,
+@@ -414,11 +414,11 @@ class spare_parts_wizard(orm.TransientModel):
+             self.pool.get('stock.picking').action_assign(cr, uid, [new_picking], (context))
+ 
+             #link stock picking created into service request
+-            res = self.pool.get('service.request').write(cr, uid, context.get('active_id'), {'spare_parts_planning': [(4, new_picking)]}, context=context)
++            res = self.pool.get('service.request').write(cr, uid, [context.get('active_id')], {'spare_parts_planning': [(4, new_picking)]}, context=context)
+ 
+         #link stock move into service request
+         for move_id in move_ids:
+-            self.pool.get('service.request').write(cr, uid, context.get('active_id'), {'spare_parts_planning_move': [(4, move_id)]}, context=context)
++            self.pool.get('service.request').write(cr, uid, [context.get('active_id')], {'spare_parts_planning_move': [(4, move_id)]}, context=context)
+         return res
+ 
+     def create_pickup_print(self, cr, uid, ids, context=None):
+@@ -497,11 +497,11 @@ class spare_parts_wizard(orm.TransientModel):
+         self.pool.get('stock.picking').action_assign(cr, uid, [new_picking], (context))
+ 
+         #link stock picking created into service request
+-        res = self.pool.get('service.request').write(cr, uid, context.get('active_id'), {'spare_parts_consume': [(4, new_picking)]}, context=context)
++        res = self.pool.get('service.request').write(cr, uid, [context.get('active_id')], {'spare_parts_consume': [(4, new_picking)]}, context=context)
+ 
+         #link stock move into service request
+         for move_id in move_ids:
+-            self.pool.get('service.request').write(cr, uid, context.get('active_id'), {'spare_parts_consume_move': [(4, move_id)]}, context=context)
++            self.pool.get('service.request').write(cr, uid, [context.get('active_id')], {'spare_parts_consume_move': [(4, move_id)]}, context=context)
+ 
+         #pop up the delivery wizard
+         self.pool.get('stock.picking').write(cr, uid, [new_picking], {'ready_for_transfer': True}, context=context)
+@@ -559,11 +559,11 @@ class spare_parts_wizard(orm.TransientModel):
+             self.pool.get('stock.picking').action_assign(cr, uid, [new_picking], (context))
+ 
+             #link stock picking created into service request
+-            res = self.pool.get('service.request').write(cr, uid, context.get('active_id'), {'spare_parts_planning': [(4, new_picking)]}, context=context)
++            res = self.pool.get('service.request').write(cr, uid, [context.get('active_id')], {'spare_parts_planning': [(4, new_picking)]}, context=context)
+ 
+         # Link stock move into service request
+         for move_id in move_ids:
+-            self.pool.get('service.request').write(cr, uid, context.get('active_id'), {'spare_parts_planning_move': [(4, move_id)]}, context=context)
++            self.pool.get('service.request').write(cr, uid, [context.get('active_id')], {'spare_parts_planning_move': [(4, move_id)]}, context=context)
+         return res
+ 
+     def stock_by_location(self, cr, uid, ids, context=None):
+-- 
+1.9.1
+

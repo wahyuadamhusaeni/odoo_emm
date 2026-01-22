@@ -1,0 +1,56 @@
+From 33dcc247f6f5392821ad9ef5350ed1b3674c0886 Mon Sep 17 00:00:00 2001
+From: Ivan Wirawan <ivan.wirawan@infi-nity.com>
+Date: Wed, 13 May 2015 14:10:09 +0700
+Subject: [PATCH 3/4] [FIX:via_lot_valution] Ticket #856, improve handling of
+ Journal Items with 0.0 value.
+
+---
+ via_lot_valuation/__openerp__.py    | 2 +-
+ via_lot_valuation/doc/ChangeLog.txt | 3 +++
+ via_lot_valuation/stock.py          | 4 ++--
+ 3 files changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/via_lot_valuation/__openerp__.py b/via_lot_valuation/__openerp__.py
+index eb3237e..5e16b52 100644
+--- a/via_lot_valuation/__openerp__.py
++++ b/via_lot_valuation/__openerp__.py
+@@ -21,7 +21,7 @@
+ 
+ {
+     'name': 'Lot Valuation',
+-    'version': '1.44',
++    'version': '1.44.1',
+     'category': 'Warehouse Management',
+     'complexity': 'normal',
+     'description': """
+diff --git a/via_lot_valuation/doc/ChangeLog.txt b/via_lot_valuation/doc/ChangeLog.txt
+index 0ac822d..625a2be 100644
+--- a/via_lot_valuation/doc/ChangeLog.txt
++++ b/via_lot_valuation/doc/ChangeLog.txt
+@@ -199,3 +199,6 @@
+     * FIX: Remove _refund_cleanup_lines inheritance in account.invoice as the parent has properly handles many2one fields
+     * ADD: Remove the valuation_journal_id field and make use of res.company's default_journal instead.
+     * FIX: Position of Cost Price Per Unit in stock.production.lot form view
++
++1.44.1 --> Mar 31, 2015 : Vikasa Infinity Anugrah, PT
++    * FIX: Enhance _create_account_move_line to better handle move lines with 0.0 value.
+diff --git a/via_lot_valuation/stock.py b/via_lot_valuation/stock.py
+index 2ebda09..0e57ee8 100644
+--- a/via_lot_valuation/stock.py
++++ b/via_lot_valuation/stock.py
+@@ -267,10 +267,10 @@ class stock_move(orm.Model):
+ 
+             new_amount = _cppu * move.product_qty
+             for acc_move in result:
+-                if acc_move[2].get('debit', 0.0):
++                if 'debit' in acc_move[2]:
+                     acc_move[2].update({'debit': new_amount})
+ 
+-                if acc_move[2].get('credit', 0.0):
++                if 'credit' in acc_move[2]:
+                     acc_move[2].update({'credit': new_amount})
+ 
+                 # Propagate the production lot information
+-- 
+1.9.1
+

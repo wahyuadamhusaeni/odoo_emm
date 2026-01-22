@@ -1,0 +1,29 @@
+From 6fc2e815c7bad22ed0d191907e8ad17e763a5695 Mon Sep 17 00:00:00 2001
+From: iwan <iwan.prasetya@infi-nity.com>
+Date: Wed, 29 Jul 2015 14:15:52 +0700
+Subject: [PATCH 1/2] [FIX:via_approval_message] Ticket #1115: Proper handling
+ of integer 'ids' argument.
+
+---
+ via_approval_message/approval_message.py | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/via_approval_message/approval_message.py b/via_approval_message/approval_message.py
+index 04add93..6ab366f 100644
+--- a/via_approval_message/approval_message.py
++++ b/via_approval_message/approval_message.py
+@@ -47,6 +47,11 @@ class approval_list(orm.Model):
+     _inherit = 'approval.list'
+ 
+     def write_obj(self, cr, uid, ids, model, vals, old_value=None, new_value=None, context=None):
++        if not isinstance(ids, (list, tuple)):
++            ids = [ids]
++        else:
++            pass
++
+         approval_list_ids = self.pool.get('approval.list').search(cr, uid, [('doc_id', 'in', ids), ('model', 'in', model)], context=context)
+         for approval in self.pool.get('approval.list').browse(cr, uid, approval_list_ids, context=context):
+             locals_dict = get_local_dict(self, cr, uid, approval.doc_id, approval.model.id, context=context)
+-- 
+1.9.1
+

@@ -1,0 +1,25 @@
+From d3e832ac9c0f4e108aaa966cae679f811b7e583b Mon Sep 17 00:00:00 2001
+From: Ivan Wirawan <ivan.wirawan@infi-nity.com>
+Date: Fri, 13 Mar 2015 11:06:31 +0700
+Subject: [PATCH 2/2] [FIX:via_approval_stock] Set approval_data.xml to be
+ non-update.
+
+---
+ via_approval_stock/approval_data.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/via_approval_stock/approval_data.xml b/via_approval_stock/approval_data.xml
+index 33aa5ac..fb7e54a 100644
+--- a/via_approval_stock/approval_data.xml
++++ b/via_approval_stock/approval_data.xml
+@@ -1,6 +1,6 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <openerp>
+-    <data noupdate="0">
++    <data noupdate="1">
+ 
+         <!-- ############################################################################# -->
+         <!--                               Approval Items                                  -->
+-- 
+1.9.1
+
