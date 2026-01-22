@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <!-- Cost Revaluation -->
+        <record model="ir.ui.view" id="cost_revaluation_form_view">
+            <field name="name">cost.revaluation.form</field>
+            <field name="model">cost.revaluation</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Cost Revaluation">
+                    <group colspan="4" col="6">
+                        <field name="date"/>
+                        <field name="invoice_id"/>
+                        <field name="company_id"/>
+                    </group>
+                    <group colspan="4">
+                        <separator colspan="4" string="Memo"/>
+                        <field name="memo" nolabel="1" colspan="4"/>
+                        <separator colspan="4" string="Revaluation Items"/>
+                        <field name="inv_line_ids" nolabel="1" colspan="4" readonly="1"/>
+                    </group>
+                    <group colspan="2" col="2">
+                        <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+                        <button name="get_valuation_create" string="Schedule" icon="gtk-apply" type="object"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <!-- Cost Revaluation Invoice Items -->
+        <record model="ir.ui.view" id="invoice_item_tree">
+            <field name="name">invoice.item.tree</field>
+            <field name="model">invoice.item</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Cost Revaluation">
+                     <field name="product_id"/>
+                     <field name="lot_id"/>
+                     <field name="qty"/>
+                     <field name="uom_id"/>
+                     <field name="cost_price"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Action Link for the valuation wizard -->
+        <act_window id="action_cost_revaluation"
+            name="Cost Revaluation"
+            res_model="cost.revaluation" src_model="account.invoice"
+            view_mode="form" target="new" view_type="form"
+            groups="account.group_account_invoice,account.group_account_user,account.group_account_manager"/>
+     </data>
+</openerp>

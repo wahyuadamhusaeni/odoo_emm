@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<openerp>
+<data>
+    <record id="view_partner_params_form" model="ir.ui.view">
+        <field name="name">Partner - Parameter Addition</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <notebook>
+                <page string="References" position="inside">
+                    <field colspan="4" mode="tree" name="partner_info" nolabel="1">
+                        <tree string="" editable="bottom">
+                            <field name="parameter_id"/>
+                            <field name="value"/>
+                        </tree>
+                    </field>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</data>
+</openerp>

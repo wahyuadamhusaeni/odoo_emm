@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_account_tax_form_inherit_form">
+            <field name="name">VIA Tax Form - Account Tax Form View</field>
+            <field name="inherit_id" ref="account.view_tax_form"/>
+            <field name="model">account.tax</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="/form[@string='Account Tax']/notebook/page[@string='Tax Definition']/group/group[@string='Invoices']/field[@name='tax_sign']" position="after">
+                    <field name="tax_category"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

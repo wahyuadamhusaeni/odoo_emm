@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+    <record id="tree_view_via_purchase_quotation_report_qcf" model="ir.ui.view">
+      <field name="name">QCF (Tree View)</field>
+      <field name="model">qcf</field>
+      <field name="type">tree</field>
+      <field name="arch" type="xml">
+        <tree string="PRs and Suppliers">
+          <field name="pr_id" readonly="True"/>
+          <field name="supplier_id" readonly="True"/>
+          <field name="po_id" readonly="True"/>
+        </tree>
+      </field>
+    </record>
+
+    <record id="form_view_via_purchase_quotation_report" model="ir.ui.view">
+      <field name="name">Quotation Report (Form View)</field>
+      <field name="model">via.jasper.report</field>
+      <field name="type">form</field>
+      <field name="inherit_id" ref="via_jasper_report_utils.via_jasper_report_main_form_view"/>
+      <field name="arch" type="xml">
+        <field name="company_ids" position="after">
+          <field name="qcf_ids" colspan="4" invisible="1"/>
+        </field>
+      </field>
+    </record>
+
+    <!-- Actions -->
+    <!-- The following action will open the report wizard so that the user
+         can select the desired output format. The available formats have
+         been defined above.
+         For the following record, when you copy-paste, you only need to
+         adjust the record id and the id of the report entry specified within
+         the searches and within the eval attribute for field value -->
+    <record id="action_via_purchase_quotation_report"
+            model="ir.actions.act_window">
+      <field name="name">QCF</field>
+      <field name="res_model">via.jasper.report</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">form</field>
+      <field name="view_id" ref="via_purchase_jasper_reports.form_view_via_purchase_quotation_report"/>
+      <field name="context">{'via_jasper_report_utils.rpt_name': 'Quotation Comparison'}</field>
+      <field name="target">new</field>
+    </record>
+
+    <record id="actval_via_purchase_quotation_report"
+            model="ir.values">
+      <field name="object" eval="True"/>
+      <field name="name"
+             model="ir.actions.report.xml"
+             search="[('id', '=', report_via_purchase_quotation_report)]"
+             use="name" />
+      <field name="model"
+             model="ir.actions.report.xml"
+             search="[('id', '=', report_via_purchase_quotation_report)]"
+             use="model" />
+      <field name="key">action</field>
+      <field name="key2">client_print_multi</field>
+      <field name="value"
+             eval="'ir.actions.act_window,' + str(action_via_purchase_quotation_report)" />
+    </record>
+    <!-- End of Actions -->
+  </data>
+</openerp>

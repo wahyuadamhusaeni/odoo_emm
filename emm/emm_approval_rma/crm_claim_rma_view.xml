@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<openerp>
+<data>
+
+<record id="crm_claim_form_approval" model="ir.ui.view">
+    <field name="name">CRM Claim Form Approval</field>
+    <field name="model">crm.claim</field>
+    <field name="inherit_id" ref="emm_claim_rma.return_claims_form_view"/>
+    <field name="arch" type="xml">
+        <field name="name" position="before">
+            <field name="auto_approval_func" invisible="1"/>
+            <field name="auto_approval" invisible="1"/>
+        </field>
+        <notebook position="inside">
+            <page string="Approval" groups="base.group_user">
+                <separator colspan="4" string="Approval List"/>
+                <group col="4" colspan="4">
+                    <field name="approval_list" nolabel="1">
+                        <tree string="Approval List" editable="bottom">
+                            <field name="approval_items_id" on_change="approval_items_id_change(approval_items_id)" domain="[('model','=','crm.claim')]"/>
+                            <field name="description"/>
+                            <field name="approver" invisible="1"/>
+                            <field name="user" invisible="1"/>
+                            <field name="approver_user_show" attrs="{'readonly': [('approver_user','!=',False)]}" class="oe_highlight" on_change="approval_user_show_change(approver_user_show)" domain="[('id','in',user[0][2])]"/>
+                            <field name="approver_user" invisible="1" on_change="approval_user_change(approver_user)"/>
+                            <field name="visibility" invisible="1"/>
+                            <field name="state"/>
+                            <field name="user_filter"/>
+                            <button name="approve" icon="gtk-apply" string="Approve" type="object" attrs="{'invisible': ['|',('visibility','=',False),('state','in',['na','approved','reject','ignore'])]}"/>
+                            <button name="reject" icon="gtk-cancel" string="Reject" type="object" attrs="{'invisible': ['|',('visibility','=',False),('state','in',['na','approved','reject','ignore'])]}"/>
+                            <button name="ignore" icon="gtk-close" string="Ignore" type="object" groups="via_approval.approval_super_user"/>
+                            <button name="view" icon="gtk-find" string="View" type="object"/>
+                        </tree>
+                    </field>
+                </group>
+            </page>
+        </notebook>
+    </field>
+</record>
+
+</data>
+</openerp>

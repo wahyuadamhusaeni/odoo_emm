@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="base_revision_history_tree_view" model="ir.ui.view">
+            <field name="name">Sale Order Revision History Base Tree View</field>
+            <field name="model">sale.revision.history</field>
+            <field name="arch" type="xml">
+                <tree string="Revision History">
+                    <field name="order_id" invisible="1"/>
+                    <field name="rev_num"/>
+                    <field name="create_date"/>
+                    <field name="create_uid"/>
+                    <field name="description"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="base_revision_history_form_view" model="ir.ui.view">
+            <field name="name">Sale Order Revision History Base Form View</field>
+            <field name="model">sale.revision.history</field>
+            <field name="arch" type="xml">
+                <form string="Revision History" version="7.0">
+                    <group col="6">
+                        <group>
+                            <field name="order_id" invisible="1"/>
+                            <field name="rev_num" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="create_uid"/>
+                        </group>
+                        <group>
+                            <field name="create_date"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="description"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="emm_sales_enhancement_sale_order_form_view" model="ir.ui.view">
+            <field name="name">Sale Order View Enhancement from emm_sales_enhancements</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="attributes">
+                   <attribute name="on_change">onchange_partner_id(partner_id, context)</attribute>
+               </field>
+                <xpath expr="//form/sheet/group/group/field[@name='currency_id']" position="after">
+                    <label for="rev_num"/>
+                    <div>
+                        <field name="rev_num" class="oe_inline"/>
+                        <button name="%(action_add_rev_history)d" string="Add Revision Note" type="action" class="oe_link"/>
+                    </div>
+                    <field name="rev_date"/>
+                </xpath>
+                <notebook>
+                    <page string="Revision Notes">
+                        <field name="revision_history" readonly="1" view_mode="tree"/>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+    </data>
+</openerp>

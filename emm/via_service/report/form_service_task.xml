@@ -1,0 +1,698 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data noupdate="1">
+        <record id="via_webkit_form_srm" model="via.form.templates">
+            <field name="name">Work Order</field>
+            <field name="model_id" ref="project.model_project_task"/>
+            <field eval="False" name="company_id"/>
+            <field name="tags"><![CDATA[]]></field>
+            <field name="engine">mako</field>
+            <field name="webkit_header" ref="via_report_webkit.ir_header_webkit_plain_a4p"/>
+            <field name="template"><![CDATA[
+                        <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+        <html>
+        <!--
+        ##############################################################################################################################################
+                                                                    CSS STYLE AND STATEMENTS
+        ##################################################################################################################################################
+        -->
+        <!-- Import library python yang dibutuhkan di sini -->
+        <%from math import log10%>
+        <%from math import fmod%>
+        <%import re%>
+        <%import textwrap%>
+
+        <!--KONFIGURASI untuk menentukan layout HTML dari formulir-->
+        <%font_size = 12%>                                    <!--Ukuran tulisan yang digunakan secara umum, dapat di-override apabila font-size juga ditentukan pada setiap tr atau td-->
+        <%page_width = 397%>                             <!--Lebar formulir yang umum digunakan sebagai lebar tabel utama-->
+        <%label = round(17*page_width)%>
+        <%point_two = round(1*page_width)%>
+        <%val_left = round(52*page_width)%>
+        <%val_right = round(19*page_width)%>
+
+        <!-- lebar untuk table data/td  kategori ke 2-->
+        <%gen_label_left = round(15*page_width)%>
+        <%gen_label_right = round(10*page_width)%>
+        <%gen_val_left = round(54*page_width)%>
+        <%gen_val_right = round(19*page_width)%>
+        <%limit_char = 69 %>
+
+        <head>
+        <style type="text/css">
+            body {
+                font-size: ${font_size | entity}px;
+                font-family: 'Sans-Serif';
+            }
+
+            table {
+                padding: 6px;
+                text-align: left;
+                border-spacing: 1pt;
+                width: 100%;
+            }
+
+            table td {
+                padding: 2px;
+            }
+
+            .table_header_con {
+                padding: 2px;
+                text-align: left;
+                border-spacing: 1pt;
+                width: 100%;
+                border-collapse: collapse;
+            }
+
+            .middle {
+                vertical-align:middle;
+            }
+
+            .middle_top {
+                vertical-align:top;
+            }
+
+            .main_table {
+                border: 0px;
+                height: 700px;
+                width: 670px;
+                border-collapse: collapse;
+            }
+
+            .inner_table {
+                border: 1px solid black;
+                height: 260px;
+                width: 325px;
+            }
+
+             table.tail {
+                height: 5px;
+                text-align: left;
+                vertical-align: top;
+                font-size: 12px;
+                font-family: Sans-Serif;
+                padding-left: 0px;
+                padding-right: 0px;
+                padding-top: 0px;
+                padding-bottom: 0px;
+                border-spacing: 0px;
+                border-collapse: collapse;
+                table-layout:fixed;
+        }
+
+            td.tail_audit {
+                    height: 5px;
+                    text-align: left;
+                    vertical-align: bottom;
+                    font-size: 9px;
+                    font-family: Sans-Serif;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                    word-wrap:break-word;
+                    padding-left: 0px;
+                    padding-right: 0px;
+                    padding-top: 0px;
+                    padding-bottom: 0px;
+            }
+
+            td.tail_page {
+                    height: 5px;
+                    text-align: right;
+                    vertical-align: bottom;
+                    font-size: 9px;
+                    font-family: Sans-Serif;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                    word-wrap:break-word;
+                    padding-left: 0px;
+                    padding-right: 0px;
+                    padding-top: 0px;
+                    padding-bottom: 0px;
+            }
+
+            .middle_td {
+                height: 140px;
+            }
+
+            .manual_td {
+                height: 222px;
+            }
+
+            .center {
+                text-align: center;
+            }
+
+            .border {
+                border-left: 1px solid black;
+                border-right: 1px solid black;
+                border-top: 1px solid black;
+                border-bottom: 1px solid black;
+                text-align: justify;
+                line-height:1.5;
+            }
+
+            .border_left {
+                border-left: 1px solid white;
+                border-bottom: 1px solid black;
+            }
+
+            .border_right {
+                border-right: 1px solid white;
+                border-bottom: 1px solid black;
+            }
+
+            .border_bottom {
+                border-bottom: 1px solid white;
+            }
+
+            .border_top {
+                border-top: 1px solid white;
+            }
+
+            .height_std {
+                height: 15px;
+            }
+
+            .height_space_banner{
+                height: 1px;
+                width: 25%;
+            }
+
+            .left {
+                text-align: left;
+            }
+
+            .right {
+                text-align: right;
+            }
+
+            .logo_td {
+                width: 64px;
+            }
+
+            .address_td {
+                width: 100%;
+            }
+
+            .inner_td {
+                width: 321px;
+            }
+
+            .picture_box {
+                /*
+                width: 80px;
+                height: 123px;
+                */
+                width: 76px;
+                height: 113px;
+            }
+
+            .picture_box img {
+                height: 113px;
+                width: auto;
+            }
+
+            .picture_box img {
+                height: auto;
+                width: 76px;
+            }
+
+            .picture_box div {
+                height: 100%;
+                width: 100%;
+                border: 1px solid black;
+            }
+
+            .box {
+                border: 1px solid black;
+            }
+
+            .bold {
+                font-weight: bold;
+            }
+
+            .label {
+                width: 63px;
+            }
+
+            .colon {
+                width: 13px;
+            }
+
+            .value {
+                width: auto;
+            }
+
+            .trade_mark {
+                margin: 0px;
+                padding: 0px;
+            }
+
+            .copy {
+                text-align: right;
+                font-size: 10px;
+            }
+
+            .checkbox {
+                width: 15px;
+                height: 8px;
+                line-height:1;
+                padding-bottom: 0;
+                padding-top: 0;
+                font-size: 10px;
+                text-align: center;
+            }
+
+            .foot_note {
+                font-size: 8px;
+                text-align: right;
+            }
+
+            .address_banner {
+                font-size: 12px;
+                text-align: right;
+            }
+            .label_form {
+                vertical-align: bottom;
+            }
+            .label {
+                width: ${label}px;
+            }
+            .point_two {
+                width: ${point_two}px;
+            }
+            .val_left {
+                width: ${val_left}px;
+            }
+            .val_right {
+                width: ${val_right}px;
+            }
+            .gen_label_left {
+                width: ${gen_label_left}px;
+            }
+            .gen_label_right {
+                width: ${gen_label_right}px;
+            }
+            .gen_val_left {
+                width: ${gen_val_left}px;
+            }
+            .gen_val_right {
+                width: ${gen_val_right}px;
+            }
+        </style>
+        </head>
+
+        <!--################################################################################################################################################
+                                                                         DEKLARASI VARIABEL
+        ####################################################################################################################################################-->
+        <!--Proses semua dokumen satu per satu-->
+        <%records = len(objects)%>
+        <%total_page = records%>
+        <%jumlah = 0%>
+        <%identifier = 0%>
+        <%max_note_chars = 110%>                            <!--Jumlah maksimum karakter per baris untuk Notes -->
+        <%max_note_lines = 4%>                              <!--Jumlah maksimum baris untuk Notes yang multi-line -->
+        <%max_addr_chars = 67%>                            <!--Jumlah maksimum karakter per baris untuk Address -->
+        <%max_addr_lines = 2%>                              <!--Jumlah maksimum baris untuk Address yang multi-line -->
+
+        <%list_line_1 = []%>
+        <%list_line_2 = []%>
+        <%idx = 0%>
+        <%total_str = 0 %>
+        <%wrap_char = 60 %>
+        %for spk in objects :
+            <%counter = 0%>
+            <%start_from = 0%>
+            <%limit = 3%>
+            <%increment = limit%>
+            <%identifier += 1%>
+            <%svc_obj = spk.task_task and spk.task_task[0] %>
+            <%contact = ['contact']%>
+
+        <!--##################################################################################################################################################
+                                                                    PROCESSING LOGIC JUMLAH DOKUMEN YANG DICETAK
+        ####################################################################################################################################################-->
+            <!--Menentukan jumlah dokumen yang akan dicetak-->
+            %if (jumlah  >= limit):
+                <p style="page-break-after:always;"></p><br/><br/>
+                <%jumlah = 1%>
+            %else:
+                <%jumlah +=1%>
+            %endif
+        <!--
+        ##################################################################################################################################################
+
+        ####################################################################################################################################################
+        -->
+        <!--pengaturan body dan tabel formulir-->
+        <body>
+        <!-- Bagian tabel seluruh -->
+        <table class="main_table">
+            <tbody>
+                <tr>
+                    <td class="middle bold label_form  height_std" colspan="3">
+                    <i>LAPORAN KUNJUNGAN PURNA JUAL</i>
+                    </td>
+                    <td class="middle right height_std" colspan="3">
+                    <b>${spk.company_id and spk.company_id.name or ''|entity}</b><br>
+                    <div class="address_banner">
+                    ${spk.company_id and spk.company_id.street or ''|entity}<br>
+                    ${spk.company_id and spk.company_id.partner_id.street2 or ''|entity} <br>
+                    ${spk.company_id and spk.company_id.city or ''|entity} - ${spk.company_id and spk.company_id.zip or ''|entity}<br>
+                    t: ${spk.company_id and spk.company_id.partner_id and spk.company_id.partner_id.phone or '' |entity} f: ${spk.company_id and spk.company_id.partner_id and spk.company_id.partner_id.fax or '' |entity}
+                    </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="middle border border_left border_bottom border_right" colspan="3">
+                    </td>
+                    <td class="middle border border_left border_right border_bottom height_space_banner">
+                    </td>
+                    <td class="middle border_right border_bottom">
+                    </td>
+                    <td class="middle border border_bottom border_right">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="middle bold height_std" colspan="3">
+                    <b>Informasi Permintaan</b>
+                    <br>
+                    </td>
+                    <td class="middle right height_std" colspan="3">
+                    <b>No. Laporan</b> &nbsp; ${spk.task_task and spk.task_task[0].name or '' |entity}
+                    <br>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="middle border" colspan="6">
+                        <table class="table_header_con">
+                            <tr>
+                                <td class="middle border_bottom border_top border_left border_right height_std label">
+                                Kontak
+                                </td>
+                                <td class="middle border_bottom border_top border_left border_right point_two">
+                                :
+                                </td>
+                                <td class="middle border border_bottom border_top border_left border_right height_std val_left">
+                                <%kontak = spk.task_task and spk.task_task[0] and spk.task_task[0].partner and spk.task_task[0].partner.name or '' %>
+                                %if spk.task_task and spk.task_task[0] and spk.task_task[0].partner and spk.task_task[0].partner.type in contact:
+                                    ${kontak[:wrap_char]}
+                                %else:
+                                    ${kontak[:wrap_char]}
+                                %endif
+                                </td>
+                                <td class="middle border_bottom border_top border_left border_right height_std label">
+                                Tanggal
+                                </td>
+                                <td class="middle border_bottom border_top border_left border_right point_two">
+                                :
+                                </td>
+                                <td class="middle border_bottom border_top border_left border_right height_std val_right">
+                                    ${spk.date_start and formatDate(spk.date_start, format='%d %b %Y') or '' | n}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="middle border_bottom border_top border_left border_right height_std">
+                                Perusahaan
+                                </td>
+                                <td class="middle border_bottom border_top border_left border_right">
+                                :
+                                </td>
+                                <td class="middle border border_bottom border_top border_left border_right height_std">
+                                ${spk.task_task and spk.task_task[0] and spk.task_task[0].partner and spk.task_task[0].partner.name or ''|entity}
+                                </td>
+                                <td class="middle border_bottom border_top border_left border_right">No. Serial</td>
+                                <td class="middle border_bottom border_top border_left border_right">:</td>
+                                <td class="middle border_bottom border_top border_left border_right">${spk.task_task and spk.task_task[0].serial_number and spk.task_task[0].serial_number.name or ''|entity}</td>
+                            </tr>
+                            <tr>
+                                <td class="middle border_top border_left border_right height_std">
+                                Telp / Mobile
+                                </td>
+                                <td class="middle border_top border_left border_right">
+                                :
+                                </td>
+                                <td class="middle border border_top border_left border_right height_std">
+                                ${spk.task_task and spk.task_task[0] and spk.task_task[0].partner and spk.task_task[0].partner.phone or ''|entity} &nbsp;
+                                <%mobile = spk.task_task and spk.task_task[0] and spk.task_task[0].partner and spk.task_task[0].partner.mobile or ''%>
+                                %if mobile:
+                                    <%mobile = '/ ' + mobile %>
+                                %else:
+                                    <%mobile = mobile %>
+                                %endif
+                                ${mobile |entity}
+                                </td>
+                                <td class="middle">Nama Produk</td>
+                                <td class="middle">:</td>
+                                <td class="middle">${spk.task_task and spk.task_task[0] and spk.task_task[0].product_id and spk.task_task[0].product_id.name or ''|entity}</td>
+                            </tr>
+                            <tr>
+                                <td class="middle_top height_std">
+                                Lokasi Pelaksanaan<br>
+                                </td>
+                                <td class="middle_top">
+                                    :
+                                </td>
+                                <td class="middle_top height_std" colspan="4">
+                                <%list_str = [spk.task_task and spk.task_task[0] and spk.task_task[0].partner and spk.task_task[0].partner.street or '', spk.task_task and spk.task_task[0] and spk.task_task[0].partner and spk.task_task[0].partner.street2 or '', spk.task_task and spk.task_task[0] and spk.task_task[0].partner and spk.task_task[0].partner.city or '', spk.task_task and spk.task_task[0] and spk.task_task[0].partner and spk.task_task[0].partner.zip or '']%>
+                                <%len_str = [len(spk.task_task and spk.task_task[0] and spk.task_task[0].partner and spk.task_task[0].partner.street or ''), len(spk.task_task and spk.task_task[0] and spk.task_task[0].partner and spk.task_task[0].partner.street2 or ''), len(spk.task_task and spk.task_task[0] and spk.task_task[0].partner and spk.task_task[0].partner.city or ''), len(spk.task_task and spk.task_task[0] and spk.task_task[0].partner and spk.task_task[0].partner.zip or '')]%>
+                                %for item in list_str:
+                                    <%total_str += len(item) %>
+                                    %if total_str > limit_char:
+                                        <%list_line_2.append(list_str[idx])%>
+                                    %else:
+                                        <%list_line_1.append(list_str[idx])%>
+                                    %endif
+                                    <%idx +=1%>
+                                %endfor
+                                <% line1 = ','.join(list_line_1)%>
+                                ${line1}
+                                <br>
+                                <% line2 = ','.join(list_line_2)%>
+                                ${line2}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="middle border border_bottom border_right height_std">
+                    <b>Perihal/Permasalahan</b>
+                    </td>
+                    <td class="middle border_bottom border_right">
+                    </td>
+                    <td class="middle border_bottom border" colspan="4">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="middle_top border middle_td" colspan="6">
+                    <% _notes_line = [] %>
+                    %for line in (spk.task_task and spk.task_task[0].description or '').splitlines():
+                    <% _notes_line.extend(textwrap.wrap(line, max_note_chars)) %>
+                    %endfor
+
+                    %for line in _notes_line[:max_note_lines]:
+                        ${line | entity}<br/>
+                    %endfor
+                    </td>
+                </tr>
+                <tr>
+                    <td class="middle bold height_std" colspan="3">
+                    <b>Catatan Tindakan</b>
+                    <br>
+                    </td>
+                    <td class="middle border border_left border_right right" colspan="3"><b>No. Penugasan </b>: ${spk.id or ''|entity}</td>
+                </tr>
+                <tr>
+                    <td class="middle border" colspan="6">
+                    <table class="table_header_con">
+                            <tr>
+                                <td class="middle height_std label">
+                                Dilaksanakan Oleh &nbsp;&nbsp;&nbsp;:
+                                </td>
+                                <td class="middle height_std val_left">
+                                <%name_user = spk.user_id and spk.user_id.name or '' %>
+                                ${name_user[:wrap_char]}
+                                </td>
+                                <td class="middle point_two">
+                                </td>
+                                <td class="middle height_std label">
+                                Tanggal
+                                </td>
+                                <td class="middle border_bottom border_top border_left border_right point_two">
+                                :
+                                </td>
+                                <td class="middle border_bottom border_top border_left border_right height_std val_right">
+                                   ${spk.date_start and formatDate(spk.date_start, format='%d %b %Y') or '' | n}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="middle border border_bottom" colspan="6">
+                        <table class="table_header_con">
+                            <tr>
+                                <td class="middle border_bottom border_top border_left border_right height_std label">
+                                <b>Tindakan</b>
+                                </td>
+                                <td class="middle border_bottom border_top border_left border_right point_two">
+                                </td>
+                                <td class="middle border_bottom border_top border_left height_std val_left">
+                                </td>
+                                <td class="middle border_bottom border_top border_left border_right height_std label">
+                                </td>
+                                <td class="middle border_bottom border_top border_left border_right point_two">
+                                </td>
+                                <td class="middle border_bottom border_top border_left border_right height_std val_right">
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="middle border border_bottom manual_td middle_top" colspan="6">
+                    <% _notes_line_2 = [] %>
+                    %for line_2 in (spk.description or '').splitlines():
+                    <% _notes_line_2.extend(textwrap.wrap(line_2, max_note_chars)) %>
+                    %endfor
+
+                    %for line_2 in _notes_line_2[:max_note_lines]:
+                        ${line_2 | entity}<br/>
+                    %endfor
+                    </td>
+                </tr>
+                <tr>
+                    <td class="middle border border_right" colspan="3">
+                        &nbsp;
+                    </td>
+                    <td class="middle border foot_note" colspan="3">
+                    </td>
+                </tr>
+                <tr>
+                <td class="middle border border_bottom" colspan="6">
+                        <table class="table_header_con">
+                            <tr>
+                                <td class="middle border_bottom border_top border_left border_right height_std label">
+                                Dokumen terlampir
+                                </td>
+                                <td class="middle border_bottom border_top border_left border_right point_two">:
+                                </td>
+                                <td class="middle border_bottom border_top height_std val_left">
+                                <table class="table_header_con">
+                                    <tr>
+                                        <td class="middle center border checkbox">
+                                            %if len(spk.task_task and spk.task_task[0] and spk.task_task[0].spare_parts_planning_move and spk.task_task[0].spare_parts_planning_move) > 0:
+                                                ${"V"}
+                                            %else:
+                                                ${}
+                                            %endif
+                                        </td>
+                                        <td class="middle">Sparepart</td>
+                                        <td class="middle center border checkbox">
+                                            %if len(spk.task_task and spk.task_task[0] and spk.task_task[0].service_invoice and spk.task_task[0].service_invoice) > 0:
+                                                ${"V"}
+                                            %else:
+                                                ${}
+                                            %endif
+                                        </td>
+                                        <td class="middle">Tanda Terima Sementara</td>
+                                    </tr>
+                                </table>
+                                </td>
+                                <td class="middle border_bottom border_top height_std label">
+                                </td>
+                                <td class="middle border_bottom border_top height_std point_two">
+                                </td>
+                                <td class="middle border_bottom border_top height_std val_right">
+                                </td>
+                            </tr>
+                        </table>
+                </td>
+                </tr>
+                <tr>
+                <td class="middle border" colspan="6">
+                        <table class="table_header_con">
+                            <tr>
+                                <td class="middle border_bottom border_top border_right height_std label" colspan="6">
+                                Administrasi&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: &nbsp;
+                                ${spk.task_task and spk.task_task[0].partner_assign and spk.task_task[0].partner_assign.name or '' |entity}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                <table>
+                    <tr>
+                    <td class="middle height_std" colspan="2"><br>
+                    Disetujui Oleh :<br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <%nama_setujui = spk.task_task and spk.task_task[0].partner_assign and spk.task_task[0].partner_assign.name or ''%>
+                    Nama: ${nama_setujui[:wrap_char]}
+                    <br>
+                    Tgl: ${spk.task_task and spk.task_task[0].date and formatDate(spk.task_task[0].date, format='%d %b %Y') or '' | n}
+                    </td>
+                    <td class="middle height_std" colspan="2"><br>
+                    Dilaksanakan Oleh (Teknisi) :<br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <%nama_pelaksana = spk.user_id and spk.user_id.name or ''%>
+                    Nama: ${nama_pelaksana[:wrap_char]}
+                    <br>
+                    Tgl:
+                    </td>
+                    <td class="middle height_std" colspan="3"><br>
+                    Diterima Oleh (Pelanggan) :<br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <%nama_pelanggan = spk.task_task and spk.task_task[0] and spk.task_task[0].partner and spk.task_task[0].partner.name or ''%>
+                    Nama: ${nama_pelanggan[:wrap_char]}
+                    <br>
+                    Tgl:
+                    </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6"><br><br>
+                            <table class="tail">
+                                <tr>
+                                    <td class="tail_audit">
+                                        [${user.name or '-' |entity } - ${time.strftime('%d %h %Y %r')}]
+                                    </td>
+                                    <td class="tail_page" >
+                                        Hal 1 dari 1
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+                </tr>
+            </tbody>
+        </table>
+        </body>
+        %endfor
+        </html>
+                ]]></field>
+        </record>
+
+        <!-- Activate the form -->
+        <function model="via.form.templates" name="activate"
+            eval="[ ref('via_webkit_form_srm') ], " />
+    </data>
+</openerp>

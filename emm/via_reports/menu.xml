@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<openerp>
+  <data>
+    <menuitem id="menu_via_reporting_root" name="VIA Reports"
+              web_icon="images/reporting.png"
+              web_icon_hover="images/reporting-hover.png"/>
+  </data>
+</openerp>

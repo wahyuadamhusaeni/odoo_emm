@@ -1,0 +1,1790 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data noupdate="1">
+        <record id="stock_picking_in_form_template" model="via.form.templates">
+            <field name="name">Form Incoming Shipment dalam RMA</field>
+            <field name="model_id" ref="model_stock_picking_in"/>
+            <field eval="False" name="company_id"/>
+            <field name="multi" eval="True"/>
+            <field name="engine">mako</field>
+            <field name="webkit_header" ref="via_report_webkit.ir_header_webkit_plain_a4p"/>
+            <field name="template">
+                <![CDATA[
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+
+<!--
+################################################################################
+Nomor Template  : FRM001
+Versi Template  : v1
+Revisi Template : 27 Mar 2014
+Copyright       : PT. Vikasa Infinity Anugrah (www.infi-nity.com)
+Deskripsi:
+    Template untuk formulir sejenis faktur
+Log:
+################################################################################
+-->
+
+<!--
+################################################################################
+I. DEKLARASI VARIABLE - KONFIGURASI
+################################################################################
+-->
+<!-- Import library python yang dibutuhkan di sini -->
+<%from math import log10%>
+<%from math import fmod%>
+<%import re%>
+
+<!-- Konfigurasi Bagian [A]-->
+<%wrong_document_state = [] %>                          <!--Dipakai untuk menyimpan daftar dan status dari dokumen-dokumen yang tidak akan dicetak (status invalid)-->
+<%total_document = len(objects)%>                       <!--Dipakai untuk mencek jumlah dokumen-dokumen yang akan dicetak-->
+
+<!-- Konfigurasi Bagian [B]-->
+<!--KONFIGURASI untuk menentukan jumlah baris dari line item yang ingin dicetak setiap halamannya-->
+<!--Variabel berikut menentukan atau mengikuti 'layout' dari halaman kertas, sehingga menandakan batasan atau limit kertas-->
+<%max_lines = 56%>                                      <!--Jumlah baris maksimum untuk line item s/d akhir halaman-->
+<%def_footer_lines = 10%>                               <!--Jumlah pemakaian baris untuk footer yang akan dicetak setiap halamannya-->
+<%last_page_footer_lines = 16%>                         <!--Jumlah pemakaian baris untuk footer yang akan dicetak khusus untuk halaman akhir-->
+<%def_page_lines = max_lines - def_footer_lines%>       <!--Jumlah line item yang akan dicetak setiap halamannya-->
+<%last_page_lines = max_lines - last_page_footer_lines%><!--Jumlah line item yang akan dicetak di halaman akhir-->
+
+<!-- Konfigurasi Bagian [C]-->
+<!--KONFIGURASI untuk menentukan jumlah dan spesifikasi dari kolom untuk setiap baris line item yang akan dicetak-->
+<%line_item_columns=6%>                                 <!--Jumlah kolom dari setiap baris line item yang dicetak-->
+<%column_width_in_chars=[3,36,10,10,24,27]%>          <!--Lebar masing-masing kolom line item dalam jumlah huruf/karakter-->
+<%max_wrap_lines=3%>                                     <!--Maksimum jumlah baris yang dibentuk untuk teks yang wrapping, sisa teks yang tidak 'muat' di'buang'-->
+                                                        <!--Nilai satu berarti tidak akan ada wrapping, sehingga semua teks untuk kolom akan di'truncate'-->
+
+<!-- Konfigurasi Bagian [D]-->
+<!--KONFIGURASI dapat digunakan untuk menentukan running total untuk setiap halaman berdasarkan kolom yang ditampilkan di area-->
+<!--line item.-->
+<%show_page_sum_top=True%>                              <!--Tampilkan 'Pindahan' (di atas line item)-->
+<%show_page_sum_bottom=True%>                           <!--Tampilkan 'Dipindahkan' (di bawah line item)-->
+<%num_of_sum_col=1%>                                    <!--Jumlah kolom yang akan dijumlah-->
+<%show_line_item_cum_sum_by_page=[True,True,True]%>     <!--Hitung jumlah total per 'halaman' yang dicetak-->
+<%sum_col_a=0%>                                         <!--Indeks 0 dari kolom yang dijumlah-->
+<%sum_col_b=1%>                                         <!--Indeks 1 dari kolom yang dijumlah-->
+<%sum_col_c=2%>                                         <!--Indeks 2 dari kolom yang dijumlah-->
+<%sum_col_d=3%>                                         <!--Indeks 3 dari kolom yang dijumlah-->
+<%sum_col_e=4%>                                         <!--Indeks 4 dari kolom yang dijumlah-->
+<!--<%sum_col_shown=sum_col_a%>                             Indeks dari kolom dijumlah yang akan ditampilkan-->
+
+<!-- Konfigurasi Bagian [E]-->
+<!--KONFIGURASI untuk menentukan layout HTML dari formulir-->
+<%preprinted_header_space = 226%>                       <!--Blank space untuk area preprinted dari formulir-->
+<%line_item_height = 17%>                               <!--Tinggi dari setiap line item yang dicetak-->
+<%font_size = 13%>                                      <!--Ukuran tulisan yang digunakan secara umum, dapat di-override apabila font-size juga ditentukan pada setiap tr atau td-->
+<%page_width = 793%>                                    <!--Lebar formulir yang umum digunakan sebagai lebar tabel utama-->
+<%page_height = 1100%>                                  <!--Panjang formulir yang umum digunakan sebagai panjang tabel utama-->
+<%padding_size = 5%>
+
+<!--Layout untuk Area Banner (dalam pixel/px) -->
+<%banner_width = page_width%>
+<%banner_co_info_width = 0.6*banner_width%>
+<%banner_logo_width = banner_width-banner_co_info_width%>
+<%banner_doc_name_width = banner_logo_width%>
+<%banner_line_width = banner_width%>
+<%banner_height = 85%>
+<%banner_line_height = 5%>
+<%banner_co_info_height = banner_height-banner_line_height%>
+<%banner_doc_name_height = 20%>
+<%banner_logo_height = banner_co_info_height-banner_doc_name_height%>
+<!--Layout untuk Area Header (dalam pixel/px) -->
+<%header_width = page_width%>
+<%header_cust_info_width = 0.40*header_width%>
+<%header_doc_info_width = header_width-header_cust_info_width%>
+<%header_doc_info_label_width = 0.35*header_doc_info_width%>
+<%header_doc_info_colon_width = 5%>
+<%header_doc_info_text_width = header_doc_info_width-header_doc_info_label_width-header_doc_info_colon_width%>
+<%header_height = 140%>
+<%header_cust_info_height = header_height%>
+<%header_doc_info_height = header_height%>
+<!--Layout untuk Area line Item Header (dalam pixel/px) -->
+<%line_item_width = page_width%>
+<%line_item_header_width = line_item_width%>
+<%line_item_body_width = line_item_width%>
+<%line_item_footer_width = line_item_width%>
+<%line_item_col1_width = round(0.042*line_item_width)%>
+<%line_item_col2_width = round(0.383*line_item_width)%>
+<%line_item_col3_width = round(0.084*line_item_width)%>
+<%line_item_col4_width = round(0.105*line_item_width)%>
+<%line_item_col5_width = round(0.262*line_item_width)%>
+<%line_item_col6_width = round(0.124*line_item_width)%>
+<%line_item_col7_width = round(0.0*line_item_width)%>
+<%line_item_col8_width = round(0.0*line_item_width)%>
+<%line_item_col9_width = round(0.0*line_item_width)%>
+<%line_item_col_width_sum = line_item_col1_width+line_item_col2_width+line_item_col3_width+line_item_col4_width+line_item_col5_width+line_item_col6_width+line_item_col7_width+line_item_col8_width+line_item_col9_width%>
+<%line_item_header_height = 50%>
+<%line_item_body_height = 0%>                       <!--JANGAN DIUBAH-->
+<%line_item_footer_height = 5%>
+<!--Layout untuk Area Footer (dalam pixel/px) -->
+<%footer_width = page_width%>
+<%footer_bank_info_width = 0.6*footer_width%>
+<%footer_summary_width = footer_width-footer_bank_info_width%>
+<%footer_amount_said_width = footer_bank_info_width%>
+<%footer_bank_info_label_width = 0.30*footer_bank_info_width%>
+<%footer_bank_info_colon_width = 5%>
+<%footer_bank_info_text_width = footer_bank_info_width-footer_bank_info_label_width-footer_bank_info_colon_width%>
+<%footer_summary_label_width = 0.45*footer_summary_width%>
+<%footer_summary_currency_width = 30%>
+<%footer_summary_text_width = footer_summary_width-footer_summary_label_width-footer_summary_currency_width%>
+<%footer_height = 0%>
+<%footer_summary_height = footer_height%>
+<%footer_bank_info_height = footer_summary_height%>
+<%footer_amount_said_height = 0%>
+<!--Layout untuk Area Signatory (dalam pixel/px) -->
+<%signatory_width = page_width%>
+<%no_of_signature = 3%>
+<%signatory_signature_width = 120%>
+<%signatory_note_width = signatory_width-(no_of_signature*signatory_signature_width)%>
+<%signature_name_width = signatory_signature_width%>
+<%signatory_height = 120%>
+<%signatory_signature_height = signatory_height%>
+<%signatory_note_height = signatory_height%>
+<%signature_name_height = signatory_signature_height-16%>  <!--Angka 16 adalah perkiraan tinggi pixel teks 'Verified By' -->
+<!--Layout untuk Area Tail (dalam pixel/px) -->
+<%tail_width = page_width%>
+<%tail_audit_width = 0.5*tail_width%>
+<%tail_page_width = tail_width-tail_audit_width%>
+<%tail_height = 15%>
+<%tail_audit_height = tail_height%>
+<%tail_page_height = tail_height%>
+<!--Layout untuk Area Tail (dalam pixel/px) -->
+<%filler_default_height =   page_height-banner_height-header_height-line_item_header_height-(line_item_height*def_page_lines )-line_item_footer_height-footer_height-tail_height%>
+<%filler_last_page_height = page_height-banner_height-header_height-line_item_header_height-(line_item_height*last_page_lines)-line_item_footer_height-footer_height-signatory_height-tail_height%>
+
+<!-- Konfigurasi Bagian [F]-->
+<!--KONFIGURASI untuk menambah data testing-->
+<%ttl_test_line = 0%>                                   <!--Blank space untuk area preprinted dari formulir-->
+
+<!-- Konfigurasi Opsional [G] -->
+<%no_of_copies = 1%>                                    <!--Jumlah kopi yang perlu dicetak untuk setiap dokumen-->
+<%show_banner=True%>                                    <!--Konfigurasi ini digunakan untuk menampilkan header-->
+<%show_company_info=False%>
+<%show_footer=True%>                                    <!--Konfigurasi ini digunakan untuk menampilkan footer-->
+<%show_user=True%>                                      <!--Konfigurasi ini digunakan untuk menampilkan user yang mencetak-->
+<%show_time_print=True%>                                <!--Konfigurasi ini digunakan untuk menampilkan waktu print-->
+<%show_debug_box = False%>
+<%show_debug_value = False%>
+<%setLang('id_ID')%>
+
+
+<!--
+################################################################################
+II. DEFINISI CSS STYLES
+################################################################################
+-->
+
+<head>
+<style type="text/css">
+body.base {
+        font-size: ${font_size}px;
+        font-family: Sans-Serif;
+        margin: 0px;
+}
+
+table.banner {
+%if show_debug_box:
+        border: 1px solid brown;
+%endif
+        height: ${banner_height}px;
+        width: ${banner_width}px;
+        text-align: left;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+        border-spacing: 0px;
+        border-collapse: collapse;
+        table-layout: auto;
+}
+
+td.banner_logo {
+%if show_debug_box:
+        border: 1px solid red;
+%endif
+        height: ${banner_logo_height}px;
+        width: ${banner_logo_width}px;
+        text-align: left;
+        vertical-align: top;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+}
+
+td.banner_doc_name {
+%if show_debug_box:
+        border: 1px solid blue;
+%endif
+        height: ${banner_doc_name_height}px;
+        width: ${banner_doc_name_width}px;
+        text-align: left;
+        vertical-align: bottom;
+        font-size: 15px;
+        font-family: Sans-Serif;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+}
+
+td.banner_co_info {
+%if show_debug_box:
+        border: 1px solid yellow;
+%endif
+        height: ${banner_co_info_height}px;
+        width: ${banner_co_info_width}px;
+        text-align: right;
+        vertical-align: bottom;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+}
+
+td.banner_line {
+%if show_debug_box:
+        border: 1px solid orange;
+%endif
+        height: ${banner_line_height}px;
+        width: ${banner_line_width}px;
+        text-align: center;
+        vertical-align: top;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+}
+
+table.header {
+%if show_debug_box:
+        border: 1px solid gray;
+%endif
+        height: ${header_height}px;
+        width: ${header_width}px;
+        text-align: left;
+        vertical-align: top;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+        border-spacing: 0px;
+        border-collapse: collapse;
+        table-layout:fixed;
+}
+
+td.header_cust_info {
+%if show_debug_box:
+        border: 1px solid green;
+%endif
+        height: ${header_cust_info_height}px;
+        width: ${header_cust_info_width}px;
+        text-align: left;
+        vertical-align: top;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+}
+
+td.header_doc_info {
+%if show_debug_box:
+        border: 1px solid Cyan;
+%endif
+        height: ${header_doc_info_height}px;
+        width: ${header_doc_info_width}px;
+        text-align: left;
+        vertical-align: top;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+}
+
+td.header_doc_info_label {
+%if show_debug_box:
+        border: 1px solid green;
+%endif
+        width: ${header_doc_info_label_width}px;
+        text-align: left;
+        vertical-align: top;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+}
+
+td.header_doc_info_colon {
+%if show_debug_box:
+        border: 1px solid green;
+%endif
+        width: ${header_doc_info_colon_width}px;
+        text-align: left;
+        vertical-align: top;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+}
+
+td.header_doc_info_text {
+%if show_debug_box:
+        border: 1px solid green;
+%endif
+        width: ${header_doc_info_text_width}px;
+        text-align: left;
+        vertical-align: top;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+}
+
+table.line_item_header {
+%if show_debug_box:
+        border: 1px solid purple;
+%endif
+        height: ${line_item_header_height}px;
+        width: ${line_item_header_width}px;
+        text-align: left;
+        vertical-align: bottom;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        padding: 0px;
+        border-spacing: 0px;
+        border-collapse: collapse;
+        table-layout:fixed;
+}
+
+table.line_item_body {
+        border-left: 0px solid black;
+        border-right: 0px solid black;
+        border-top: 1px solid black;
+        border-bottom: 1px solid black;
+        height: ${line_item_body_height}px;
+        width: ${line_item_body_width}px;
+        text-align: left;
+        vertical-align: top;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        padding: 0px;
+        border-spacing: 0px;
+        border-collapse: collapse;
+        table-layout:fixed;
+}
+
+table.line_item_footer {
+%if show_debug_box:
+        border: 1px solid purple;
+%endif
+        height: ${line_item_footer_height}px;
+        width: ${line_item_footer_width}px;
+        text-align: left;
+        vertical-align: top;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        padding: 0px;
+        border-spacing: 0px;
+        border-collapse: collapse;
+        table-layout:fixed;
+}
+
+td.line_item_col_left {
+        height: ${line_item_height}px;
+        border-left: 0px;
+        border-right: 0px;
+        border-top: 0px;
+        border-bottom: 0px;
+        padding-left: ${padding_size}px;
+        padding-right: ${padding_size}px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+        -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+        box-sizing: border-box;         /* Opera/IE 8+ */
+}
+
+td.line_item_col_middle {
+        height: ${line_item_height}px;
+        border-left: 0px;
+        border-right: 0px;
+        border-top: 0px;
+        border-bottom: 0px;
+        padding-left: ${padding_size}px;
+        padding-right: ${padding_size}px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+        -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+        box-sizing: border-box;         /* Opera/IE 8+ */
+}
+
+td.line_item_col_right {
+        height: ${line_item_height}px;
+        border-left: 0px;
+        border-right: 0px;
+        border-top: 0px;
+        border-bottom: 0px;
+        padding-left: ${padding_size}px;
+        padding-right: ${padding_size}px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+        -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+        box-sizing: border-box;         /* Opera/IE 8+ */
+}
+
+table.footer {
+%if show_debug_box:
+        border: 1px solid Cyan;
+%endif
+        height: ${footer_height}px;
+        width: ${footer_width}px;
+        text-align: left;
+        vertical-align: top;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+        border-spacing: 0px;
+        border-collapse: collapse;
+        table-layout:fixed;
+}
+
+td.footer_bank_info {
+%if show_debug_box:
+        border: 1px solid blue;
+%endif
+        height: ${footer_bank_info_height}px;
+        width: ${footer_bank_info_width}px;
+        text-align: left;
+        vertical-align: top;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+}
+
+td.footer_summary {
+%if show_debug_box:
+        border: 1px solid Cyan;
+%endif
+        height: ${footer_summary_height}px;
+        width: ${footer_summary_width}px;
+        text-align: left;
+        vertical-align: top;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+}
+
+td.footer_amount_said {
+%if show_debug_box:
+        border: 1px solid purple;
+%endif
+        height: ${footer_amount_said_height}px;
+        width: ${footer_amount_said_width}px;
+        text-align: left;
+        vertical-align: top;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        word-wrap:break-word;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+}
+
+div.footer_amount_said {
+%if show_debug_box:
+        border: 1px solid red;
+%endif
+        height: ${0.90*footer_amount_said_height}px;
+        width: ${0.90*footer_amount_said_width}px;
+        text-align: left;
+        vertical-align: top;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        word-wrap:break-word;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+}
+
+td.footer_bank_info_label {
+%if show_debug_box:
+        border: 1px solid orange;
+%endif
+        width: ${footer_bank_info_label_width}px;
+        text-align: left;
+        vertical-align: top;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+}
+
+td.footer_bank_info_colon {
+%if show_debug_box:
+        border: 1px solid green;
+%endif
+        width: ${footer_bank_info_colon_width}px;
+        text-align: left;
+        vertical-align: top;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+}
+
+td.footer_bank_info_text {
+%if show_debug_box:
+        border: 1px solid yellow;
+%endif
+        width: ${footer_bank_info_text_width}px;
+        text-align: left;
+        vertical-align: top;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+}
+
+td.footer_summary_label {
+%if show_debug_box:
+        border: 1px solid orange;
+%endif
+        width: ${footer_summary_label_width}px;
+        text-align: right;
+        vertical-align: top;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+}
+
+td.footer_summary_currency {
+%if show_debug_box:
+        border: 1px solid green;
+%endif
+        width: ${footer_summary_currency_width}px;
+        text-align: right;
+        vertical-align: top;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+}
+
+td.footer_summary_text {
+%if show_debug_box:
+        border: 1px solid yellow;
+%endif
+        width: ${footer_summary_text_width}px;
+        text-align: right;
+        vertical-align: top;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        padding-left: 0px;
+        padding-right: ${padding_size}px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+}
+
+table.signatory {
+%if show_debug_box:
+        border: 1px solid green;
+%endif
+        height: ${signatory_height}px;
+        width: ${signatory_width}px;
+        text-align: left;
+        vertical-align: top;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+        border-spacing: 0px;
+        border-collapse: collapse;
+        table-layout:fixed;
+}
+
+td.signatory_note {
+%if show_debug_box:
+        border: 1px solid blue;
+%endif
+        height: ${signatory_note_height}px;
+        width: ${signatory_note_width}px;
+        text-align: left;
+        vertical-align: top;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        word-wrap:break-word;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+}
+
+div.signatory_note {
+%if show_debug_box:
+        border: 1px solid yellow;
+%endif
+        height: ${signatory_note_height}px;
+        width: ${0.9*signatory_note_width}px;
+        text-align: left;
+        vertical-align: top;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        word-wrap:break-word;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+}
+
+td.signatory_signature {
+%if show_debug_box:
+        border: 1px solid red;
+%endif
+        height: ${signatory_signature_height}px;
+        width: ${signatory_signature_width}px;
+        text-align: center;
+        vertical-align: top;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+}
+
+div.signature_name {
+%if show_debug_box:
+        border: 1px solid blue;
+%endif
+        height: ${signature_name_height}px;
+        line-height: ${signature_name_height}px;
+        width: ${signature_name_width}px;
+        text-align: center;
+        vertical-align: bottom;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        word-wrap:break-word;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+}
+
+span.span_center_bottom_truncated_padded {
+%if show_debug_box:
+    border: 1px solid yellow;
+%endif
+    display: inline-block;
+    line-height: normal;
+    vertical-align: bottom;
+    padding-top: 0px;
+    padding-right: 2px;
+    padding-bottom: 0px;
+    padding-left: 2px;
+    margin: 0px;
+}
+
+table.tail {
+%if show_debug_box:
+        border: 1px solid red;
+%endif
+        height: ${tail_height}px;
+        width: ${tail_width}px;
+        text-align: left;
+        vertical-align: top;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+        border-spacing: 0px;
+        border-collapse: collapse;
+        table-layout:fixed;
+}
+
+td.tail_audit {
+%if show_debug_box:
+        border: 1px solid yellow;
+%endif
+        height: ${tail_audit_height}px;
+        width: ${tail_audit_width}px;
+        text-align: left;
+        vertical-align: bottom;
+        font-size: 9px;
+        font-family: Sans-Serif;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        word-wrap:break-word;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+}
+
+td.tail_page {
+%if show_debug_box:
+        border: 1px solid magenta;
+%endif
+        height: ${tail_page_height}px;
+        width: ${tail_page_width}px;
+        text-align: right;
+        vertical-align: bottom;
+        font-size: 9px;
+        font-family: Sans-Serif;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        word-wrap:break-word;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+}
+
+table.filler_default {
+%if show_debug_box:
+        border: 1px solid brown;
+%endif
+        height: ${filler_default_height}px;
+        width: ${page_width}px;
+        text-align: left;
+        vertical-align: top;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+        border-spacing: 0px;
+        border-collapse: collapse;
+        table-layout:fixed;
+}
+
+table.filler_last_page {
+%if show_debug_box:
+        border: 1px solid brown;
+%endif
+        height: ${filler_last_page_height}px;
+        width: ${page_width}px;
+        text-align: left;
+        vertical-align: top;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+        border-spacing: 0px;
+        border-collapse: collapse;
+        table-layout:fixed;
+}
+
+table {
+        border: 0px;
+        padding: 0px;
+        border-spacing: 0px;
+        border-collapse: collapse;
+        table-layout:fixed;
+}
+
+td {
+        padding: 0px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+}
+
+p {
+        white-space: normal;
+        text-overflow:ellipsis;
+        font-size: 12px;
+}
+
+sup, sub
+{
+        vertical-align: 0;
+        position: relative;
+}
+
+sup { bottom: 1ex; }
+sub { top: 0.8ex; }
+
+</style>
+</head>
+
+<!--pengaturan body dan tabel formulir-->
+<body class="base">
+
+ <!--
+################################################################################
+   III. PENGAMBILAN DAN PEMROSESAN DATA-DATA DARI DOKUMEN
+################################################################################
+-->
+<!--LOOP 1: Iterasi untuk memproses setiap dokumen yang dipilih untuk di cetak-->
+%for doc in objects:
+
+<!-- MULAI DIUBAH 01 ========================================================-->
+    <!-- Hanya dokumen dengan status tertentu yang dapat dicetak -->
+    <!-- Mengubah state dokumen yang bisa dicetak -->
+    %if doc.state != 'assigned' and doc.state != 'done':
+<!-- AKHIR DIUBAH 01 ========================================================-->
+        <!-- Seluruh dokumen yang statusnya invalid akan di'catat' untuk -->
+        <!-- kemudian diinfokan ke pengguna -->
+        <% wrong_document_state.append('%s: %s' % (doc.name, doc.state)) %>
+    %else:
+        <!--Hanya proses dokumen dengan status yang valid-->
+
+        <!--
+        ################################################################################
+        PRA-PROSES DATA: bagian ini adalah untuk memproses data line item yang akan dicetak.  Diperlukan proses awal (preprocessing) di mana teks atau
+        deskripsi dari line item yang akan dicetak di'parsing' untuk menentukan apakah akan ada 'wrapping' atau tidak.  Jika wrapping akan terjadi, maka
+        teks yang telah dibaca akan dipotong/split ke baris berikutnya (jumlah maksimum baris ditentukan oleh variabel max_wrap_lines).
+        Hasil akhir dari preprocessing data ini adalah suatu list dari baris atau line item yang akan dicetak (secara data type berupa list of list).
+        Untuk setiap baris yang juga berupa list data type, akan berisikan teks yang akan dicetak bagi masing-masing kolomnya.
+        Bagian pra-proses data ini secara umum dibagi menjadi beberapa langkah:
+        1. Pengambilan data dan penjumlahan data/kolom yang diinginkan
+        2. Penambahan dummy data untuk testing (ini sifatnya optional)
+        3. Penghitungan jumlah halaman yang akan dicetak
+        ################################################################################
+        -->
+        <!--Menghitung baris line item yang akan dicetak-->
+        <!--Hitung jumlah produk atau line item yang akan diproses untuk dicetak-->
+        <%total_line_items = len(doc.move_lines)%>
+        <!--Siapkan variabel 'penyimpanan'-->
+        <%line_item_print=[]%>          <!--Tempat untuk menyimpan semua teks dari produk atau 'line item' yang telah di proses mengikuti konfigurasi kolom-->
+        <%total_lines_print=0%>         <!--Jumlah baris yang harus dicetak-->
+
+        <%line_item_sum_by_page=[]%>    <!--Jumlah atau total dari seluruh line item untuk setiap halamannya-->
+        <%line_item_to_sum=[]%>         <!--List dari seluruh nilai line item yang akan/dapat dijumlah-->
+
+
+        <!--Proses semua produk di dalam dokumen yang dimaksud-->
+        %for line_item_count in range (0,total_line_items):
+            <!--Ambil atau proses produk atau 'line item'nya-->
+            <%line_item = doc.move_lines[line_item_count]%>
+
+            <!--Initialisasi tempat penyimpanan nilai dari masing-msaing kolom -->
+            <!--yang akan dijumlahkan-->
+            <%line_item_to_sum.append([])%>
+            <!--Loop ini diperlukan untuk menginisialisasi jumlah masing-masing kolom-->
+            <!--Berapa jumlah kolom yang diinisialisasi tergantung kepada variabel num_of_sum_col-->
+            <!--Setelah inisialisasi selesai, seharusny ada 'row/list' baru di variabel line_item_to_sum-->
+            <!--yang berupa list dari angka 0 (sebanyak num_of_sum_col).  Contoh [0, 0, 0], -->
+            <!--num_of_sum_col adalah 3-->
+            <!--Setelah diinisialisasi, angka 0 tsb akan di overwrite dengan total/nilai yang sesuai di bawah-->
+            %for col_no in range (0,num_of_sum_col):
+                <%line_item_to_sum[line_item_count].append(0)%>
+            %endfor
+
+<!-- MULAI DIUBAH 02 ========================================================-->
+            <!-- Mengubah jumlah dan data dari kolom yang akan ditampilkan di area line item -->
+
+            <!--Tempat sementara untuk menyimpan data setiap produk atau 'line item'-->
+            <%str_holder=[]%>
+            <!--Proses seluruh kolom menjadi satu list-->
+            <!--Kolom 1: no urut produk-->
+            <%str_holder.append(str(line_item_count + 1))%>
+            <!--Kolom 2: nama produk-->
+            <!--Buang kode produk (substitusikan seluruh teks dari awal s/d tanda ']' dengan empty string)-->
+            <!--<%line_item_desc = re.sub(r'.*]', "", line_item.name)%>-->
+            <%line_item_desc = line_item.name%>
+            <%str_holder.append(line_item_desc)%>
+            <!--Kolom 3: jumlah/kuantitas produk-->
+
+            <%str_holder.append(formatLang(line_item.product_qty))%>
+            <!--Kolom 4: satuan unit (UOM) produk-->
+            <%str_holder.append(str(line_item.product_uom.name or ''))%>
+            <!--Kolom 5: serial number-->
+            <%str_holder.append(str(line_item.prodlot_id.name or ''))%>
+            <!--Kolom 6: lokasi-->
+            <%str_holder.append(str(line_item.location_dest_id.name or ''))%>
+
+            <!-- Setiap nilai atau kolom yang akan dicari running totalnya disimpan ke dalam list ini-->
+
+<!-- AKHIR DIUBAH 02 ========================================================-->
+
+            <!--Ini adalah bagian yang me-wrap setiap baris line item sesuai-->
+            <!--dengan konfigurasi [C] di atas. Untuk setiap produk yang-->
+            <!--diproses, kita tambahkan satu list baru, jika terdapat-->
+            <!--wrapping akan diproses/tambahkan di bagian wrapping-->
+            <%no_lines=0%>
+            <%line_item_print.append([])%>
+            <%wrappable_column=0%>
+
+            <%rv = wrap_line(str_holder, column_width_in_chars)%>
+
+            <!--Ambil teks yang terbaru atau yang sudah diproses wrapping-nya-->
+            <%str_holder = rv[1][:]%>
+            <%line_item_print[total_lines_print] = rv[2][:]%>
+
+            <!--Jika terdapat baris yang diproses, maka naikkan counter (hitungan)-->
+            %if rv[0] >= 0:
+                <%no_lines = no_lines + 1%>
+                <%total_lines_print = total_lines_print + 1%>
+            %endif
+            %while (no_lines < max_wrap_lines) and (rv[0] > 0):
+                <%line_item_print.append([])%>
+                <%rv=wrap_line(str_holder, column_width_in_chars)%>
+
+                <!--Ambil teks yang terbaru atau yang sudah diproses wrapping-nya-->
+                <%str_holder = rv[1][:]%>
+                <%line_item_print[total_lines_print] = rv[2][:]%>
+
+                <%no_lines = no_lines + 1%>
+                <%total_lines_print = total_lines_print + 1%>
+            %endwhile
+        %endfor
+
+        <!-- For testing only: adding dummy line items -->
+        <%test_lines = total_line_items + ttl_test_line%>
+        %for line_number in range(total_line_items,test_lines):
+<!-- MULAI DIUBAH 03 ========================================================-->
+            <!--Bagian ini hanya untuk testing dengan menambahkan line item-->
+            <!--yang akan dicetak sesuai konfigurasi [F]. Tambahkan baris dummy-->
+            <!--untuk testing, sesuaikan dengan jumlah kolom di konfigurasi [C]-->
+            <%str_holder=[]%>
+            <%str_holder.append(str(line_number+1))%>
+            <%str_holder.append('123456789012345678901234568901234567')%>
+            <%str_holder.append('8.888.888')%>
+            <%str_holder.append('ABCDEFGHI')%>
+            <%str_holder.append('88.888.888.888')%>
+            <%str_holder.append('888.888.888.888.888.888.888')%>
+<!-- AKHIR DIUBAH 03 ========================================================-->
+
+            <!--Ini adalah bagian yang me-wrap setiap baris line item sesuai dengan-->
+            <!--konfigurasi [C] di atas. Untuk setiap produk yang diproses, kita-->
+            <!--tambahkan satu list baru, jika terdapat wrapping akan diproses/tambahkan-->
+            <!--di bagian wrapping-->
+            <%no_lines=0%>
+            <%line_item_print.append([])%>
+            <%wrappable_column=0%>
+
+            <%rv = wrap_line(str_holder, column_width_in_chars)%>
+
+            <!--Ambil teks yang terbaru atau yang sudah diproses wrapping-nya-->
+            <%str_holder = rv[1][:]%>
+            <%line_item_print[total_lines_print] = rv[2][:]%>
+
+            <!--Jika terdapat baris yang diproses, maka naikkan counter (hitungan)-->
+            %if rv[0] >= 0:
+                <%no_lines = no_lines + 1%>
+                <%total_lines_print = total_lines_print + 1%>
+            %endif
+            %while (no_lines < max_wrap_lines) and (rv[0] > 0):
+                <%line_item_print.append([])%>
+                <%rv=wrap_line(str_holder, column_width_in_chars)%>
+
+                <!--Ambil teks yang terbaru atau yang sudah diproses wrapping-nya-->
+                <%str_holder = rv[1][:]%>
+                <%line_item_print[total_lines_print] = rv[2][:]%>
+
+                <%no_lines = no_lines + 1%>
+                <%total_lines_print = total_lines_print + 1%>
+            %endwhile
+
+            <%line_item_to_sum.append([])%>
+            <!--Loop ini diperlukan untuk menginisialisasi jumlah masing-masing kolom-->
+            <!--Berapa jumlah kolom yang diinisialisasi tergantung kepada variabel -->
+            <!--num_of_sum_col. Setelah inisialisasi selesai, seharusny ada 'row/list'-->
+            <!--baru di variabel line_item_to_sum yang berupa list dari angka 0-->
+            <!--(sebanyak num_of_sum_col).  Contoh [0, 0, 0], num_of_sum_col adalah 3-->
+            <!--Setelah diinisialisasi, angka 0 tsb akan di overwrite dengan total/nilai-->
+            <!--yang sesuai di bawah.-->
+            %for col_no in range (0,num_of_sum_col):
+<!-- MULAI DIUBAH 04 ========================================================-->
+                <!-- Bagian ini hanya untuk testing dengan menambahkan nilai yang-->
+                <!-- perlu di jumlahkan per konfigurasi [F]-->
+                <%line_item_to_sum[line_number].append(1000)%>
+<!-- AKHIR DIUBAH 04 ========================================================-->
+            %endfor
+        %endfor
+
+        <!-- Menghitung jumlah halaman formulir berdasarkan perhitungan def_page_lines-->
+        <% total_page = total_lines_print / def_page_lines%>
+        %if last_page_footer_lines <= def_footer_lines:
+            <!--Footer untuk halaman akhir akan muat, sehingga tidak perlu dibuatkan-->
+            <!--halaman terakhir tambahan.-->
+            <%blank_last_page = False%>
+            <%compact_page = False%>
+            %if fmod(total_lines_print, def_page_lines) > 0:
+                <!--Jika terdapat sisa baris,maka sisa baris tersebut akan dicetak-->
+                <!--dihalaman baru, yaitu halaman terakhir-->
+                <%total_page = total_page + 1%>
+            %endif
+        %else:
+            <!--Footer untuk halaman akhir bisa bisa 'memakan' area line items, -->
+            <!--sehingga mungkin perlu dibuatkan halaman baru.-->
+            <%compact_page = True%>
+            %if fmod(total_lines_print, def_page_lines) == 0:
+                <!--Jika tidak terdapat sisa baris,maka footer halaman akhir akan-->
+                <!--dicetak di halaman baru.-->
+                <%total_page = total_page + 1%>
+                <%blank_last_page = True%>
+            %elif (fmod(total_lines_print, def_page_lines) + last_page_footer_lines) > max_lines:
+                <!--Jika terdapat sisa baris dan area footer tidak cukup, maka akan ditambahkan 2 halaman baru-->
+                <%total_page = total_page + 2%>
+                <%blank_last_page = True%>
+            %else:
+                <%total_page = total_page + 1%>
+                <%blank_last_page = False%>
+            %endif
+        %endif
+
+<!--
+################################################################################
+IV. CETAK SESUAI DENGAN JUMLAH KOPI YANG DIPERLUKAN
+################################################################################
+-->
+        %for copy_no in range(0,no_of_copies):
+            <%current_line = 0%>
+            <%line_item_sum_by_page = []%>
+
+<!--
+################################################################################
+V. BAGIAN PRE-PRINTED LAPORAN (LOGO)
+################################################################################
+-->
+
+        <!--Looping untuk menghasilkan ('render') halaman dari formulir-->
+            %for current_page in range(1, total_page + 1):
+<table class="base">
+<!--
+################################################################################
+VI. BAGIAN BANNER
+################################################################################
+-->
+    <tr>
+        <td>
+            <table class="banner">
+                <tr>
+                    <!--Area Banner Kiri (Logo dan Nama Dokumen)-->
+                    <td>
+                        <table>
+                            <!--Area untuk logo-->
+                            <tr>
+                                <td class="banner_logo">
+                                </td>
+                            </tr>
+                            <!--Area untuk nama dokumen (misal FAKTUR)-->
+                            <tr>
+                                <td class="banner_doc_name">
+                                    <i><b>NOTA TERIMA</b></i>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <!--Area Banner Kanan (Company Info)-->
+                    <td style="vertical-align: bottom;">
+                        <table>
+                            <td class="banner_co_info">
+                %if show_company_info:
+                    %if doc.company_id and doc.company_id.name:
+                                    ${doc.company_id and doc.company_id.name or ''|entity}<br>
+                    %else:
+                                    ${}
+                    %endif
+                    %if doc.company_id and doc.company_id.street:
+                                    ${doc.company_id and doc.company_id.street or ''|entity}<br>
+                    %else:
+                                    ${}
+                    %endif
+                    %if doc.company_id and doc.company_id.partner_id.street2:
+                                    ${doc.company_id and doc.company_id.partner_id.street2 or ''|entity} <br>
+                    %else:
+                                    ${}
+                    %endif
+                    %if doc.company_id and doc.company_id.city:
+                                    ${doc.company_id and doc.company_id.city or ''|entity} 
+                    %else:
+                                    ${}
+                    %endif
+                    %if doc.company_id and doc.company_id.zip:
+                                    - ${doc.company_id and doc.company_id.zip or ''|entity}<br>
+                    %else:
+                                    ${}
+                    %endif
+                    %if doc.company_id and doc.company_id.partner_id and doc.company_id.partner_id.phone:
+                                    t: ${doc.company_id and doc.company_id.partner_id and doc.company_id.partner_id.phone or '' |entity} 
+                    %else:
+                                    ${}
+                    %endif
+                    %if doc.company_id and doc.company_id.partner_id and doc.company_id.partner_id.fax:
+                                    f: ${doc.company_id and doc.company_id.partner_id and doc.company_id.partner_id.fax or '' |entity} <br>
+                    %else:
+                                    ${}
+                    %endif
+                    %if doc.company_id and doc.company_id.partner_id and doc.company_id.partner_id.email:
+                                    email: ${doc.company_id and doc.company_id.partner_id and doc.company_id.partner_id.email or '' |entity}
+                    %else:
+                                    ${}
+                    %endif
+            %else:
+                                    ${}
+            %endif
+                            </td>
+                        </table>
+                    </td>
+                </tr>
+                <!-- Area garis bawah banner -->
+                <tr>
+                    <td class="banner_line" colspan="2">
+                        <hr style="height: 1px; background: #000;">
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+
+<!--
+################################################################################
+VII. BAGIAN HEADER
+################################################################################
+-->
+    <!-- Area Info Customer dan Dokumen -->
+    <tr>
+        <td>
+            <table class="header">
+                <tr>
+                    <td>
+                        <!-- Area Kiri (Info Customer)-->
+                        <table>
+                            <td class="header_cust_info">
+                                <b>Dari:</b><br>
+                                ${doc.partner_id and doc.partner_id.name or ''|entity}<br>
+                <!--Untuk menambahkan nama perusahaan dari contact yang dituju, jika ada-->
+                    <%name=doc.partner_id and doc.partner_id.parent_id and doc.partner_id.parent_id.name%>
+                    %if name:
+                        ${strip_name(name, maxlen=70) or ''|entity}<br>
+                    %else:
+                        ${}
+                    %endif
+                    <%street=doc.partner_id and doc.partner_id.street%>
+                    %if street:
+                        ${strip_name(street, maxlen=100) or ''|entity}<br>
+                    %else:
+                        ${}
+                    %endif
+                    <%street2=doc.partner_id and doc.partner_id.street2%>
+                    %if street2:
+                        ${strip_name(street2, maxlen=50) or ''|entity}&nbsp;
+                    %else:
+                        ${}
+                    %endif
+                    <%city=doc.partner_id and doc.partner_id.city%>
+                    %if city:
+                        ${doc.partner_id and doc.partner_id.city or ''|entity}&nbsp;
+                    %else:
+                        ${}
+                    %endif
+                    <%zip=doc.partner_id and doc.partner_id.zip%>
+                    %if zip:
+                        ${strip_name(zip,maxlen=10) or ''|entity}<br>
+                    %else:
+                        ${}
+                    %endif
+                    <%phone=doc.partner_id and doc.partner_id.phone%>
+                    %if phone:
+                        t: ${doc.partner_id and doc.partner_id.phone or ''|entity}<br>
+                    %else:
+                        ${}
+                    %endif
+                    <%fax=doc.partner_id and doc.partner_id.fax%>
+                    %if fax:
+                        f: ${strip_name(fax, maxlen=10) or ''|entity}<br>
+                    %else:
+                        ${}
+                    %endif
+                            </td>
+                        </table>
+                    </td>
+                    <td class="header_doc_info">
+                        <!-- Area Kanan (Info Dokumen)-->
+                        <table>
+                            <tr>
+                                <td class="header_doc_info_label"><b>Tanggal Nota Terima</b></td>
+                                <td class="header_doc_info_colon">:</td>
+                                <td class="header_doc_info_text">${formatDate(doc.date_done,format='%d %b %Y') or '' |entity}</td>
+                            </tr>
+                            <tr>
+                                <td class="header_doc_info_label"><b>Nomor Nota Terima</b></td>
+                                <td class="header_doc_info_colon">:</td>
+                                <td class="header_doc_info_text">${doc.name or '-'|entity}</td>
+                            </tr>
+                            <tr>
+                                <td class="header_doc_info_label"><b>Nomor RMA</b></td>
+                                <td class="header_doc_info_colon">:</td>
+                                <td class="header_doc_info_text"> ${doc.origin or ' - '|entity}</td>
+                            </tr>
+                            <tr>
+                                <td class="header_doc_info_label"><b>Perencanaan Pengambilan</b></td>
+                                <td class="header_doc_info_colon">:</td>
+                                <td class="header_doc_info_text">
+                                    %if doc.claim_method == 'picking':
+                                        barang akan diambil
+                                    %else:
+                                        barang akan dikirim
+                                    %endif
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+
+<!--
+################################################################################
+VIII. BAGIAN BODY / LINE ITEM (TABEL ITEM)
+################################################################################
+-->
+
+    <!--Area untuk pencetakan line item-->
+    <tr>
+        <td>
+            <table class="line_item_header">
+                <!--Cetak header dari area line item -->
+                <tr>
+                    <td class="line_item_col_left" style="border:1px solid black; width: ${line_item_col1_width}px; text-align:center;" ><b>No.</b>
+                    </td>
+                    <td class="line_item_col_middle" style="border:1px solid black; width: ${line_item_col2_width}px; text-align:left;" ><b>Nama Barang/Jasa</b>
+                    </td>
+                    <td class="line_item_col_middle" style="border:1px solid black; width: ${line_item_col3_width+line_item_col4_width}px;text-align:center;"><b>Jumlah</b>
+                    </td>
+                    <td class="line_item_col_middle" style="border:1px solid black; width: ${line_item_col5_width}px; text-align:right;"><b>Nomor Seri</b>
+                    </td>
+                    <!-- <td class="line_item_col_middle" style="border:1px solid black; width: ${line_item_col6_width}px; text-align:left;"><b>Lokasi</b>
+                    </td> -->
+                    <td class="line_item_col_middle" style="border:1px solid black; width: ${line_item_col6_width}px; text-align:center;"><b>Dicek</b>
+                    </td>
+                </tr>
+
+<!-- MULAI JANGAN DIUBAH ====================================================-->
+                <!--Menentukan apakah -->
+                %if compact_page and (current_page == total_page):
+                    <%last_line = current_line + (max_lines - last_page_footer_lines)%>
+                %else:
+                    <%last_line = current_line + def_page_lines%>
+                %endif
+
+                <!--Tambahkan running total untuk halaman yang akan diproses ini-->
+
+                <!--Initialisasi tempat penyimpanan hasil penjumlahan per halaman-->
+                <!--dari masing-masing line item-->
+                <%line_item_sum_by_page.append([])%>
+                <!--Loop ini diperlukan untuk menginisialisasi jumlah masing-masing kolom-->
+                <!--Berapa jumlah kolom yang diinisialisasi tergantung kepada variabel num_of_sum_col-->
+                <!--Setelah inisialisasi selesai, seharusny ada 'row/list' baru di variabel line_item_to_sum-->
+                <!--yang berupa list dari angka 0 (sebanyak num_of_sum_col).  Contoh [0, 0, 0], -->
+                <!--num_of_sum_col adalah 3-->
+                <!--Setelah diinisialisasi, angka 0 tsb akan di overwrite dengan total/nilai yang sesuai di bawah-->
+                %for col_no in range (0,num_of_sum_col):
+                    <%line_item_sum_by_page[current_page-1].append(0)%>
+                    <!--Bagian ini mementukan nilai awal pindahan-->
+                    <!--Jika kita di halaman 2 dst, maka nilai awal dari pindahan bukan 0, melainkan-->
+                    <!--total dari halaman sebelumnya, yaitu yang dipindahkan-->
+                    %if show_line_item_cum_sum_by_page[col_no] and (current_page > 1):
+                        <%line_item_sum_by_page[current_page-1][col_no] = line_item_sum_by_page[current_page-2][col_no]%>
+                    %endif
+                %endfor
+<!-- AKHIR JANGAN DIUBAH ====================================================-->
+
+                <tr>
+                    <!--Bagian untuk menampilkan 'Pindahan XXXX' di atas list/daftar line item-->
+                    <td style="text-align: right; height:${line_item_height}px;border-left:1px solid black;border-right:1px solid black;" colspan="${line_item_columns};">
+
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <table class="line_item_body">
+                <!-- JUMLAH BARIS ${last_line} ++ ${current_line} -->
+                %for line_no in range (current_line,last_line):
+                    %if line_no < total_lines_print:
+
+                        <!--Penghitungan running total untuk halaman yang diproses-->
+                        <!--Jika no urut bukan nol (0), maka diasumsikan item dengan nomor urut tersebut (di kurangi 1 karena 0 indexing)-->
+                        <!--akan dirunning totalkan-->
+
+
+
+                <!--tampilan detail item body-->
+                <!--Cetak line item yang telah diproses dari dokumen yang dimaksud-->
+                <tr>
+                    <!--no-->
+                    <td class="line_item_col_left" style="width: ${line_item_col1_width}px; text-align: center;border-left:1px solid black;border-right:1px solid black;">
+                        ${line_item_print[line_no][0]}
+                    </td>
+                    <!--nama barang-->
+                    <td class="line_item_col_middle" style="width: ${line_item_col2_width}px; text-align: left;border-left:1px solid black;border-right:1px solid black;">
+                        ${line_item_print[line_no][1]}
+                    </td>
+                    <!--Jumlah-->
+                    <td class="line_item_col_middle" style="width: ${line_item_col3_width}px; text-align: right;">
+                        ${line_item_print[line_no][2]}
+                    </td>
+                    <!--satuan-->
+                    <td class="line_item_col_middle" style="width: ${line_item_col4_width}px; text-align: left;">
+                        ${line_item_print[line_no][3]}
+                    </td>
+                    <!--serial number-->
+                    <td class="line_item_col_middle" style="width: ${line_item_col5_width}px; text-align: right;border-left:1px solid black;border-right:1px solid black;">
+                        ${line_item_print[line_no][4]}
+                    </td>
+                    <!--lokasi-->
+                   <!--  <td class="line_item_col_middle" style="width: ${line_item_col6_width}px; text-align: left;border-left:1px solid black;border-right:1px solid black;">
+                        ${line_item_print[line_no][5]}
+                    </td> -->
+                    <!--diverifikasi-->
+                    <td class="line_item_col_middle" style="width: ${line_item_col6_width}px; text-align: left;border-left:1px solid black;border-right:1px solid black;">
+                    </td>
+                </tr>
+                    %else:
+                    <!--Cetak baris line item 'kosong', untuk mem-fill sisa tabel line item-->
+                <tr>
+                    <!--no-->
+                    <td class="line_item_col_left" style="width: ${line_item_col1_width}px; text-align: center;border-left:1px solid black;border-right:1px solid black;">
+                    </td>
+                    <!--nama barang-->
+                    <td class="line_item_col_middle" style="width: ${line_item_col2_width}px; text-align: left;border-left:1px solid black;border-right:1px solid black;">
+                    </td>
+                    <!--Jumlah-->
+                    <td class="line_item_col_middle" style="width: ${line_item_col3_width}px; text-align: right;">
+                    </td>
+                    <!--satuan-->
+                    <td class="line_item_col_middle" style="width: ${line_item_col4_width}px; text-align: left;">
+                    </td>
+                    <!--serial number-->
+                    <td class="line_item_col_middle" style="width: ${line_item_col5_width}px; text-align: right;border-left:1px solid black;border-right:1px solid black;">
+                    </td>
+                    <!--lokasi-->
+                    <!-- <td class="line_item_col_middle" style="width: ${line_item_col6_width}px; text-align: left;border-left:1px solid black;border-right:1px solid black;">
+                    </td> -->
+                    <!--lokasi-->
+                    <td class="line_item_col_middle" style="width: ${line_item_col6_width}px; text-align: left;border-left:1px solid black;border-right:1px solid black;">
+                    </td>
+
+                </tr>
+                    %endif
+                %endfor
+            </table>
+        </td>
+    </tr>
+
+                <!--Update posisi line untuk dicetak terkini-->
+                <%current_line = last_line%>
+    <!--Cetak baris kosong di bagian bawah tabel line item (ini adalah filler)-->
+    <tr>
+        <td style="vertical-align: top;">
+            <table class="line_item_footer">
+                <tr>
+                    <td style="text-align: left; height:${line_item_height}px;">
+                        <!--*Nilai setelah diskon (tanpa pajak)-->
+                    </td>
+                    <!--Bagian untuk menampilkan 'Pindahan XXXX' di atas list/daftar line item-->
+                    <td style="text-align: right; height:${line_item_height}px;">
+
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+<!--
+################################################################################
+IX. BAGIAN FOOTER FORMULIR
+################################################################################
+-->
+    <tr>
+        <td>
+            <table class="footer">
+                <tr>
+                    <td class="footer_bank_info">
+                        <table>
+                            <tr>
+                                <td class="footer_amount_said" colspan="3">
+                                    <div class="footer_amount_said">
+                                        <!--<b>Terbilang:</b><br>-->
+
+                %if show_debug_value:
+                                        01the quick brown fox jumps over the crazy dog. 02the quick brown fox jumps over the crazy dog.
+                                        03the quick brown fox jumps over the crazy dog. 04the quick brown fox jumps over the crazy dog.
+                                        05the quick brown fox jumps over the crazy dog. 06the quick brown fox jumps over the crazy dog.
+                                        07the quick brown fox jumps over the crazy dog. 08the quick brown fox jumps over the crazy dog.
+                                        09the quick brown fox jumps over the crazy dog. 10the quick brown fox jumps over the crazy dog.
+                                        11the quick brown fox jumps over the crazy dog. 12the quick brown fox jumps over the crazy dog.
+                %endif
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <!--<b>Informasi Bank</b>-->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="footer_bank_info_label">
+                                    <!--Nama Bank-->
+                                </td>
+                                <!--<td class="footer_bank_info_colon">:</td>-->
+                                <td class="footer_bank_info_text">
+                <!--<% banks = doc.company_id and doc.company_id.bank_ids or [] %>-->
+                                    <!--{banks and banks[0].bank_name or ''}-->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="footer_bank_info_label">
+                                    <!--Atas Nama-->
+                                </td>
+                                <!--<td class="footer_bank_info_colon">:</td>-->
+                                <td class="footer_bank_info_text">
+                <!--<% banks = doc.company_id and doc.company_id.bank_ids or [] %>-->
+                                    <!--{banks and banks[0].owner_name or ''}-->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="footer_bank_info_label">
+                                    <!--No. Rekening-->
+                                </td>
+                                <!--<td class="footer_bank_info_colon">:</td>-->
+                                <td class="footer_bank_info_text">
+                <!--<% banks = doc.company_id and doc.company_id.bank_ids or [] %>-->
+                                <!--{banks and banks[0].acc_number or ''}-->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="footer_bank_info_label">
+                                    <!--Bank Code/SWIFT-->
+                                </td>
+                                <!--<td class="footer_bank_info_colon">:</td>-->
+                                <td class="footer_bank_info_text">
+                <!--<% banks = doc.company_id and doc.company_id.bank_ids or [] %>-->
+                                <!--{banks and banks[0].bank_bic or ''}-->
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td class="footer_summary">
+                        <table>
+
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+<!--
+################################################################################
+X. BAGIAN FILLER
+################################################################################
+-->
+    <tr>
+        <td>
+                %if current_page == total_page:
+            <table class="filler_last_page">
+                <td>
+                    %if show_debug_box:
+                        Filler last page height: ${filler_last_page_height}px
+                    %endif
+                </td>
+            </table>
+                %else:
+            <table class="filler_default">
+                <td>
+                    %if show_debug_box:
+                        Filler default height: ${filler_default_height}px
+                    %endif
+                </td>
+            </table>
+                %endif
+        </td>
+    </tr>
+
+<!--
+################################################################################
+XI. BAGIAN SIGNATORY FORMULIR
+################################################################################
+-->
+                %if current_page == total_page:
+    <tr>
+        <td style="text-align: center;">
+            <table class="signatory">
+                <tr>
+                    <!-- Area cetak catatan-->
+                    <td class="signatory_note">
+                        <table>
+                            <tr>
+                                <td>
+                                    <div class="signatory_note">
+                                        <b>Catatan:</b><br>
+                                        ${doc.note or '' |entity}
+                    %if show_debug_value:
+                                        01the quick brown fox jumps over the crazy dog. 02the quick brown fox jumps over the crazy dog.
+                                        03the quick brown fox jumps over the crazy dog. 04the quick brown fox jumps over the crazy dog.
+                                        05the quick brown fox jumps over the crazy dog. 06the quick brown fox jumps over the crazy dog.
+                                        07the quick brown fox jumps over the crazy dog. 08the quick brown fox jumps over the crazy dog.
+                                        09the quick brown fox jumps over the crazy dog. 10the quick brown fox jumps over the crazy dog.
+                                        11the quick brown fox jumps over the crazy dog. 12the quick brown fox jumps over the crazy dog.
+                    %endif
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td class="signatory_signature" style="text-align: center;">
+                        <table style="text-align: center;">
+                            <tr style="text-align: center;">
+                                <td>
+                                    <center>Diserahkan Oleh</center>
+                                </td>
+                            </tr>
+                            <tr style="text-align: center;">
+                                <td>
+                                    <div class="signature_name">
+                                        <span class="span_center_bottom_truncated_padded">
+                    <%signatory = doc.company_id and doc.company_id.get_signatory_by_doc_name('warehouse_manager').get(doc.company_id.id, '') %>
+                                    %if signatory and signatory.signature:
+                                        (${signatory.signature|entity })
+                                    %else:
+                                        (&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)
+                                    %endif
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td class="signatory_signature" style="text-align: center;">
+                        <table style="text-align: center;">
+                            <tr style="text-align: center;">
+                                <td>
+                                    <center>Diterima Oleh</center>
+                                </td>
+                            </tr>
+                            <tr style="text-align: center;">
+                                <td>
+                                    <div class="signature_name">
+                                        <span class="span_center_bottom_truncated_padded">
+                    <%signatory = doc.company_id and doc.company_id.get_signatory_by_doc_name('warehouse_user').get(doc.company_id.id, '') %>
+                                    %if signatory and signatory.signature:
+                                        (${signatory.signature|entity })
+                                    %else:
+                                        (&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)
+                                    %endif
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td class="signatory_signature" style="text-align: center;">
+                        <table style="text-align: center;">
+                            <tr style="text-align: center;">
+                                <td>
+                                    <center>Diverifikasi Oleh</center>
+                                </td>
+                            </tr>
+                            <tr style="text-align: center;">
+                                <td>
+                                    <div class="signature_name">
+                                        <span class="span_center_bottom_truncated_padded">
+                    <%signatory = doc.company_id and doc.company_id.get_signatory_by_doc_name('warehouse_manager').get(doc.company_id.id, '') %>
+                                    %if signatory and signatory.signature:
+                                        (${signatory.signature|entity })
+                                    %else:
+                                        (&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)
+                                    %endif
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+                %endif
+
+<!--
+################################################################################
+XII. BAGIAN HALAMAN
+################################################################################
+-->
+    <tr>
+        <td>
+            <table class="tail">
+                <tr>
+                    <td class="tail_audit">
+                        %if show_user:
+                            Dicetak oleh ${user.name or ''|entity}
+                        %else:
+                            ${}
+                        %endif
+                        %if show_time_print:
+                            pada ${time.strftime('%d %h %Y %r')}
+                        %else:
+                            ${}
+                        %endif
+                    </td>
+                    <td class="tail_page" >
+                        Hal ${current_page} dari ${total_page}
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+                <!-- Insert page break untuk setiap halaman kecuali halaman terakhir -->
+                %if current_page < total_page:
+            <p style="page-break-after:always; margin: 0px;"></p>
+                %endif
+            <!-- Akhir dari loop untuk mencetak lebih dari 1 halaman -->
+            %endfor
+
+            <!-- Inset page break untuk akhir setiap pencetakan 1 kopi kecuali setelah pencetakan kopi terakhir -->
+            %if copy_no < (no_of_copies-1):
+            <p style="page-break-after:always; margin: 0px;"></p>
+            %endif
+        <!-- Akhir dari loop untuk mencetak lebih dari 1 kopi -->
+        %endfor
+
+        <!-- Tambahkan page break setiap pencetakan dokumen, kecuali untuk dokumen terakhir-->
+        %if total_document > 1:
+                <p style="page-break-after:always; margin: 0px;"></p>
+            <%total_document = total_document - 1 %>
+        %endif
+
+    <!-- Akhir kondisi yang mencek status dari dokumen yang dicetak -->
+    %endif
+
+<!-- Akhir dari loop untuk mencetak lebih dari 1 dokumen -->
+%endfor
+
+<!--
+################################################################################
+XIII. WRONG STATE STATEMENT
+################################################################################
+-->
+
+%if wrong_document_state:
+<p style="page-break-after:always"></p>
+<small>
+<br/><br/><br/>
+<b>Dokumen-dokumen ini tidak dicetak karena statusnya:</b><br/>
+${', '.join(wrong_document_state)}
+</small>
+%endif
+
+</body>
+</html>
+                ]]>
+            </field>
+        </record>
+
+        <!-- Activate the form -->
+        <function model="via.form.templates" name="activate"
+            eval="[ ref('stock_picking_in_form_template') ], " />
+    </data>
+</openerp>

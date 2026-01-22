@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_company_account_voucher_print_form">
+            <field name="name">res.company.account.voucher.print.form</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="model">res.company</field>
+            <field name="priority">88</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <page string="Configuration" position="inside">
+                    <separator string="Document Signature" colspan="4"/>
+                    <field name="document_signature" mode="tree" domain="[('company_id', '=', id)]" nolabel="1" colspan="4">
+                        <tree string="" editable="top">
+                            <field name="doc_type"/>
+                            <field name="user_id"/>
+                        </tree>
+                    </field>
+                    <newline/>
+                </page>
+            </field>
+        </record>
+    </data>
+</openerp>

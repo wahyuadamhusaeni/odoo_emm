@@ -1,0 +1,52 @@
+<openerp>
+    <data>
+        <record id="view_stock_move_via_stock" model="ir.ui.view">
+            <field name="name">stock.move.form5</field>
+            <field name="model">stock.move</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="stock.view_move_form" />
+            <field name="arch" type="xml">
+                <field name="date_expected" position="after">
+                    <separator string="Journal Entries" colspan="2" />
+                    <field name="account_move_id" colspan="4" nolabel="1"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="stock_partial_picking_form_enhanced" model="ir.ui.view">
+            <field name="name">VIA Stock Enhancement - Partial Picking</field>
+            <field name="model">stock.partial.picking</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="stock.stock_partial_picking_form" />
+            <field name="arch" type="xml">
+                <field name="prodlot_id" position="attributes">
+                    <attribute name="context">{'product_id':product_id}</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record id="stock_partial_move_line_list_enhanced" model="ir.ui.view">
+            <field name="name">VIA Stock Enhancement - Partial Move Line List</field>
+            <field name="model">stock.partial.move.line</field>
+            <field name="type">tree</field>
+            <field name="inherit_id" ref="stock.stock_partial_move_line_list" />
+            <field name="arch" type="xml">
+                <field name="prodlot_id" position="attributes">
+                    <attribute name="context">{'product_id':product_id}</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_picking_out_contact_form" model="ir.ui.view">
+            <field name="name">Stock Picking EMM Stock Enhanced Contact Form View</field>
+            <field name="model">stock.picking.out</field>
+            <field name="inherit_id" ref="stock.view_picking_out_form"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="attributes">
+                    <attribute name="context">{'search_default_customer':1, 'show_address':1}</attribute>
+                    <attribute name="options">{'always_reload': True}</attribute>
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>

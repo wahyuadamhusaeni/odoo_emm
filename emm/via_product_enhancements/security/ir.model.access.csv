@@ -1,0 +1,7 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"product_tag_warehouse_user","product_tag_warehouse_user","via_product_enhancements.model_product_tag","stock.group_stock_user",1,1,0,0
+"product_tag_warehouse_manager","product_tag_warehouse_manager","via_product_enhancements.model_product_tag","stock.group_stock_manager",1,1,1,1
+"product_tag_sale_manager","product_tag_sale_manager","via_product_enhancements.model_product_tag","base.group_sale_manager",1,1,1,1
+"product_tag_sale_salesman","product_tag_sale_salesman","via_product_enhancements.model_product_tag","base.group_sale_salesman",1,0,0,0
+"product_tag_purchase_user","product_tag_purchase_user","via_product_enhancements.model_product_tag","purchase.group_purchase_user",1,0,0,0
+"product_tag_purchase_manager","product_tag_purchase_manager","via_product_enhancements.model_product_tag","purchase.group_purchase_manager",1,1,1,1

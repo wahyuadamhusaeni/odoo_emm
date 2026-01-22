@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <!-- Signatory Document Type code -->
+        <record id="doc_signature_technician" model="code.decode">
+            <field name="sequence" eval="1"/>
+            <field name="code">technician</field>
+            <field name="value">Teknisi</field>
+            <field name="category" ref="via_document_signature.doc_signature_type_category"/>
+            <field name="pinned" eval="True"/>
+        </record>
+
+        <record id="doc_signature_service_admin" model="code.decode">
+            <field name="sequence" eval="1"/>
+            <field name="code">service_admin</field>
+            <field name="value">Service Admin</field>
+            <field name="category" ref="via_document_signature.doc_signature_type_category"/>
+            <field name="pinned" eval="True"/>
+        </record>
+
+    	<!-- Service Request State -->
+
+        <record id="service_request_state" model="code.category">
+            <field name="name">Service Request State</field>
+            <field name="pinned">True</field>
+        </record>
+
+        <!-- Stock Picking Type -->
+        <record id="stock_picking_svc_type" model="code.category">
+            <field name="name">Stock Picking Type</field>
+            <field name="pinned">True</field>
+        </record>
+
+        <!-- Stock Location Area Type -->
+        <record id="stock_location_area_type" model="code.category">
+            <field name="name">Stock Location Area Type</field>
+            <field name="pinned">True</field>
+        </record>
+
+        <!-- State for Service Request -->
+
+        <!-- Task Stages -->
+        <record id="service_request_state_draft" model="service.state">
+            <field name="sequence" eval="1"/>
+            <field name="name">Draft</field>
+        </record>
+        <record id="service_request_state_inprogress" model="service.state">
+            <field name="sequence" eval="2"/>
+            <field name="name">In Progress</field>
+        </record>
+        <record id="service_request_state_pending" model="service.state">
+            <field name="sequence" eval="2"/>
+            <field name="name">Pending</field>
+        </record>
+        <record id="service_request_state_done" model="service.state">
+            <field name="sequence" eval="3"/>
+            <field name="name">Done</field>
+        </record>
+
+        <!-- Type for Stock Picking-->
+        <record id="stock_picking_svc_type_standard" model="code.decode">
+            <field name="sequence" eval="1"/>
+            <field name="code">standard</field>
+            <field name="value">Standard</field>
+            <field name="category" ref="stock_picking_svc_type"/>
+            <field name="pinned" eval="True"/>
+        </record>
+        <record id="stock_picking_svc_type_request" model="code.decode">
+            <field name="sequence" eval="1"/>
+            <field name="code">request</field>
+            <field name="value">Request</field>
+            <field name="category" ref="stock_picking_svc_type"/>
+            <field name="pinned" eval="True"/>
+        </record>
+        <record id="stock_picking_svc_type_pickup" model="code.decode">
+            <field name="sequence" eval="1"/>
+            <field name="code">pickup</field>
+            <field name="value">Pickup</field>
+            <field name="category" ref="stock_picking_svc_type"/>
+            <field name="pinned" eval="True"/>
+        </record>
+        <record id="stock_picking_svc_type_consume" model="code.decode">
+            <field name="sequence" eval="1"/>
+            <field name="code">consume</field>
+            <field name="value">Consumed</field>
+            <field name="category" ref="stock_picking_svc_type"/>
+            <field name="pinned" eval="True"/>
+        </record>
+        <record id="stock_picking_svc_type_return" model="code.decode">
+            <field name="sequence" eval="1"/>
+            <field name="code">return</field>
+            <field name="value">Return</field>
+            <field name="category" ref="stock_picking_svc_type"/>
+            <field name="pinned" eval="True"/>
+        </record>
+
+        <!-- Type for Stock Location Area-->
+        <record id="stock_location_area_type_spareparts" model="code.decode">
+            <field name="sequence" eval="1"/>
+            <field name="code">spareparts</field>
+            <field name="value">Spareparts</field>
+            <field name="category" ref="stock_location_area_type"/>
+            <field name="pinned" eval="True"/>
+        </record>
+        <record id="stock_location_area_type_pickup" model="code.decode">
+            <field name="sequence" eval="1"/>
+            <field name="code">pickup</field>
+            <field name="value">Pickup</field>
+            <field name="category" ref="stock_location_area_type"/>
+            <field name="pinned" eval="True"/>
+        </record>
+        <record id="stock_location_area_type_transit" model="code.decode">
+            <field name="sequence" eval="1"/>
+            <field name="code">transit</field>
+            <field name="value">Transit</field>
+            <field name="category" ref="stock_location_area_type"/>
+            <field name="pinned" eval="True"/>
+        </record>
+
+    </data>
+</openerp>

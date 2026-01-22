@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+    <record id="group_via_reporting_tree_manager" model="res.groups">
+        <field name="name">VIA / Reporting / Reporting Tree / Manager</field>
+    </record>
+    <record id="via_reporting_tree_rule" model="ir.rule">
+      <field name="name">VIA Reporting Tree</field>
+      <field name="model_id" ref="model_via_reporting_tree"/>
+      <field name="global" eval="True"/>
+      <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+    <record id="via_reporting_tree_node_rule" model="ir.rule">
+      <field name="name">VIA Reporting Tree Node</field>
+      <field name="model_id" ref="model_via_reporting_tree_node"/>
+      <field name="global" eval="True"/>
+      <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+    <record id="via_account_tree_node_rule" model="ir.rule">
+      <field name="name">VIA Account Tree Node</field>
+      <field name="model_id" ref="model_via_account_tree_node"/>
+      <field name="global" eval="True"/>
+      <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+  </data>
+</openerp>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Sales Order Parameters Category -->
+        <record id="so_parameter_category" model="code.category">
+            <field name="name">Sales Order Parameters Category</field>
+            <field name="pinned">True</field>
+        </record>
+    </data>
+</openerp>

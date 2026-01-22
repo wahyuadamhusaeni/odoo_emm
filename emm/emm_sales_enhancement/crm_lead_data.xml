@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record id="emm_server_action_configuration" model="ir.actions.server">
+            <field name="name">Lead from Email</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="crm.model_crm_lead"/>
+            <field name="code">fields = ['Nama', 'Perusahaan', 'Alamat', 'Telepon', 'Hanphone', 'Email', 'Pesan']
+_dict={}
+lead=self.browse(cr,uid,context['active_id'],context=context)
+description=lead['description']
+for line in description.splitlines():
+    for field in fields:
+        if field in line:
+            if 'Alamat Perusahaan' in line and field == 'Perusahaan':
+                continue
+            else:
+                split_line = line.split(':')
+                if len(split_line) > 1:
+                    if field == 'Email':
+                        if '[' in split_line[1]:
+                            split_email_line = split_line[1].split('[')
+                            _dict[field] = split_email_line[0].strip()
+                    else:
+                        _dict[field] = split_line[1].strip()
+
+self.write(cr,uid,context['active_id'],{
+                        'name':_dict.get('Perusahaan') or _dict.get('Nama') or 'Tidak ada subjek',
+                        'partner_name':_dict.get('Perusahaan','Tidak ada nama perusahaan'),
+                        'phone':_dict.get('Telepon','Tidak ada nomor telepon'),
+                        'mobile':_dict.get('Hanphone','Tidak ada nomor handphone'),
+                        'contact_name':_dict.get('Nama','Tidak ada nama kontak'),
+                        'email_from':_dict.get('Email','Tidak ada email'),
+                        'street':_dict.get('Alamat','Tidak ada alamat perusahaan'),
+                        'description':_dict.get('Pesan','Tidak ada pesan')}, context=context)</field>
+            <field  name="state">code</field>
+        </record>
+    </data>
+</openerp>

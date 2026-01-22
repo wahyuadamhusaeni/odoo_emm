@@ -1,0 +1,464 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!-- Menu Item -->
+
+        <menuitem id="base.menu_aftersale" name="After-Sale Services" groups="base.group_sale_salesman" parent="base.menu_base_partner" sequence="2" />
+
+        <menuitem id="base.menu_service_request" name="Service Request (SR)" parent="base.menu_base_partner"/>
+
+        <menuitem id="base.menu_tag_config" name="Tag Configuration" parent="base.menu_base_config" sequence="90"/>
+
+        <!-- Tag Action -->
+
+        <act_window id="sr_keyword_action"
+            name="SR Keyword"
+            res_model="service.request.keyword"
+            view_type="form"
+            view_mode="tree,form"/>
+
+        <act_window id="sr_skill_set_action"
+            name="SR Skill Set"
+            res_model="service.request.skill.set"
+            view_type="form"
+            view_mode="tree,form"/>
+
+        <!-- Service Request Action -->
+
+        <act_window id="service_request_action"
+            name="Service Request"
+            res_model="service.request"
+            view_type="form"
+            view_mode="tree,form"/>
+
+        <!-- Service Request Invoice Line Action -->
+
+        <act_window id="service_request_invoice_line_action"
+            name="To Invoice"
+            res_model="service.invoice.line"
+            view_type="form"
+            view_mode="tree,form"
+            domain="[('has_invoiced','!=','True'),('origin','!=','')]"/>
+
+        <!-- Sub Menu Item -->
+
+        <menuitem action="sr_keyword_action" id="menu_sr_keyword" parent="base.menu_tag_config" sequence="1"/>
+
+        <menuitem action="sr_skill_set_action" id="menu_sr_skill_set" parent="base.menu_tag_config" sequence="2"/>
+
+        <menuitem action="service_request_action" id="menu_service_request" name="Service Request" parent="base.menu_aftersale" />
+
+        <menuitem action="service_request_invoice_line_action" id="menu_service_request_invoice_line" name="To Invoice" parent="base.menu_aftersale" />
+
+        <!-- Service Request Keyword Tree View -->
+
+        <record id="view_service_request_keyword_tree" model="ir.ui.view">
+            <field name="name">view.service.request.keyword.tree</field>
+            <field name="model">service.request.keyword</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Service Request Keyword">
+                    <field name="name"/>
+                    <field name="is_active"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Service Request Keyword Form View -->
+
+        <record id="view_service_request_keyword_form" model="ir.ui.view">
+            <field name="name">view.service.request.keyword.form</field>
+            <field name="model">service.request.keyword</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Service Request Keyword" version="7.0">
+                    <sheet>
+                        <separator colspan="4" string="Service Request Keyword"/>
+                        <group col="4" colspan="4">
+                            <field name="name"/>
+                            <field name="is_active"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Service Request Skill Set Tree View -->
+
+        <record id="view_service_request_skill_set_tree" model="ir.ui.view">
+            <field name="name">view.service.request.skill.set.tree</field>
+            <field name="model">service.request.skill.set</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Service Request Skill Set">
+                    <field name="complete_name"/>
+                    <field name="is_active"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Service Request Line Skill Set View -->
+
+        <record id="view_service_request_skill_set_form" model="ir.ui.view">
+            <field name="name">view.service.request.skill.set.form</field>
+            <field name="model">service.request.skill.set</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Service Request Skill Set" version="7.0">
+                    <sheet>
+                        <separator colspan="4" string="Service Request Skill Set"/>
+                        <group col="4" colspan="4">
+                            <field name="name"/>
+                            <field name="model"/>
+                            <field name="doc_id"/>
+                            <field name="skill_parent_id"/>
+                            <field name="is_active"/>
+                            <field name="skill_child_id"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Service Request Tree View -->
+
+        <record id="view_service_request_tree" model="ir.ui.view">
+            <field name="name">view.service.request.tree</field>
+            <field name="model">service.request</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Service Request">
+                    <field name="name"/>
+                    <!-- <field name="sr_name"/> -->
+                    <field name="partner"/>
+                    <field name="product_id"/>
+                    <field name="serial_number"/>
+                    <field name="date"/>
+                    <field name="elapsed_time"/>
+                    <field name="partner_assign"/>
+                    <field name="description"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Service Request Form View -->
+
+        <record id="view_service_request_form" model="ir.ui.view">
+            <field name="name">view.service.request.form</field>
+            <field name="model">service.request</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Service Request" version="7.0">
+                    <header>
+                        <button name="confirm_sr" type="object" string="Confirm" attrs="{'invisible': [('state','not in',['draft','pending'])]}"/>
+                        <button name="pending_sr" type="object" string="Pending" attrs="{'invisible': [('state','!=','inprogress')]}"/>
+                        <button name="cancel_sr" type="object" string="Cancel" attrs="{'invisible': [('state','not in',['draft','inprogress'])]}"/>
+                        <button name="done_sr" type="object" string="Done" attrs="{'invisible': [('state','!=','inprogress')]}"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_right oe_button_box" name="buttons">
+                            <button name="knowledge_base" string="Knowledge Base" type="object"/>
+                            <button name="summary" string="Summary" type="object"/>
+                            <button name="history_1" string="Partner History" type="object"/>
+                            <button name="history_2" string="Product History" type="object"/>
+                        </div>
+                        <h1>
+                            <label string="Service Request"/>
+                            <field name="name" class="oe_inline"/>
+                        </h1>
+                        <!-- <div> -->
+                            <!-- <label for="sr_name"/> -->
+                            <!-- <field name="sr_name"/> -->
+                            <!-- <label for="sr_keyword" class="oe_edit_only"/> -->
+                            <!-- <field name="sr_keyword" widget="many2many_tags"/> -->
+                        <!-- </div> -->
+                        <group col="4" colspan="4">
+                            <field name="partner" on_change="on_change_partner(partner)" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="partner_type"/>
+                            <field name="date" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="elapsed_time"/>
+                            <field name="location_from" attrs="{'readonly': [('state','not in',['draft','inprogress'])]}"/>
+                            <field name="partner_assign" attrs="{'readonly': [('state','!=','draft')]}"/>
+                        </group>
+                        <label for="description"/>
+                        <field name="description" nolabel="1" colspan="4" placeholder="Add description here ..." height="50" attrs="{'readonly': [('state','not in',['draft','inprogress'])]}"/>
+                        <separator colspan="4" string="Product To Service"/>
+                        <group col="4" colspan="4">
+                            <field name="serial_number" on_change="on_change_serial_number(serial_number)" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="delivery_order" domain="[('state','=','done'),('type','=','out')]" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="product_id" on_change="on_change_product_id(product_id)" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="delivery_order_date"/>
+                        </group>
+                        <button name="Copy" string="Copy From DO" type="object" context="{'delivery_order_date': delivery_order_date}"/>
+                        <group col="4" colspan="4">
+                            <field name="warranty_start" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="warranty_end"/>
+                            <field name="warranty_duration"/>
+                            <field name="warranty_elapsed_time"/>
+                            <label for="warranty_time"/>
+                            <div>
+                                <field name="warranty_time" class="oe_inline" nolabel="1"/>
+                                <field name="warranty_warning" invisible="1"/>
+                                <button name="dummy_button" icon="gtk-dialog-warning" class="oe_link" type="object" attrs="{'invisible': [('warranty_warning','=',False)]}" help="The Product Warranty Has Expired"/>
+                            </div>
+                            <field name="sr_skill_set" widget="many2many_tags" attrs="{'readonly': [('state','!=','draft')]}"/>
+                            <field name="change_view" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="service_information_visibility" invisible="1"/>
+                            <field name="service_information" nolabel="1" attrs="{'invisible': [('service_information_visibility','=',False)]}"/>
+                        </group>
+                        <notebook>
+                            <page string="Service Task">
+                                <button name="assign_task" string="Create Task" type="object" context="{'service_request_id': active_id, 'sr_skill_set': sr_skill_set}" attrs="{'invisible': [('state','!=','inprogress')]}"/>
+                                <separator colspan="4" string="Service Task"/>
+                                <field name="service_task" nolabel="1" colspan="4" widget="one2many_list" context="{'form_view_ref': 'via_service.view_project_task_service_simple_form'}" attrs="{'readonly': [('state','!=','inprogress')]}">
+                                    <tree string="Service Task" create="false" delete="false">
+                                        <field name="id" string="Task ID"/>
+                                        <field name="name"/>
+                                        <field name="user_id"/>
+                                        <field name="date_start"/>
+                                        <field name="date_end"/>
+                                        <field name="date_deadline"/>
+                                        <field name="progress" widget="progressbar"/>
+                                        <button name="print_service_task" icon="gtk-print" string="Print" type="object"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Spare Parts">
+                                <button name="spare_parts_request" string="Request" type="object" context="{'picking_svc_type': 'request', 'location_from_request': location_from, 'partner': partner}" attrs="{'invisible': [('state','!=','inprogress')]}"/>
+                                <button name="spare_parts_pickup" string="Pickup" type="object" context="{'picking_svc_type': 'pickup', 'location_from_request': [], 'partner': partner}" attrs="{'invisible': [('state','!=','inprogress')]}"/>
+                                <button name="spare_parts_consume" string="Consume" type="object" context="{'picking_svc_type': 'consume', 'location_from_request': [], 'partner': partner}" attrs="{'invisible': [('state','!=','inprogress')]}"/>
+                                <button name="spare_parts_return" string="Return" type="object" context="{'service_request_id': active_id, 'picking_svc_type': 'return', 'location_from_request': [], 'partner': partner}" attrs="{'invisible': [('state','!=','inprogress')]}"/>
+                                <button name="toggle_view_true" string="Internal Move" type="object" class="oe_right" context="{'change_view': change_view}"/>
+                                <button name="toggle_view_false" string="Stock Move" type="object" class="oe_right" context="{'change_view': change_view}"/>
+                                <separator colspan="4" string="Planning"/>
+                                <field name="spare_parts_planning" nolabel="1" colspan="4" attrs="{'invisible': [('change_view','=',False)], 'readonly': [('state','!=','inprogress')]}" widget="one2many_list" context="{'form_view_ref': 'via_service.view_stock_picking_simple_service'}" >
+                                    <tree string="Spare Parts Planning" create="false" delete="false">
+                                        <field name="name" string="No"/>
+                                        <field name="backorder_id" string="Back Order"/>
+                                        <field name="picking_svc_type"/>
+                                        <field name="date" string="Requested Date"/>
+                                        <field name="state"/>
+                                        <button name="print_pickup_return" icon="gtk-print" string="Print" type="object" attrs="{'invisible': ['|',('picking_svc_type','not in',['pickup','return'])]}"/>
+                                    </tree>
+                                </field>
+                                <field name="spare_parts_planning_move" nolabel="1" colspan="4" attrs="{'invisible': [('change_view','=',True)], 'readonly': [('state','!=','inprogress')]}" widget="one2many_list" >
+                                    <tree string="Spare Parts Planning Move" create="false" delete="false">
+                                        <field name="product_id"/>
+                                        <field name="product_qty"/>
+                                        <field name="product_uom"/>
+                                        <field name="prodlot_id"/>
+                                        <field name="picking_id"/>
+                                        <field name="location_id"/>
+                                        <field name="location_dest_id"/>
+                                        <field name="state"/>
+                                    </tree>
+                                </field>
+                                <separator colspan="4" string="Consumed"/>
+                                <field name="spare_parts_consume" nolabel="1" colspan="4" attrs="{'invisible': [('change_view','=',False)], 'readonly': [('state','!=','inprogress')]}" widget="one2many_list" context="{'form_view_ref': 'via_service.view_stock_picking_out_simple_service'}" >
+                                    <tree string="Spare Parts Consume" create="false" delete="false">
+                                        <field name="name" string="No"/>
+                                        <field name="backorder_id" string="Back Order"/>
+                                        <field name="picking_svc_type"/>
+                                        <field name="date" string="Requested Date"/>
+                                        <field name="state"/>
+                                    </tree>
+                                </field>
+                                <field name="spare_parts_consume_move" nolabel="1" colspan="4" attrs="{'invisible': [('change_view','=',True)], 'readonly': [('state','!=','inprogress')]}" widget="one2many_list" >
+                                    <tree string="Spare Parts Consume Move" create="false" delete="false">
+                                        <field name="product_id"/>
+                                        <field name="product_qty"/>
+                                        <field name="product_uom"/>
+                                        <field name="prodlot_id"/>
+                                        <field name="picking_id"/>
+                                        <field name="location_id"/>
+                                        <field name="location_dest_id"/>
+                                        <field name="state"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Service Fee">
+                                <!-- <button name="service_fee_request" string="Request" type="object" context="{'service_request_id': active_id}"/> -->
+                                <separator colspan="4" string="Request"/>
+                                <field name="service_request" nolabel="1" colspan="4" domain="[('service_type','=','request')]" attrs="{'readonly': [('state','!=','inprogress')]}">
+                                    <tree string="Service Fee Request" editable="bottom">
+                                        <field name="service_id" domain="[('type','=','service')]" on_change="onchange_service_id(service_id)"/>
+                                        <field name="service_qty" on_change="onchange_service_qty(service_qty, service_id)"/>
+                                        <field name="service_uom" readonly="True"/>
+                                        <field name="service_price" readonly="True"/>
+                                        <field name="service_total" readonly="True"/>
+                                        <field name="service_type" invisible="0" readonly="True"/>
+                                    </tree>
+                                </field>
+                                <group col="4" colspan="4">
+                                    <separator colspan="2" string="Execute" class="oe_inline"/>
+                                    <button name="service_fee_execute" string="Execute" type="object" context="{'service_request_id': active_id}" class="oe_right" attrs="{'invisible': [('state','!=','inprogress')]}"/>
+                                </group>
+                                <field name="service_execute" nolabel="1" colspan="4" domain="[('service_type','=','execute')]" attrs="{'readonly': [('state','!=','inprogress')]}">
+                                    <tree string="Service Fee Execute" create="false" delete="false">
+                                        <field name="service_id"/>
+                                        <field name="service_qty"/>
+                                        <field name="service_uom"/>
+                                        <field name="service_price"/>
+                                        <field name="service_total"/>
+                                        <field name="service_type" invisible="0"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Service Invoice">
+                                <button name="create_invoice" string="Create Invoice" type="object" context="{'service_request_id': active_id}" attrs="{'invisible': [('state','!=','inprogress')]}"/>
+                                <field name="service_invoice" nolabel="1" colspan="4" widget="one2many_list" attrs="{'readonly': [('state','!=','inprogress')]}">
+                                    <tree string="Service Invoice" create="false" delete="false">
+                                        <field name="partner_id" groups="base.group_user"/>
+                                        <field name="date_invoice"/>
+                                        <field name="number"/>
+                                        <field name="reference" invisible="1"/>
+                                        <field name="name" invisible="1"/>
+                                        <field name="journal_id" invisible="1"/>
+                                        <field name="period_id" invisible="1" groups="account.group_account_user"/>
+                                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                        <field name="user_id"/>
+                                        <field name="date_due"/>
+                                        <field name="origin"/>
+                                        <field name="currency_id" groups="base.group_multi_currency"/>
+                                        <field name="residual" sum="Residual Amount"/>
+                                        <field name="amount_untaxed" sum="Untaxed Amount"/>
+                                        <field name="amount_total" sum="Total Amount"/>
+                                        <field name="state"/>
+                                        <button name="print_service_invoice" icon="gtk-print" string="Print" type="object"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Service Request Search View -->
+
+        <record id="view_service_request_search" model="ir.ui.view">
+            <field name="name">view.service.request.search</field>
+            <field name="model">service.request</field>
+            <field name="arch" type="xml">
+                <search string="Service Request">
+                    <field name="name"/>
+                    <field name="partner"/>
+                    <field name="partner_assign"/>
+                    <field name="location_from"/>
+                    <field name="product_id"/>
+                    <field name="serial_number"/>
+                    <field name="state"/>
+                    <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
+                    <filter name="inprogress" string="In Progress" domain="[('state','=','inprogress')]"/>
+                    <filter name="pending" string="Pending" domain="[('state','=','pending')]"/>
+                    <filter name="cancel" string="Cancelled" domain="[('state','=','cancel')]"/>
+                    <filter name="done" string="Done" domain="[('state','=','done')]"/>
+                    <separator/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Partner" domain="[]" context="{'group_by':'partner'}"/>
+                        <filter string="Product" domain="[]" context="{'group_by':'product_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Service Request Log View -->
+
+        <record id="service_request_log_view_form" model="ir.ui.view">
+            <field name="name">Service Request Log Form Mail Thread</field>
+            <field name="model">service.request</field>
+            <field name="inherit_id" ref="view_service_request_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form" position="inside">
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Service Request Invoice Line Tree View -->
+
+        <record id="view_service_request_invoice_line_tree" model="ir.ui.view">
+            <field name="name">view.service.request.invoice.line.tree</field>
+            <field name="model">service.invoice.line</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Service Request Invoice Line" create="false">
+                    <field name="origin"/>
+                    <field name="product_id"/>
+                    <field name="uos_id"/>
+                    <field name="account_id"/>
+                    <field name="price_unit"/>
+                    <field name="cost_method"/>
+                    <field name="name"/>
+                    <field name="quantity"/>
+                    <field name="total"/>
+                    <field name="has_invoiced"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_service_request_invoice_line_form" model="ir.ui.view">
+            <field name="name">view.service.request.invoice.line.form</field>
+            <field name="model">service.invoice.line</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Service Request Invoice Line" create="false" edit="false">
+                    <field name="origin"/>
+                    <field name="product_id"/>
+                    <field name="uos_id"/>
+                    <field name="account_id"/>
+                    <field name="price_unit"/>
+                    <field name="cost_method"/>
+                    <field name="name"/>
+                    <field name="quantity"/>
+                    <field name="total"/>
+                    <field name="zero_price"/>
+                    <field name="has_invoiced"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_service_make_invoice" model="ir.ui.view">
+            <field name="name">Create invoices</field>
+            <field name="model">service.invoice.line</field>
+            <field name="arch" type="xml">
+                <form string="Create invoices" version="7.0">
+                    <separator colspan="4" string="Do you really want to create the invoice(s)?" />
+                    <footer>
+                        <button name="make_invoices" string="Create Invoices" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_service_make_invoice" model="ir.actions.act_window">
+            <field name="name">Make Invoices</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">service.invoice.line</field>
+            <!-- <field name="view_type">form</field> -->
+            <!-- <field name="view_mode">form</field> -->
+            <field name="view_id" ref="view_service_make_invoice"/>
+            <field name="target">new</field>
+            <field name="multi">True</field>
+        </record>
+
+        <record model="ir.values" id="service_make_invoice">
+            <field name="name">Make Invoices</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_service_make_invoice'))" />
+            <field name="key">action</field>
+            <field name="model">service.invoice.line</field>
+        </record>
+
+    </data>
+</openerp>

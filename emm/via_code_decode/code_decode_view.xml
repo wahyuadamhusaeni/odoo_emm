@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<openerp>
+<data>
+
+<record id="view_code_decode_tree" model="ir.ui.view">
+    <field name="name">code.decode.tree</field>
+    <field name="model">code.decode</field>
+    <field name="type">tree</field>
+    <field name="arch" type="xml">
+        <tree string="Code Decode">
+            <field name="category"/>
+            <field name="code"/>
+            <field name="sequence"/>
+            <field name="value"/>
+            <field name="company_id"/>
+            <field name="pinned"/>
+        </tree>
+    </field>
+</record>
+
+<record id="view_code_decode_form" model="ir.ui.view">
+    <field name="name">code.decode.form</field>
+    <field name="model">code.decode</field>
+    <field name="type">form</field>
+    <field name="arch" type="xml">
+        <form string="Code Decode">
+            <field name="code"/>
+            <field name="category"/>
+            <field name="sequence"/>
+            <field name="value"/>
+            <field name="company_id"/>
+            <field name="pinned"/>
+        </form>
+    </field>
+</record>
+
+<record id="act_code_decode" model="ir.actions.act_window">
+    <field name="name">Code Decode</field>
+    <field name="res_model">code.decode</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">tree, form</field>
+</record>
+<record model="ir.actions.act_window.view" id="action_code_decode_tree">
+    <field name="sequence" eval="1"/>
+    <field name="view_mode">tree</field>
+    <field name="view_id" ref="view_code_decode_tree"/>
+    <field name="act_window_id" ref="act_code_decode"/>
+</record>
+<record model="ir.actions.act_window.view" id="action_code_decode_form">
+    <field name="sequence" eval="2"/>
+    <field name="view_mode">form</field>
+    <field name="view_id" ref="view_code_decode_form"/>
+    <field name="act_window_id" ref="act_code_decode"/>
+</record>
+
+<menuitem
+    id="menu_code_decode" name="Code Decode"
+    parent="menu_document_control" action="act_code_decode"/>
+
+</data>
+</openerp>

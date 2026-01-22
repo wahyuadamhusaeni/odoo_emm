@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="company_journal_default_form">
+            <field name="name">company.journal.default</field>
+            <field name="model">company.journal</field>
+            <field name="arch" type="xml">
+                <form string="Company Journal Default" version="7.0">
+                    <group>
+                        <field name="domain_id" on_change="get_domain_journal(domain_id)" />
+                    </group>
+                    <group>
+                        <field name="journal_id"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_company_inherit_company_journal_default_form">
+            <field name="name">res.company.form.inherit.company.journal.default</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="model">res.company</field>
+            <field name="arch" type="xml">
+                <page string="Configuration" position="inside">
+                    <group string="Company Journals">
+                        <field name="default_journal" mode="tree" nolabel="1">
+                            <tree>
+                                <field name="domain_id"/>
+                                <field name="journal_id"/>
+                            </tree>
+                            <form>
+                                <field name="domain_id" required="1" on_change="get_domain_journal(domain_id)"/>
+                                <field name="filter_domain" invisible="1"/>
+                                <field name="journal_id" required="1" context="{'domain': filter_domain}"/>
+                            </form>
+                        </field>
+                    </group>
+                </page>
+            </field>
+        </record>
+    </data>
+</openerp>

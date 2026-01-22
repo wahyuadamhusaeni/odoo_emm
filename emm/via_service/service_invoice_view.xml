@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!-- Service Invoice Form View -->
+
+        <record id="view_service_invoice_form" model="ir.ui.view">
+            <field name="name">view.service.invoice.form</field>
+            <field name="model">service.invoice</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Service Invoice" version="7.0">
+                    <field name="sr_id" invisible="1"/>
+                    <field name="stock_move_ids" invisible="1"/>
+                    <separator colspan="4" string="Spare Parts Consumed"/>
+                    <field name="stock_move" domain="[('id','in',stock_move_ids[0][2])]">
+                        <tree string="Spare Parts Consumed" create="false" editable="bottom">
+                            <field name="product_id" readonly="True"/>
+                            <field name="product_qty" readonly="True"/>
+                            <field name="product_uom" readonly="True"/>
+                            <field name="prodlot_id" readonly="True"/>
+                            <field name="picking_id" readonly="True"/>
+                            <field name="location_id" readonly="True"/>
+                            <field name="location_dest_id" readonly="True"/>
+                            <field name="state" readonly="True"/>
+                            <field name="zero_price"/>
+                            <field name="total_price" readonly="True"/>
+                        </tree>
+                    </field>
+                    <separator colspan="4" string="Service Fee Executed"/>
+                    <field name="service_fee" domain="[('service_type','=','execute'),('sr_id','=',sr_id),('has_invoiced','=',False)]">
+                        <tree string="Service Fee Execute" create="false" editable="bottom">
+                            <field name="service_id" readonly="True"/>
+                            <field name="service_qty" readonly="True"/>
+                            <field name="service_uom" readonly="True"/>
+                            <field name="service_price" readonly="True"/>
+                            <field name="service_type" invisible="1"/>
+                            <field name="zero_price"/>
+                            <field name="has_invoiced" invisible="1"/>
+                        </tree>
+                    </field>
+                    <button name="create_service_invoice" string="Create Invoice" type="object" context="{'stock_move': stock_move, 'service_fee': service_fee}"/>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</openerp>

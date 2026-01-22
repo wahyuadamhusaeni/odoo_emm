@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <delete id="doc_signature_category" model="code.category"/>
+        <record id="doc_signature_type_category" model="code.category">
+            <field name="name">Document Type</field>
+            <field name="pinned" eval="True"/>
+        </record>
+    </data>
+</openerp>

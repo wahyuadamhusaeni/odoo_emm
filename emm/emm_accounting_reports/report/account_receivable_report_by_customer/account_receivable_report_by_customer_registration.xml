@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+
+    <record id="report_client_accounting_arrbc"
+            model="ir.actions.report.xml">
+      <field name="name">Account Receivable Report By Customer</field>
+      <field name="report_name">account_receivable_report_by_customer_pdf</field>
+      <field name="report_type">pdf</field>
+      <field name="jasper_output">pdf</field>
+      <field name="model">res.partner</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file" eval="'emm_accounting_reports/report/account_receivable_report_by_customer/account_receivable_report_by_customer.jrxml'"/>
+      <field name="report_rml" eval="'emm_accounting_reports/report/account_receivable_report_by_customer/account_receivable_report_by_customer.jrxml'"/>
+      <field name="multi" eval="False"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+
+    <record id="report_client_accounting_arrbc_xls"
+            model="ir.actions.report.xml">
+      <field name="name">Account Receivable Report By Customer</field>
+      <field name="report_name">account_receivable_report_by_customer_xls</field>
+      <field name="report_type">xls</field>
+      <field name="jasper_output">xls</field>
+      <field name="model">res.partner</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file" eval="'emm_accounting_reports/report/account_receivable_report_by_customer/account_receivable_report_by_customer_xls.jrxml'"/>
+      <field name="report_rml" eval="'emm_accounting_reports/report/account_receivable_report_by_customer/account_receivable_report_by_customer_xls.jrxml'"/>
+      <field name="multi" eval="False"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+  </data>
+</openerp>

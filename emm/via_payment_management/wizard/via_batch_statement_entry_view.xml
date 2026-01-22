@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="via_batch_statement_entry" model="ir.ui.view">
+            <field name="name">Account Transactions</field>
+            <field name="model">via.batch.statement.entry</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Transaction Information" version="7.0">
+                    <sheet>
+                        <group colspan="4" col="6">
+                            <field name="date"/>
+                            <field name="company_id"/>
+                            <field name="journal_id" on_change="onchange_journal(journal_id)"/>
+                            <field name="opp_account_id"/>
+                        </group>
+                        <separator string="Transaction Lines" colspan="4"/>
+                        <field name="statement_lines" mode="tree" colspan="4" nolabel="1">
+                            <tree string="" editable="top">
+                                <field name="name"/>
+                                <field name="ref"/>
+                                <field name="partner_id"/>
+                                <field name="debit" sum="Total Debit"/>
+                                <field name="credit" sum="Total Credit"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                    <footer>
+                        <button name="record_transactions" string="Submit" type="object" class="oe_highlight"/>
+                        or
+                        <button special="cancel" string="Cancel" class="oe_link"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_bank_batch_entry" model="ir.actions.act_window">
+            <field name="name">Transaction Batch Entry</field>
+            <field name="res_model">via.batch.statement.entry</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="via_batch_statement_entry"/>
+        </record>
+
+        <menuitem action="action_bank_batch_entry" id="menu_bank_batch_entry" parent="menu_bank_account" sequence="1"/>
+    </data>
+</openerp>
+

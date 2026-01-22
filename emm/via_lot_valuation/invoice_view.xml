@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf8"?>
+<openerp>
+    <data>
+        <!-- Invoice Line Form Inherited to add Production Lot -->
+        <record id="view_invoice_line_form_lot_inherit" model="ir.ui.view">
+            <field name="name">account.invoice.line.form.lot.inherit</field>
+            <field name="model">account.invoice.line</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="account.view_invoice_line_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form/field[@name='name']" position="replace">
+                    <field name="cost_method" invisible="1"/>
+                    <field name="prod_lot_id" domain="[('product_id', '=', product_id)]" attrs="{'invisible' : [('cost_method', 'not in', ('fifo', 'lifo', 'lot_based'))]}"/>
+                    <field name="name" colspan="4"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Customer Invoice Form Inherited to add Production Lot -->
+        <record id="view_invoice_line_form_lot_inherit2" model="ir.ui.view">
+            <field name="name">Lot Valuation - Customer Invoice Form Inherit</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/sheet/notebook/page/field[@name='invoice_line']/tree/field[@name='quantity']" position="after">
+                    <field name="prod_lot_id" domain="[('product_id', '=', product_id)]"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Supplier Invoice Form Inherited to add Production Lot -->
+        <record id="view_invoice_line_form_lot_inherit3" model="ir.ui.view">
+            <field name="name">Lot Valuation - Supplier Invoice Form Inherit</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/sheet/notebook/page/field[@name='invoice_line']/tree/field[@name='quantity']" position="after">
+                    <field name="prod_lot_id" domain="[('product_id', '=', product_id)]"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

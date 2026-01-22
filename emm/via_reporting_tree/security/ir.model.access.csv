@@ -1,0 +1,10 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"reporting_tree_type","Reporting Tree Type","model_via_reporting_tree_type","group_via_reporting_tree_manager",1,1,1,1
+"reporting_tree","Reporting Tree","model_via_reporting_tree","group_via_reporting_tree_manager",1,1,1,1
+"reporting_tree_node","Reporting Tree Node","model_via_reporting_tree_node","group_via_reporting_tree_manager",1,1,1,1
+"account_tree_node","Account Tree Node","model_via_account_tree_node","group_via_reporting_tree_manager",1,1,1,1
+"reporting_tree_type_ro","Reporting Tree Type (Read-Only)","model_via_reporting_tree_type",,1,0,0,0
+"reporting_tree_ro","Reporting Tree (Read-Only)","model_via_reporting_tree",,1,0,0,0
+"reporting_tree_node_ro","Reporting Tree Node (Read-Only)","model_via_reporting_tree_node",,1,0,0,0
+"account_tree_node_ro","Account Tree Node (Read-Only)","model_via_account_tree_node",,1,0,0,0
+

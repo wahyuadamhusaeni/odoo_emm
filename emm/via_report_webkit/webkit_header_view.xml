@@ -1,0 +1,20 @@
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="header_webkit">
+            <field name="name">res.company.header.html</field>
+            <field name="model">ir.header_webkit</field>
+            <field name="inherit_id" ref="report_webkit.header_webkit"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="format" position="after">
+                    <newline/>
+                    <field name="paper_height"
+                        attrs="{'invisible': [('format', '!=', 'Custom')], 'required': [('format', '=', 'Custom')]}"/>
+                    <field name="paper_width"
+                        attrs="{'invisible': [('format', '!=', 'Custom')], 'required': [('format', '=', 'Custom')]}"/>
+                    <newline/>
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>

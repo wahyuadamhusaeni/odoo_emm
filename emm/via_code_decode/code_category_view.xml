@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<openerp>
+<data>
+
+<record id="view_code_category_tree" model="ir.ui.view">
+    <field name="name">code.category.tree</field>
+    <field name="model">code.category</field>
+    <field name="type">tree</field>
+    <field name="arch" type="xml">
+        <tree string="Document Type">
+            <field name="name"/>
+        </tree>
+    </field>
+</record>
+
+<record id="view_code_category_form" model="ir.ui.view">
+    <field name="name">code.category.form</field>
+    <field name="model">code.category</field>
+    <field name="type">form</field>
+    <field name="arch" type="xml">
+        <form string="Document Type">
+            <field name="name"/>
+            <field name="pinned"/>
+        </form>
+    </field>
+</record>
+
+<act_window id="act_code_category"
+    name="Code Category"
+    res_model="code.category"
+    view_type="form"
+    view_mode="tree,form"/>
+
+<menuitem
+    id="menu_document_control" name="Code Decode Registry"
+    parent="base.menu_custom" />
+
+<menuitem
+    id="menu_code_category" name="Code Category"
+    parent="menu_document_control" action="act_code_category"/>
+
+</data>
+</openerp>

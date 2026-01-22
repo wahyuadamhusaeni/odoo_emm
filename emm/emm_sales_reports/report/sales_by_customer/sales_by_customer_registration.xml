@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+    <record id="report_emm_sales_sbc"
+            model="ir.actions.report.xml">
+        <field name="name">Sales by Customer</field>
+        <field name="report_name">sales_by_customer_pdf</field>
+        <field name="report_type">pdf</field>
+        <field name="jasper_output">pdf</field>
+        <field name="model">sale.order</field>
+
+        <field name="type">ir.actions.report.xml</field>
+        <field name="auto" eval="True"/>
+        <field name="header" eval="True"/>
+        <field name="report_file" eval="'emm_sales_reports/report/sales_by_customer/sales_by_customer.jrxml'"/>
+        <field name="report_rml" eval="'emm_sales_reports/report/sales_by_customer/sales_by_customer.jrxml'"/>
+        <field name="multi" eval="False"/>
+        <field name="attachment_use" eval="False"/>
+        <field name="jasper_report" eval="True"/>
+    </record>
+
+    <record id="report_emm_sales_sbc_xls"
+            model="ir.actions.report.xml">
+        <field name="name">Sales by Customer</field>
+        <field name="report_name">sales_by_customer_xls</field>
+        <field name="report_type">xls</field>
+        <field name="jasper_output">xls</field>
+        <field name="model">sale.order</field>
+
+        <field name="type">ir.actions.report.xml</field>
+        <field name="auto" eval="True"/>
+        <field name="header" eval="True"/>
+        <field name="report_file" eval="'emm_sales_reports/report/sales_by_customer/sales_by_customer_xls.jrxml'"/>
+        <field name="report_rml" eval="'emm_sales_reports/report/sales_by_customer/sales_by_customer_xls.jrxml'"/>
+        <field name="multi" eval="False"/>
+        <field name="attachment_use" eval="False"/>
+        <field name="jasper_report" eval="True"/>
+    </record>
+  </data>
+</openerp>

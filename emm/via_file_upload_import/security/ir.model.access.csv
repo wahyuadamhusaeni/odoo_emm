@@ -1,0 +1,7 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"file_upload_import_config_all","file_upload_import_config all","model_file_upload_import_config","",1,0,0,0
+"file_upload_import_config_technical","file_upload_import_config technical","model_file_upload_import_config","base.group_no_one",1,1,1,1
+"file_upload_import_field_mapping_all","file_upload_import_field_mapping all","model_file_upload_import_field_mapping","",1,0,0,0
+"file_upload_import_field_mapping_technical","file_upload_import_field_mapping technical","model_file_upload_import_field_mapping","base.group_no_one",1,1,1,1
+"file_upload_import_log_all","file_upload_import_log all","model_file_upload_import_log","",1,1,1,0
+"file_upload_import_log_technical","file_upload_import_log technical","model_file_upload_import_log","base.group_no_one",1,1,1,0

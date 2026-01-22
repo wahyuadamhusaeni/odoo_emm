@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record id="view_wiki_tag_form" model="ir.ui.view">
+            <field name="name">view.wiki.tag.form</field>
+            <field name="model">document.page</field>
+            <field name="inherit_id" ref="document_page.view_wiki_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="content" position="before">
+                    <group col="4" colspan="4">
+                        <field name="sr_skill_set" widget="many2many_tags"/>
+                        <field name="parent_id" on_change="onchange_parent_id(parent_id,content)" string="Category"/>
+                        <field name="attachment" widget="many2many_binary"/>
+                    </group>
+                </field>
+                <field name="parent_id" position="replace"/>
+            </field>
+        </record>
+
+        <record id="view_wiki_tag_filter" model="ir.ui.view">
+            <field name="name">document.page.tag.search</field>
+            <field name="model">document.page</field>
+            <field name="inherit_id" ref="document_page.view_wiki_filter"/>
+            <field name="arch" type="xml">
+                <field name="parent_id" position="after">
+                    <field name="sr_skill_set"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</openerp>

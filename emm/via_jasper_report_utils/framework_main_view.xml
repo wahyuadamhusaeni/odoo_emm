@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+    <record id="via_jasper_report_main_form_view" model="ir.ui.view">
+      <field name="name">VIA Jasper Reports</field>
+      <field name="model">via.jasper.report</field>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+        <form string="VIA Jasper Report Wizard">
+          <field name="id" invisible="1"/>
+          <field name="rpt_name"/>
+          <field name="company_ids"/>
+          <field name="company_id"/>
+          <field name="from_mo"/>
+          <field name="from_yr"/>
+          <field name="to_mo"/>
+          <field name="to_yr"/>
+          <field name="from_dt"/>
+          <field name="to_dt"/>
+          <field name="from_dt_2"/>
+          <field name="to_dt_2"/>
+          <field name="as_of_dt"/>
+          <field name="as_of_yr"/>
+          <field name="rpt_output"/>
+          <field name="orderby_ids"/>
+          <field name="state"/>
+          <field name="prod_ids"/>
+          <field name="prod_ids_empty_is_none"/>
+          <field name="prod_group_level"/>
+          <field name="prod_ids_2"/>
+          <field name="prod_ids_2_empty_is_none"/>
+          <field name="no_zero"/>
+          <field name="use_indentation"/>
+          <field name="no_wrap"/>
+          <field name="display_large"/>
+          <field name="reference_label"/>
+          <field name="comparison_label"/>
+          <field name="display_comparison"/>
+          <field name="date_filter"/>
+          <field name="date_filter_2"/>
+          <field name="salesman_ids"/>
+          <field name="customer_ids"/>
+          <field name="filter_selection"/>
+          <field name="filter_selection_2"/>
+          <field name="customer_addr_ids"/>
+        </form>
+      </field>
+    </record>
+  </data>
+</openerp>

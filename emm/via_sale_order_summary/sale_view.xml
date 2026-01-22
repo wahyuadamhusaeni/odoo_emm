@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<openerp>
+<data>
+
+<record id="sales_order_summary_form" model="ir.ui.view">
+    <field name="name">Sales Order Summary Form</field>
+    <field name="model">sale.order</field>
+    <field name="inherit_id" ref="sale.view_order_form"/>
+    <field name="arch" type="xml">
+        <notebook position="inside">
+            <page string="Summary">
+                <separator colspan="4" string="Payment Summary"/>
+                <group col="4" colspan="4">
+                    <field name="total_amt" string="Amount Total" readonly="1"/>
+                    <field name="invoiced_amt" readonly="1"/>
+                    <field name="to_invoiced_amt" readonly="1"/>
+                    <field name="paid_amt" readonly="1"/>
+                    <field name="to_pay_amt" readonly="1"/>
+                </group>
+                <separator colspan="4" string="Shipment Summary"/>
+                <field name="so_tracking_by_quantity" readonly="True"/>
+                <separator colspan="4" string="Invoices &amp; Refunds"/>
+                <field name="invoice_ids" readonly="True">
+                    <tree colors="blue:state == 'draft';black:state in ('proforma','proforma2','open');gray:state == 'cancel'" string="Invoice">
+                        <field name="date_invoice"/>
+                        <field name="number"/>
+                        <field name="date_due"/>
+                        <field name="origin"/>
+                        <field name="currency_id" groups="base.group_multi_currency"/>
+                        <field name="amount_total" sum="Total Amount"/>
+                        <field name="residual" sum="Residual Amount"/>
+                        <field name="state"/>
+                    </tree>
+                </field>
+                <separator colspan="4" string="Deliveries &amp; Returns"/>
+                <field name="picking_ids" readonly="True">
+                    <tree colors="blue:state == 'draft';grey:state == 'cancel';red:state not in ('cancel', 'done') and min_date &lt; current_date" string="Delivery Orders">
+                        <field name="partner_id"/>
+                        <field name="date"/>
+                        <field name="min_date"/>
+                        <field name="name"/>
+                        <field name="backorder_id"/>
+                        <field name="invoice_state"/>
+                        <field name="state"/>
+                    </tree>
+                </field>
+            </page>
+        </notebook>
+    </field>
+</record>
+
+</data>
+</openerp>

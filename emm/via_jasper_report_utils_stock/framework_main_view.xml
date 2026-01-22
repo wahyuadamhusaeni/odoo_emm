@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+    <record id="via_jasper_report_main_form_view_stock" model="ir.ui.view">
+      <field name="name">VIA Jasper Reports Stock</field>
+      <field name="model">via.jasper.report</field>
+      <field name="type">form</field>
+      <field name="inherit_id" ref="via_jasper_report_utils.via_jasper_report_main_form_view"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[last()]" position="after">
+          <field name="location_ids"/>
+          <field name="prod_lot_ids"/>
+          <field name="prod_lot_ids_empty_is_none"/>
+          <field name="prod_lot_ids_2"/>
+          <field name="prod_lot_ids_2_empty_is_none"/>
+            </xpath>
+      </field>
+    </record>
+  </data>
+</openerp>

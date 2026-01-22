@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="invoice_form" model="ir.ui.view">
+            <field name="name">emm_claim_rma.invoice_form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form" />
+            <field eval="16" name="priority"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="/form/sheet/notebook/page[@string='Other Info']/group/group/field[@name='origin']" position="after">
+                        <field name="claim_id" attrs="{'invisible':[('claim_id','=',False), ('type','!=','out_refund')]}" context="{'form_view_ref':'emm_claim_rma.return_claims_form_view'}"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record id="view_rma_invoice_line_tree" model="ir.ui.view">
+            <field name="name">emm_claim_rma.account.invoice.line.tree</field>
+            <field name="model">account.invoice.line</field>
+            <field name="priority" eval="99"/>
+            <field name="arch" type="xml">
+                <tree string="Invoice Line">
+                    <field name="invoice_id"/>
+                    <field name="name"/>
+                    <field name="account_id" groups="account.group_account_user"/>
+                    <field name="quantity"/>
+                    <field name="uos_id" groups="product.group_uom"/>
+                    <field name="price_unit"/>
+                    <field name="discount" groups="sale.group_discount_per_so_line"/>
+                    <field name="price_subtotal"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_rma_invoice_line_form" model="ir.ui.view">
+            <field name="name">emm_claim_rma.account.invoice.line.form</field>
+            <field name="model">account.invoice.line</field>
+            <field name="priority" eval="99"/>
+            <field name="arch" type="xml">
+                <form string="Invoice Line" version="7.0">
+                    <group>
+                        <group>
+                            <field name="product_id"/>
+                            <label for="quantity"/>
+                            <div>
+                                <field name="quantity" class="oe_inline"/>
+                                <field name="uos_id" class="oe_inline" groups="product.group_uom"/>
+                            </div>
+                            <field name="price_unit"/>
+                            <field name="discount" groups="sale.group_discount_per_so_line"/>
+                        </group>
+                        <group>
+                            <field name="invoice_id"/>
+                            <field name="account_id" groups="account.group_account_user"/>
+                            <field name="invoice_line_tax_id" widget="many2many_tags"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <label for="name"/>
+                    <field name="name"/>
+                </form>
+            </field>
+        </record>
+    </data>
+</openerp>

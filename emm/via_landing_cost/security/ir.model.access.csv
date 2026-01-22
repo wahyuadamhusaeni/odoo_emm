@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_landed_cost,products.on.stock.picking,model_products_on_stock_picking,account.group_account_invoice,1,1,1,1

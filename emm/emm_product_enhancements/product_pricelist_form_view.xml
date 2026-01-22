@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!-- Product price list -->
+
+        <record model="ir.ui.view" id="emm_product_pricelist_view_form">
+            <field name="name">emm.product.pricelist.form</field>
+            <field name="model">product.pricelist</field>
+            <field name="inherit_id" ref="product.product_pricelist_view"/>
+            <field name="arch" type="xml">
+                <field name="company_id" position="before">
+                    <field name="pl_category"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</openerp>

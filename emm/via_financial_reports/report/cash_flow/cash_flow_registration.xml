@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+    <record id="report_via_financial_cf"
+            model="ir.actions.report.xml">
+      <field name="name">Cash Flow</field>
+      <field name="report_name">cash_flow_pdf</field>
+      <field name="report_type">pdf</field>
+      <field name="jasper_output">pdf</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file" eval="'via_financial_reports/report/cash_flow/cash_flow.jrxml'"/>
+      <field name="report_rml" eval="'via_financial_reports/report/cash_flow/cash_flow.jrxml'"/>
+      <field name="multi" eval="False"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+
+    <record id="report_via_financial_cf_xls"
+            model="ir.actions.report.xml">
+      <field name="name">Cash Flow</field>
+      <field name="report_name">cash_flow_xls</field>
+      <field name="report_type">xls</field>
+      <field name="jasper_output">xls</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file" eval="'via_financial_reports/report/cash_flow/cash_flow_xls.jrxml'"/>
+      <field name="report_rml" eval="'via_financial_reports/report/cash_flow/cash_flow_xls.jrxml'"/>
+      <field name="multi" eval="False"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+
+    <record id="report_via_financial_cf_csv"
+            model="ir.actions.report.xml">
+      <field name="name">Cash Flow</field>
+      <field name="report_name">cash_flow_csv</field>
+      <field name="report_type">csv</field>
+      <field name="jasper_output">csv</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file" eval="'via_financial_reports/report/cash_flow/cash_flow_csv.jrxml'"/>
+      <field name="report_rml" eval="'via_financial_reports/report/cash_flow/cash_flow_csv.jrxml'"/>
+      <field name="multi" eval="False"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+  </data>
+</openerp>

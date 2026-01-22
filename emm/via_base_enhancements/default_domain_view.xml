@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_default_domain_search">
+            <field name="model">default.domain</field>
+            <field name="arch" type="xml">
+                <search string="Default Domains">
+                    <field name="name"/>
+                    <field name="domain"/>
+                </search>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_default_domain_list">
+            <field name="model">default.domain</field>
+            <field name="arch" type="xml">
+                <tree string="Default Domains">
+                    <field name="name"/>
+                    <field name="domain"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_default_domain_form">
+            <field name="model">default.domain</field>
+            <field name="arch" type="xml">
+                <form string="Default Domains" version="7.0">
+                  <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="domain_code"/>
+                        <field name="domain"/>
+                    </group>
+                  </sheet>
+                </form>
+            </field>
+        </record>
+
+        <act_window name="Default Domains" res_model="default.domain" id="default_domain_list_action"/>
+
+        <menuitem id="default_domain_menu" name="Default Domains" parent="base.menu_ir_property" action="default_domain_list_action"/>
+    </data>
+</openerp>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- INHERITED VIEW FOR THE OBJECT : stock_picking -->
+        <record id="picking_in_form" model="ir.ui.view">
+            <field name="name">Incoming Shipment Form View - Claim RMA Enhancement</field>
+            <field name="model">stock.picking.in</field>
+            <field name="inherit_id" ref="stock.view_picking_in_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='origin']" position="after">
+                    <field name="claim_id" attrs="{'invisible': [('claim_id', '=', False)]}"/>
+                    <field name="rma_number" attrs="{'invisible': [('claim_id', '=', False)]}"/>
+                    <field name="claim_method" attrs="{'invisible': [('claim_id', '=', False)]}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="picking_out_form" model="ir.ui.view">
+           <field name="name">Delivery Order Form View - Claim RMA Enhancement</field>
+            <field name="model">stock.picking.out</field>
+            <field name="inherit_id" ref="stock.view_picking_out_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='origin']" position="after">
+                    <field name="claim_id" attrs="{'invisible': [('claim_id', '=', False)]}"/>
+                    <field name="rma_number" attrs="{'invisible': [('claim_id', '=', False)]}"/>
+                    <field name="claim_method" attrs="{'invisible': [('claim_id', '=', False)]}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="picking_in_tree" model="ir.ui.view">
+            <field name="name">Incoming Shipment Tree View - Claim RMA Enhancement</field>
+            <field name="model">stock.picking.in</field>
+            <field name="inherit_id" ref="stock.view_picking_in_tree" />
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="claim_id"/>
+                    <field name="rma_number"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="picking_out_tree" model="ir.ui.view">
+           <field name="name">Delivery Order Tree View - Claim RMA Enhancement</field>
+            <field name="model">stock.picking.out</field>
+            <field name="inherit_id" ref="stock.view_picking_out_tree" />
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="claim_id"/>
+                    <field name="rma_number"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_picking_in_search" model="ir.ui.view">
+            <field name="name">Incoming Shipment Search View - Claim RMA Enhancement</field>
+            <field name="model">stock.picking.in</field>
+            <field name="inherit_id" ref="stock.view_picking_in_search" />
+            <field name="arch" type="xml">
+                <filter string="To Invoice" name="to_invoice" icon="terp-dolar" domain="[('invoice_state', '=', '2binvoiced')]" position="after">
+                    <separator/>
+                    <filter string="From Claim" icon="terp-accessories-archiver-minus" domain="[('claim_id', '!=', False)]" />
+                    <field name="claim_id" string="Claim"/>
+                </filter>
+                <field name="name" position="replace">
+                    <field name="name" string="Name" filter_domain="['|','|','|',('name','ilike',self),('origin','ilike',self),('rma_number','ilike',self),('claim_id.claim_number','ilike',self)]" />
+                </field>
+            </field>
+        </record>
+
+        <record id="view_picking_out_search" model="ir.ui.view">
+            <field name="name">Delivery Order Search View - Claim RMA Enhancement</field>
+            <field name="model">stock.picking.out</field>
+            <field name="inherit_id" ref="stock.view_picking_out_search" />
+            <field name="arch" type="xml">
+                <filter icon="terp-dolar" name="to_invoice" string="To Invoice" domain="[('invoice_state','=','2binvoiced')]" help="Delivery orders to invoice" position="after">
+                    <separator/>
+                    <filter string="From Claim" icon="terp-accessories-archiver-minus" domain="[('claim_id', '!=', False)]" />
+                    <field name="claim_id" string="Claim"/>
+                </filter>
+                <field name="name" position="replace">
+                    <field name="name" string="Name" filter_domain="['|','|','|',('name','ilike',self),('origin','ilike',self),('rma_number','ilike',self),('claim_id.claim_number','ilike',self)]" />
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>

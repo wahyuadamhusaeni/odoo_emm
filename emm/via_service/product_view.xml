@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!-- Product Form View -->
+
+        <record id="service_product_form_view" model="ir.ui.view">
+            <field name="name">service.product.form.view</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <group string="Sale Conditions" position="inside">
+                    <field name="additional_service_fee" class="oe_inline"/>
+                </group>
+            </field>
+        </record>
+
+    </data>
+</openerp>

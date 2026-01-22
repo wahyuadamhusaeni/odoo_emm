@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_company_taxform_sequence_form">
+            <field name="name">VIA Tax Form - Company Form View</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="model">res.company</field>
+            <field name="priority">88</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <group name="account_grp" position="inside">
+                      <separator string="Tax Form Configuration" colspan="2"/>
+                      <field name="legal_id"/>
+                      <field name="user_id"/>
+                </group>
+            </field>
+        </record>
+    </data>
+</openerp>

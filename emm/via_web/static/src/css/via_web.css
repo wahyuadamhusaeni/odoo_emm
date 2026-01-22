@@ -1,0 +1,8 @@
+.infinity {
+    font-weight: bold;
+    font-family: "Liberation Sans", Helvetica, sans-serif;
+}
+
+.announcement_bar {
+    display: none !important;
+}

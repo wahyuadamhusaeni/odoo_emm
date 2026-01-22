@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+    <record id="report_client_purchase_pfapt"
+	    model="ir.actions.report.xml">
+      <field name="name">PR Fulfillment &amp; PO Tracking</field>
+      <field name="report_name">pr_fulfillment_and_po_tracking_pdf</field>
+      <field name="report_type">pdf</field>
+      <field name="jasper_output">pdf</field>
+      <field name="model">purchase.requisition</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file" eval=""/>
+      <field name="report_rml" eval=""/>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="False"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+
+    <record id="report_client_purchase_pfapt_xls"
+	    model="ir.actions.report.xml">
+      <field name="name">PR Fulfillment &amp; PO Tracking</field>
+      <field name="report_name">pr_fulfillment_and_po_tracking_xls</field>
+      <field name="report_type">xls</field>
+      <field name="jasper_output">xls</field>
+      <field name="model">purchase.requisition</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file" eval=""/>
+      <field name="report_rml" eval=""/>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="False"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+  </data>
+</openerp>

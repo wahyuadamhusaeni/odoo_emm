@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_old_cost_price_field">
+            <field name="name">Remove Old Cost Price field</field>
+            <field name="model">product.product</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="via_lot_valuation.view_form_lot_inherit"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='standard_price']/.." position="attributes">
+                    <attribute name="groups">purchase.group_purchase_manager,account.group_account_invoice,account.group_account_user,account.group_account_manager</attribute>
+                </xpath>
+                <label string="Cost Price" position="replace">
+                    <label string="Cost Price" for="standard_price" align="1.0" groups="purchase.group_purchase_manager,account.group_account_invoice,account.group_account_user,account.group_account_manager"/>
+                </label>
+                <field name="old_cost_price" position="attributes">
+                    <attribute name="groups">purchase.group_purchase_manager,account.group_account_invoice,account.group_account_user,account.group_account_manager</attribute>
+                    <attribute name="nolabel">0</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_cost_price_per_unit_field">
+            <field name="name">Remove Cost Price Per Unit field</field>
+            <field name="model">stock.production.lot</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="via_lot_valuation.stock_production_lot_form_view" />
+            <field name="arch" type="xml">
+                <field name="cost_price_per_unit" position="attributes">
+                    <attribute name="groups">purchase.group_purchase_manager,account.group_account_invoice,account.group_account_user,account.group_account_manager</attribute>
+                </field>
+                <xpath expr="//button[@string='Update']" position="attributes">
+                    <attribute name="groups">purchase.group_purchase_manager,account.group_account_invoice,account.group_account_user,account.group_account_manager</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf8"?>
+<openerp>
+    <data>
+        <!-- Inherited Product's view to Add the old cost price of the product -->
+        <!--  Updated Product's Form view to make the Cost Price readonly if cost method is fifo,lifo or lot based -->
+        <record model="ir.ui.view" id="view_form_lot_inherit">
+            <field name="name">product.product.standard.price.form.inherit</field>
+            <field name="model">product.product</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="stock.view_product_standard_price_form"/>
+            <field name="arch" type="xml">
+                <field name="standard_price" position="attributes">
+                   <attribute name="attrs">{'readonly': [('cost_method', 'in', ('average','fifo','lifo','lot_based'))]}</attribute>
+                </field>
+                <label string="Cost Price" position="before">
+                    <field name="old_cost_price" readonly="1" groups="base.group_user"/>
+                </label>
+                <xpath expr="//field[@name='cost_method']" position="attributes">
+                    <attribute name="on_change">onchange_cost_method(cost_method)</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

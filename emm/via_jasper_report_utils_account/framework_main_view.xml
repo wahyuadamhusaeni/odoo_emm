@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+    <record id="via_jasper_report_main_form_view_account" model="ir.ui.view">
+      <field name="name">VIA Jasper Reports Account</field>
+      <field name="model">via.jasper.report</field>
+      <field name="type">form</field>
+      <field name="inherit_id" ref="via_jasper_report_utils.via_jasper_report_main_form_view"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[last()]" position="after">
+          <field name="reporting_tree_id"/>
+          <field name="reporting_tree_node_ids"/>
+          <field name="analytic_acc_ids"/>
+          <field name="acc_ids"/>
+          <field name="acc_ids_empty_is_all"/>
+          <field name="journal_ids"/>
+          <field name="journal_ids_empty_is_all"/>
+          <field name="fiscalyear_id"/>
+          <field name="fiscalyear_id_2"/>
+          <field name="display_move"/>
+          <field name="target_move"/>
+          <field name="display_drcr"/>
+          <field name="from_period_id"/>
+          <field name="from_period_id_2"/>
+          <field name="to_period_id"/>
+          <field name="to_period_id_2"/>
+            </xpath>
+      </field>
+    </record>
+  </data>
+</openerp>

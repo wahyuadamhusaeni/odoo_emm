@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<openerp>
+<data>
+
+<record id="purchase_order_form_approval" model="ir.ui.view">
+    <field name="name">Purchase Order Form Approval</field>
+    <field name="model">purchase.order</field>
+    <field name="inherit_id" ref="purchase.purchase_order_form"/>
+    <field name="arch" type="xml">
+        <field name="name" position="after">
+            <field name="auto_approval_func" invisible="1"/>
+            <field name="auto_approval" invisible="1"/>
+        </field>
+        <button name="purchase_cancel" position="replace">
+            <button name="purchase_cancel" states="draft,confirmed,sent" string="Cancel Order" type="object"/>
+        </button>
+        <button name="picking_ok" position="replace">
+            <button name="picking_ok" states="except_picking" string="Manually Corrected" type="object"/>
+        </button>
+        <button name="invoice_ok" position="replace">
+            <button name="invoice_ok" states="except_invoice" string="Manually Corrected" type="object"/>
+        </button>
+        <button name="purchase_confirm" position="replace">
+            <button name="purchase_confirm" type="object" states="draft" string="Confirm Order"/>
+        </button>
+        <button name="purchase_approve" position="replace">
+            <button name="purchase_approve" states="confirmed" string="Approve Order" class="oe_highlight" groups="purchase.group_purchase_manager" type="object"/>
+        </button>
+        <page string="Incoming Shipments &amp; Invoices" position="after"/>
+            <notebook>
+                <page string="Approval" groups="base.group_user">
+                    <form string="Approval List">
+                        <separator colspan="4" string="Approval List"/>
+                        <group col="4" colspan="4">
+                            <field name="approval_list" nolabel="1">
+                                <tree string="Approval List" editable="bottom">
+                                    <field name="approval_items_id" on_change="approval_items_id_change(approval_items_id)" domain="[('model','=','purchase.order')]"/>
+                                    <field name="description"/>
+                                    <field name="approver" invisible="1"/>
+                                    <field name="user" invisible="1"/>
+                                    <field name="approver_user_show" attrs="{'readonly': [('approver_user','!=',False)]}" class="oe_highlight" on_change="approval_user_show_change(approver_user_show)" domain="[('id','in',user[0][2])]"/>
+                                    <field name="approver_user" invisible="1" on_change="approval_user_change(approver_user)"/>
+                                    <field name="visibility" invisible="1"/>
+                                    <field name="state"/>
+                                    <field name="user_filter"/>
+                                    <button name="approve" icon="gtk-apply" string="Approve" type="object" attrs="{'invisible': ['|',('visibility','=',False),('state','in',['na','approved','reject','ignore'])]}"/>
+                                    <button name="reject" icon="gtk-cancel" string="Reject" type="object" attrs="{'invisible': ['|',('visibility','=',False),('state','in',['na','approved','reject','ignore'])]}"/>
+                                    <button name="ignore" icon="gtk-close" string="Ignore" type="object" groups="via_approval.approval_super_user"/>
+                                    <button name="view" icon="gtk-find" string="View" type="object"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </form>
+                </page>
+            </notebook>
+    </field>
+</record>
+
+</data>
+</openerp>

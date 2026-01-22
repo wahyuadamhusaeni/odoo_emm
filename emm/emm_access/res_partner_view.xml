@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    	<record id="view_partner_property_form_emm" model="ir.ui.view">
+            <field name="name">res.partner.purchase.property.form.inherit.emm</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="purchase.view_partner_property_form"/>
+            <field name="arch" type="xml">
+                <field name="property_product_pricelist" position="attributes">
+                    <attribute name="groups">base.group_sale_manager,base.group_sale_salesman,base.group_sale_salesman_all_leads,account.group_account_invoice,account.group_account_user,account.group_account_manager</attribute>
+                </field>
+                <field name="property_product_pricelist_purchase" position="attributes">
+                    <attribute name="groups">product.group_purchase_pricelist,purchase.group_purchase_manager,account.group_account_invoice,account.group_account_user,account.group_account_manager</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record id="res_partner_view_purchase_buttons_emm" model="ir.ui.view">
+            <field name="name">res.partner.view.purchase.buttons.emm</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="purchase.res_partner_view_purchase_buttons" />
+            <field name="arch" type="xml">
+                <xpath expr="//button[@string='Supplier Invoices']" position="attributes">
+                    <attribute name="groups">purchase.group_purchase_manager,account.group_account_invoice,account.group_account_user,account.group_account_manager</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_partner_property_form_emm" model="ir.ui.view">
+            <field name="name">res.partner.property.form.inherit.emm</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="account.view_partner_property_form"/>
+            <field name="arch" type="xml">
+                <page string="Accounting" position="attributes">
+                    <attribute name="groups">account.group_account_invoice,account.group_account_user,account.group_account_manager</attribute>
+                </page>
+            </field>
+        </record>
+    </data>
+</openerp>

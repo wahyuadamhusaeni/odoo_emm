@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="stock_picking_in_supllier_invoice" model="ir.ui.view">
+            <field name="name">view_of_stock_picking_in_account_invoice</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <button name="invoice_open" position="after">
+                    <button name="reclass_journal" type="object" attrs="{'invisible':['|',('state', 'not in', ['paid','open']),'|',('picking_state', '=', False),('move_landed_cost','!=', False)]}" string="Re-class Journal" groups="account.group_account_invoice"/>
+                </button>
+                <page string="Payments" position="after">
+                    <page string="Landing Cost" groups="account.group_account_user">
+                        <group>
+                            <field name="move_landed_cost"/>
+
+                            <field name="picking_state" invisible="1"/>
+                        </group>
+                        <separator string="Landing Cost Pickings"/>
+                        <field name="picking_ids" view_mode="list" attrs="{'readonly':[('move_landed_cost','!=', False)]}" domain="[('type', 'in', ['in', 'out']),('state','not in',['cancel'])]" on_change="onchange_move_lines(picking_ids, move_prorates)">
+                            <tree string="Stock Pickings" editable="bottom">
+                                <field name="name" readonly="1"/>
+                                <field name="partner_id" readonly="1"/>
+                                <field name="backorder_id" readonly="1"/>
+                                <field name="origin" readonly="1"/>
+                                <field name="date" readonly="1"/>
+                                <field name="min_date" readonly="1"/>
+                                <field name="invoice_state" readonly="1"/>
+                                <field name="stock_journal_id" readonly="1"/>
+                                <field name="state" readonly="1"/>
+                            </tree>
+                        </field>
+                        <separator string="Landing Cost Prorates"/>
+                        <field name="move_prorates" attrs="{'readonly':[('state', 'in', ['paid','open'])]}"/>
+                    </page>
+                </page>
+                <xpath expr="//field[@name='reference_type']/.." position="after">
+                    <field name="warning_reclass" invisible="1"/>
+                    <label for="check_reclass_date"/>
+                    <div>
+                        <field name="check_reclass_date"/>
+                        <p attrs="{'invisible':[('warning_reclass','=',False)]}" style="color:#A95C5C">
+                        Re-class Date is in a closed period.
+                        </p>
+                    </div>
+                </xpath>
+                <field name="check_total" position="after">
+                    <field name="valuation_journal_id" domain="[('type','=','general')]" attrs="{'required': [('move_prorates', '!=', [(6, False, [])])]}"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_move_form2" model="ir.ui.view">
+            <field name="name">account.move.form2</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/sheet[@string='Journal Entries']/notebook/page[@string='Journal Items']/field[@name='line_id']/tree[@string='Journal Items']" position="replace">
+                    <tree colors="blue:state == 'draft';black:state == 'posted'" editable="top" string="Journal Items">
+                        <field name="product_id"/>
+                        <field name="name"/>
+                        <field name="prod_lot_id"/>
+                        <field name="account_id" domain="[('journal_id','=',parent.journal_id),('company_id', '=', parent.company_id)]"/>
+                        <field name="debit" sum="Total Debit"/>
+                        <field name="credit" sum="Total Credit"/>
+                        <field name="state"/>
+                        <field name="analytic_account_id" invisible="1" groups="analytic.group_analytic_accounting"/>
+                    </tree>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="products_on_stock_picking_tree" model="ir.ui.view">
+            <field name="name">Landing Cost Prorates Tree View</field>
+            <field name="model">products.on.stock.picking</field>
+            <field name="tpye">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Landing Cost Prorates" create="false" delete="false" toolbar="1" editable="bottom">
+                    <field name="picking_id"/>
+                    <field name="product_id"/>
+                    <field name="product_qty"/>
+                    <field name="product_uom"/>
+                    <field name="serial_number"/>
+                    <field name="price_unit"/>
+                    <field name="line_cost" string="Line Cost" sum="Total Cost"/>
+                    <field name="prorate" sum="Total Prorate"/>
+                </tree>
+            </field>
+        </record>
+    </data>
+</openerp>

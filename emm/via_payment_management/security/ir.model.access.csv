@@ -1,0 +1,13 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"via_bank_statement_line_all","via_bank_statement_line all","model_via_bank_statement_line","",1,0,0,0
+"via_bank_statement_line_user","via_bank_statement_line user","model_via_bank_statement_line","group_via_payment_user",1,1,1,0
+"via_bank_statement_line_manager","via_bank_statement_line manager","model_via_bank_statement_line","group_via_payment_manager",1,1,1,1
+"via_expense_voucher_all","via_expense_voucher all","model_via_expense_voucher","",1,0,0,0
+"via_expense_voucher_user","via_expense_voucher user","model_via_expense_voucher","group_via_assignment_user",1,1,1,0
+"via_expense_voucher_manager","via_expense_voucher manager","model_via_expense_voucher","group_via_assignment_manager",1,1,1,1
+"via_expense_voucher_line_all","via_expense_voucher_line all","model_via_expense_voucher_line","",1,0,0,0
+"via_expense_voucher_line_user","via_expense_voucher_line user","model_via_expense_voucher_line","group_via_assignment_user",1,1,1,1
+"via_expense_voucher_line_manager","via_expense_voucher_line manager","model_via_expense_voucher_line","group_via_assignment_manager",1,1,1,1
+"via_account_move_line_all","via_account_move_line all","model_via_account_move_line","",1,0,0,0
+"via_account_move_line_user","via_account_move_line user","model_via_account_move_line","group_via_assignment_user",1,1,1,1
+"via_account_move_line_manager","via_account_move_line manager","model_via_account_move_line","group_via_assignment_manager",1,1,1,1

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!--
+        ==========================================================
+        Account Invoice View Inherit
+        ==========================================================
+        -->
+        <record model="ir.ui.view" id="via_payment_mgmt_invoice_tree">
+            <field name="name">VIA Payment Management Invoice Tree View</field>
+            <field name="inherit_id" ref="account.invoice_tree"/>
+            <field name="model">account.invoice</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <field name="state" position="after">
+                    <button name="action_assign_payment" string="Assign Payment"
+                        type="object" icon="terp-dolar" states="open" groups="via_payment_management.group_via_assign_payment"/>
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="via_payment_mgmt_invoice_form">
+            <field name="name">VIA Payment Management Invoice Form View</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="model">account.invoice</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <button string="Print Invoice" position="before">
+                    <button name="action_assign_payment" string="Assign Payment"
+                        type="object" states="open" groups="via_payment_management.group_via_assign_payment"/>
+                </button>
+            </field>
+        </record>
+
+        <record id="via_view_move_line_tree_wiz" model="ir.ui.view">
+            <field name="name">VIA Account Move Line Tree Wizard</field>
+            <field name="model">account.move.line</field>
+            <field name="type">tree</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <tree string="Available Payments">
+                    <field name="journal_id"/>
+                    <field name="date"/>
+                    <field name="move_id"/>
+                    <field name="name"/>
+                    <field name="ref"/>
+                    <field name="account_id"/>
+                    <field name="partner_id"/>
+                    <field name="debit" sum="Total Debit"/>
+                    <field name="credit" sum="Total Credit"/>
+                    <field name="amount_residual"/>
+                    <field name="reconcile_partial_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="via_view_move_line_search_wiz" model="ir.ui.view">
+            <field name="name">VIA Account Move Line Search Wizard</field>
+            <field name="model">account.move.line</field>
+            <field name="type">search</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <search string="Available Payments">
+                    <field name="journal_id"/>
+                    <field name="date"/>
+                    <field name="move_id"/>
+                    <field name="name"/>
+                    <field name="ref"/>
+                    <field name="partner_id"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="via_view_move_line_search_compact_wiz" model="ir.ui.view">
+            <field name="name">VIA Account Move Line Search Wizard Compact</field>
+            <field name="model">account.move.line</field>
+            <field name="priority">20</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Available Payments">
+                    <field name="move_id"/>
+                    <field name="name"/>
+                    <field name="ref"/>
+                    <field name="partner_id"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="via_view_move_line_tree_compact_wiz" model="ir.ui.view">
+            <field name="name">VIA Account Move Line Search Wizard Compact</field>
+            <field name="model">account.move.line</field>
+            <field name="priority">20</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Available Payments">
+                    <field name="move_id"/>
+                    <field name="name"/>
+                    <field name="ref"/>
+                    <field name="partner_id"/>
+                    <field name="debit" sum="Total Debit"/>
+                    <field name="credit" sum="Total Credit"/>
+                    <field name="amount_residual"/>
+                    <field name="reconcile_partial_id"/>
+                </tree>
+            </field>
+        </record>
+    </data>
+</openerp>

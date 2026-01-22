@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- CLAIM VIEWS -->
+        <record model="ir.ui.view" id="crm_case_claims_tree_view">
+            <field name="name">CRM - Claims Tree</field>
+            <field name="model">crm.claim</field>
+            <field name="inherit_id" ref="crm_claim.crm_case_claims_tree_view"/>
+            <field name="arch" type="xml">
+                <field name="stage_id" position="after">
+                    <field name="section_id"/>
+                </field>
+                <field name="name" position="before">
+                    <field name="claim_number"/>
+                    <field name="rma_number"/>
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="crm_case_claims_form_view_replace">
+            <field name="name">CRM - Claims Form</field>
+            <field name="model">crm.claim</field>
+            <field name="inherit_id" ref="crm_claim.crm_case_claims_form_view"/>
+            <field name="arch" type="xml">
+                <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.claim')]" position="replace">
+                    <field name="categ_id" />
+                </field>
+            </field>
+        </record>
+
+        <!-- CRM Claim -->
+        <record model="ir.ui.view" id="return_claims_form_view">
+            <field name="name">Return Claims Form</field>
+            <field name="model">crm.claim</field>
+            <field name="arch" type="xml">
+                <form string="Claim" version="7.0">
+                <header>
+                    <button name="case_open" type="object" string="Submit" states="draft" groups="base.group_user" class="oe_highlight"/>
+                    <button name="case_close" string="Settle" type="object" class="oe_highlight" states="open,pending" groups="base.group_user"/>
+                    <button name="case_cancel" string="Reject" type="object" groups="base.group_user" states="draft,open,pending"/>
+                    <field name="stage_id" widget="statusbar"/>
+                </header>
+                <sheet string="Claims">
+                    <div class="oe_title">
+                        <label for="claim_number" class="oe_edit_only"/>
+                        <h1>
+                            <field name="claim_number" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group colspan="4" col="5">
+                        <group colspan="2" col="2">
+                            <field name="name" attrs="{'readonly':[('state', 'in',['open','pending','done', 'cancel'])]}"/>
+                            <field name="user_id" attrs="{'readonly':[('state', 'in',['cancel', 'done'])]}"/>
+                            <field name="claim_type" on_change="onchange_claim_type(claim_type)"/>
+                            <field name="date" readonly="1"/>
+                        </group>
+                        <group colspan="2" col="2"  groups="base.group_user">
+                            <field name="company_id" readonly="1"/>
+                            <field name="warehouse_id"/>
+                            <field name="rma_number" readonly="1" attrs="{'invisible': [('rma_number', '=',False)]}"/>
+                            <field name="state" invisible="1"/>
+                            <field name="section_id" invisible="1"/>
+                        </group>
+                        <group colspan="1" col="1">
+                            <div>
+                                <field name="returned" class="oe_inline"/>
+                                <label for="returned"/>
+                            </div>
+                            <div>
+                                <field name="refund" class="oe_inline"/>
+                                <label for="refund"/>
+                            </div>
+                            <field name="ready_to_receive" invisible="1"/>
+                            <button name="generate_rma" string="Generate RMA" type="object" attrs="{'invisible': ['|', ('rma_number', '!=',False), ('state', 'not in', ['open', 'pending'])]}"/>
+                        </group>
+                    </group>
+                    <group colspan="4" col="4">
+                        <notebook>
+                            <page string="Product Return">
+                                <group colspan="4" col="4">
+                                    <group colspan="2" col="2">
+                                        <separator string="Partner Info" colspan="2"/>
+                                        <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id)" attrs="{'readonly':[('state', 'in',['open','pending','done','cancel'])]}"/>
+                                        <field name="partner_phone" attrs="{'readonly':[('state', 'in',['open','pending','done','cancel'])]}"/>
+                                        <field name="email_from" widget="email" attrs="{'readonly':[('state', 'in',['open','pending','done','cancel'])]}"/>
+                                    </group>
+                                    <group colspan="2" col="3">
+                                        <separator string="Product Info" colspan="3"/>
+                                        <field name="has_drafts" invisible="1" colspan="3"/>
+                                        <field name="has_other_claim" invisible="1" colspan="3"/>
+                                        <field name="claim_method" colspan="3"/>
+                                        <field name="product_id" attrs="{'readonly':[('state', 'in',['open','pending','done','cancel'])]}" colspan="3"/>
+                                        <label for="serial_number"/>
+                                        <div>
+                                            <field name="serial_number" class="oe_inline" style="width: 60%%"
+                                                nolabel="1" required="1"
+                                                on_change="onchange_process_serial_number(serial_number, product_id, partner_id, warehouse_id)"
+                                                attrs="{'readonly':[('state', 'in',['open','pending','done','cancel'])]}"/>
+                                            <button name="%(action_claimed_move_history)d"
+                                                string="(hist)" class="oe_link"
+                                                attrs="{'invisible':['|',('prodlot_id', '=', False),('state','in',['done'])]}"
+                                                type="action" target="new"
+                                                context="{'default_prodlot_id': prodlot_id}"/>
+                                            <button name="button_dummy" type="object" icon="gtk-dialog-warning"
+                                                class="oe_link" attrs="{'invisible': ['|',('has_drafts', '=', False),('state','in',['done'])]}"
+                                                help="The Serial Number has New/Draft Stock Moves and/or Invoice.  Please check the history."/>
+                                            <button name="button_dummy" type="object" icon="terp-gnome-cpu-frequency-applet+"
+                                                class="oe_link" attrs="{'invisible': ['|',('has_other_claim', '=', False),('state','in',['done'])]}"
+                                                help="The Serial Number has another Claim in progress."/>
+                                        </div>
+                                        <field name="prodlot_id" invisible="1" colspan="3"/>
+                                    </group>
+                                </group>
+                                <group name="Claimed Moves" colspan="4" col="7">
+                                    <separator string="Claimed Moves" colspan="5"/>
+                                    <div class="oe_right oe_button_box">
+                                        <button name="create_return"
+                                            string="Create Return"
+                                            attrs="{'invisible':['|', '|','|', '|', ('rma_number', '=', False), ('claimed_moves', '=', [(6, False, [])]), ('returned', '=', True), ('state','in',['cancel','done']), ('ready_to_receive','=', True)]}"
+                                            type="object" target="new"
+                                            context="{'warehouse_id': warehouse_id,
+                                               'partner_id': partner_id}"/>
+                                        <button name="create_delivery"
+                                            string="Create Delivery"
+                                            attrs="{'invisible':['|', ('rma_number', '=', False), ('state','in',['done'])]}"
+                                            type="object" target="new"
+                                            context="{'warehouse_id': warehouse_id,
+                                                'partner_id': partner_id}"/>
+                                    </div>
+                                    <field name="claimed_moves" nolabel="1" readonly="1" colspan="7"/>
+                                </group>
+                                <group name="Invoice" colspan="4" col="7">
+                                    <separator string="Invoice" colspan="6"/>
+                                    <button name="create_refund"
+                                        type='object' string='Create Refund'
+                                        attrs="{'invisible':['|', '|', '|', ('rma_number', '=', False), ('invoice_line', '=', [(6, False, [])]), ('refund_ids', '!=', []), ('state','in',['cancel','done'])]}"
+                                        icon="gtk-execute"
+                                        context="{
+                                            'default_description': name,
+                                            'claim_id': id,}"/>
+                                    <field name="invoice_line" readonly="1" colspan="7" nolabel="1"
+                                        context="{'form_view_ref': 'emm_claim_rma.view_rma_invoice_line_form', 'tree_view_ref': 'emm_claim_rma.view_rma_invoice_line_tree'}"/>
+                                </group>
+                                <group>
+                                    <field name="note" placeholder="Add an internal note..." nolabel="1"/>
+                                </group>
+                            </page>
+                            <page string="Generated Documents">
+                                <separator colspan="2" string="Returns and Deliveries"/>
+                                <field name="picking_ids" colspan="4" readonly="1">
+                                    <tree>
+                                        <field name="name"/>
+                                        <field name="backorder_id"/>
+                                        <field name="origin"/>
+                                        <field name="date"/>
+                                        <field name="min_date"/>
+                                        <field name="stock_journal_id"/>
+                                        <field name="state"/>
+                                        <field name="type" invisible="1"/>
+                                        <button name="print_incoming_shipment" icon="gtk-print" string="Print" type="object" attrs="{'invisible': [('type','not in',['in'])]}"/>
+                                    </tree>
+                                </field>
+                                <separator colspan="2" string="Refunds"/>
+                                <field name="refund_ids" colspan="4" readonly="1">
+                                    <tree>
+                                        <field name="partner_id" string="Customer"/>
+                                        <field name="date_invoice"/>
+                                        <field name="internal_number"/>
+                                        <field name="date_due"/>
+                                        <field name="currency_id"/>
+                                        <field name="amount_total"/>
+                                        <field name="state"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_return_claims" model="ir.actions.act_window">
+            <field name="name">Return Claims</field>
+            <field name="res_model">crm.claim</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a return claim.
+                </p><p>
+                    Record and track your customers' claims. Claims may be linked to a sales order or a lot.You can send emails with attachments and keep the full history for a claim (emails sent, intervention type and so on).Claims may automatically be linked to an email address using the mail gateway module.
+                </p>
+            </field>
+        </record>
+
+        <record id="return_claim_tree_view1" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="action_return_claims"/>
+        </record>
+
+        <record id="return_claim_tree_view2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="return_claims_form_view"/>
+            <field name="act_window_id" ref="action_return_claims"/>
+        </record>
+
+        <delete id="crm_claim.menu_crm_case_claims" model="ir.ui.menu"/>
+        <menuitem name="Claim RMA" id="menu_crm_claim_rma"
+            parent="base.menu_aftersale" action="action_return_claims"/>
+
+<!-- Right side link to orders -->
+        <act_window
+            id="act_crm_claim_rma_sale_orders"
+            name="Quotations and Sales"
+            res_model="sale.order"
+            src_model="crm.claim"/>
+<!-- Right side link to invoices -->
+        <act_window
+            domain="[('type', '=', 'out_invoice')]"
+            id="act_crm_claim_rma_invoice_out"
+            name="Customer Invoices"
+            res_model="account.invoice"
+            src_model="crm.claim"/>
+<!-- Right side link to invoices -->
+        <act_window
+            domain="[('type', '=', 'in_invoice')]"
+            id="act_crm_claim_rma_invoice_in"
+            name="Supplier Invoices"
+            res_model="account.invoice"
+            src_model="crm.claim"/>
+<!-- Right side link to refunds -->
+        <act_window
+            domain="[('type', '=', 'out_refund')]"
+            id="act_crm_claim_rma_refunds_out"
+            name="Customer Refunds"
+            res_model="account.invoice"
+            src_model="crm.claim"/>
+<!-- Right side link to refunds -->
+        <act_window
+            domain="[('type', '=', 'in_refund')]"
+            id="act_crm_claim_rma_refunds_in"
+            name="Supplier Refunds"
+            res_model="account.invoice"
+            src_model="crm.claim"/>
+<!-- Right side link to picking in -->
+        <act_window
+            domain="[('type', '=', 'in')]"
+            id="act_crm_claim_rma_picking_in"
+            name="Incoming Shipment and Returns"
+            res_model="stock.picking.in"
+            src_model="crm.claim"/>
+<!-- Right side link to picking out -->
+        <act_window
+            domain="[('type', '=', 'out')]"
+            id="act_crm_claim_rma_picking_out"
+            name="Deliveries"
+            res_model="stock.picking.out"
+            src_model="crm.claim"/>
+
+        <record model="ir.ui.view" id="crm_claim_rma_form_view2">
+            <field name="name">CRM - Claim product return Form</field>
+            <field name="model">crm.claim</field>
+            <field name="inherit_id" ref="crm_claim.crm_case_claims_form_view"/>
+                <field name="arch" type="xml">
+                    <field name="date_deadline" position="after">
+                        <field name="claim_type"/>
+                        <field name="warehouse_id" />
+                    </field>
+                    <field name="name" position="replace">
+                        <div class="oe_title">
+                            <label for="claim_number" class="oe_edit_only"/>
+                            <h1><field name="claim_number"/></h1>
+                        </div>
+                    </field>
+                    <field name="date" position="replace">
+                    </field>
+                    <field name="user_id" position="before">
+                        <field name="name" />
+                        <field name="date"/>
+                    </field>
+                    <xpath expr="//sheet[@string='Claims']/group[1]" position="inside">
+                        <div class="oe_right oe_button_box" name="buttons">
+                            <button name="%(act_crm_claim_rma_sale_orders)d" type="action"
+                                    string="Quotations and Sales"
+                                    attrs="{'invisible': ['|',('partner_id','=', False),('claim_type','in', ['supplier','other'])]}"
+                                    context="{'search_default_partner_id': [partner_id],'search_default_user_id':False}"
+                                   />
+                            <button name="%(act_crm_claim_rma_invoice_out)d" type="action"
+                                    string="Customer Invoices"
+                                    attrs="{'invisible': ['|',('partner_id','=', False),('claim_type','in', ['supplier','other'])]}"
+                                    context="{'search_default_partner_id': [partner_id],'search_default_user_id':False}"
+                                   />
+                            <button name="%(act_crm_claim_rma_refunds_out)d" type="action"
+                                    string="Customer Refunds"
+                                    attrs="{'invisible': ['|',('partner_id','=', False),('claim_type','in', ['supplier','other'])]}"
+                                    context="{'search_default_partner_id': [partner_id],'search_default_user_id':False}"
+                                   />
+                            <button name="%(act_crm_claim_rma_invoice_in)d" type="action"
+                                    string="Supplier Invoices"
+                                    attrs="{'invisible': ['|',('partner_id','=', False),('claim_type','in', ['customer','other'])]}"
+                                    context="{'search_default_partner_id': [partner_id],'search_default_user_id':False}"
+                                   />
+                            <button name="%(act_crm_claim_rma_refunds_in)d" type="action"
+                                    string="Supplier Refunds"
+                                    attrs="{'invisible': ['|',('partner_id','=', False),('claim_type','in', ['customer','other'])]}"
+                                    context="{'search_default_partner_id': [partner_id],'search_default_user_id':False}"
+                                   />
+                            <button name="%(act_crm_claim_rma_picking_in)d" type="action"
+                                    string="Returned Products"
+                                    attrs="{'invisible': ['|',('partner_id','=', False),('claim_type','in', ['supplier','other'])]}"
+                                    context="{'search_default_claim_id': active_id,'search_default_user_id':False}"
+                                   />
+                            <button name="%(act_crm_claim_rma_picking_out)d" type="action"
+                                    string="Deliveries"
+                                    attrs="{'invisible': ['|',('partner_id','=', False),('claim_type','in', ['supplier','other'])]}"
+                                    context="{'search_default_partner_id': [partner_id],'search_default_user_id':False}"
+                                   />
+                        </div>
+                    </xpath>
+                </field>
+        </record>
+
+        <!-- CRM claim Search view -->
+        <record id="view_crm_case_claims_filter" model="ir.ui.view">
+            <field name="name">CRM - Claims Search</field>
+            <field name="model">crm.claim</field>
+            <field name="inherit_id" ref="crm_claim.view_crm_case_claims_filter"/>
+            <field name="arch" type="xml">
+                <field name="name" string="Claims" position="before">
+                    <field name="claim_number"/>
+                </field>
+                <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}" position="before">
+                    <filter string="Sales Team" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'section_id'}"/>
+                </filter>
+            </field>
+        </record>
+
+        <!-- Menu -->
+        <record model="ir.actions.act_window" id="crm_claim.crm_case_categ_claim0">
+            <field name="context">{"search_default_user_id":uid, "stage_type":'claim'}</field>
+        </record>
+     </data>
+</openerp>

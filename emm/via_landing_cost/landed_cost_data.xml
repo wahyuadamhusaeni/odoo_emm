@@ -1,0 +1,10 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data>
+        <record id="reclass_journal_data" model="default.domain">
+            <field name="name">Landing Cost Journal</field>
+            <field name="domain_code">landing_cost_journal</field>
+            <field name="domain">[('type', '=', 'general')]</field>
+        </record>
+    </data>
+</openerp>

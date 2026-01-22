@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Transistion -->
+        <delete id="sale_stock.trans_router_wait_invoice_shipping" model="workflow.transition"/>
+
+        <record id="trans_router_wait_invoice_shipping" model="workflow.transition">
+            <field name="act_from" ref="sale.act_wait_invoice"/>
+            <field name="act_to" ref="sale.act_invoice_end"/>
+            <field name="condition">order_policy=='picking' and check_shipped_paid()</field>
+        </record>
+
+        <!-- Activity -->
+
+        <record id="sale_stock.act_ship_except" model="workflow.activity">
+            <field name="wkf_id" ref="sale.wkf_sale"/>
+            <field name="name">ship_except</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state':'shipping_except'})</field>
+        </record>
+    </data>
+</openerp>

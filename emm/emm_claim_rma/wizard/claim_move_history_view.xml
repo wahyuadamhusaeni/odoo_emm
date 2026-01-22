@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_claimed_move_history" model="ir.ui.view">
+            <field name="name">Claimed Move History Form View</field>
+            <field name="model">claim.move.history</field>
+            <field name="arch" type="xml">
+                <form string="History of Claimed Move" version="7.0">
+                    <group col="4" colspan="4">
+                        <group col="2" colspan="2">
+                            <field name="product_id" readonly="1"/>
+                        </group>
+                        <group col="2" colspan="2">
+                            <field name="prodlot_id" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Sales">
+                            <field name="sale_ids" nolabel="1" colspan="4" readonly="1" class="oe_no_button"/>
+                        </page>
+                        <page string="Moves">
+                            <field name="stock_moves" nolabel="1" colspan="4" readonly="1"
+                                 class="oe_no_button"
+                                 context="{'tree_view_ref': 'stock.stock_move_tree2'}"/>
+                        </page>
+                        <page string="Invoiced Lines">
+                            <field name="invoice_line" nolabel="1" colspan="4" readonly="1"
+                                 class="oe_no_button"
+                                 context="{'form_view_ref': 'emm_claim_rma.view_rma_invoice_line_form', 'tree_view_ref': 'emm_claim_rma.view_rma_invoice_line_tree'}"/>
+                        </page>
+                    </notebook>
+                    <footer>
+                        <button string="Close" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_claimed_move_history" model="ir.actions.act_window">
+            <field name="name">Claimed Move History</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">claim.move.history</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</openerp>

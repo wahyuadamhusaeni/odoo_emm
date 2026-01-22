@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<openerp>
+  <data>
+    <menuitem id="menu_via_reporting_financial_root" name="Finance"
+              parent="account.menu_finance_reporting"/>
+  </data>
+</openerp>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+    <record model="ir.ui.view" id="form_view_via_financial_reports_res_company">
+      <field name="name">VIA Financial Reports Company Configuration</field>
+      <field name="inherit_id" ref="base.view_company_form"/>
+      <field name="model">res.company</field>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+        <xpath expr="//page[@string='Configuration']" position="inside">
+	  <newline/>
+	</xpath>
+        <xpath expr="//page[@string='Configuration']/*[position()=1]" position="before">
+          <group col="4" colspan="4">
+            <separator string="VIA Financial Report Accounts" colspan="4"/>
+            <field name="asset_head_account"/>
+            <field name="liability_head_account"/>
+            <field name="income_head_account"/>
+            <field name="expense_head_account"/>
+            <field name="reserve_and_surplus_account"/>
+            <field name="exchange_gain_loss_account"/>
+	    <field name="consolidation_exchange_rate"/>
+          </group>
+        </xpath>
+      </field>
+    </record>
+  </data>
+</openerp>

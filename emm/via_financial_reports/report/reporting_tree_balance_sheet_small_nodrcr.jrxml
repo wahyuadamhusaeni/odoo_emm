@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporting_tree_balance_sheet_small" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isSummaryWithPageHeaderAndFooter="true">
+	<property name="ireport.zoom" value="0.75"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
+	<style name="crosstab_common"/>
+	<style name="crosstab_column_header" style="crosstab_common" fontSize="8" isBold="true"/>
+	<style name="crosstab_column_header_label" style="crosstab_column_header" hAlign="Left">
+		<box>
+			<topPen lineWidth="0.2"/>
+			<bottomPen lineWidth="0.2"/>
+		</box>
+	</style>
+	<style name="crosstab_column_header_level" style="crosstab_column_header" hAlign="Center" fontSize="6">
+		<box>
+			<topPen lineWidth="0.2"/>
+			<bottomPen lineWidth="0.2"/>
+		</box>
+	</style>
+	<style name="crosstab_column_header_cmp" style="crosstab_column_header" hAlign="Center"/>
+	<style name="crosstab_column_header_company" style="crosstab_column_header" hAlign="Center">
+		<box>
+			<topPen lineWidth="0.2"/>
+			<bottomPen lineWidth="0.2"/>
+		</box>
+	</style>
+	<style name="crosstab_column_header_company_subheader" style="crosstab_column_header" hAlign="Right" fontSize="6" isUnderline="true"/>
+	<style name="crosstab_column_header_bb" style="crosstab_column_header_company_subheader"/>
+	<style name="crosstab_column_header_dr" style="crosstab_column_header_company_subheader"/>
+	<style name="crosstab_column_header_cr" style="crosstab_column_header_company_subheader"/>
+	<style name="crosstab_column_header_mv" style="crosstab_column_header_company_subheader"/>
+	<style name="crosstab_column_header_eb" style="crosstab_column_header_company_subheader"/>
+	<style name="crosstab_column" style="crosstab_common" fontSize="6">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{rtype}.split("-")[0].equals("true")]]></conditionExpression>
+			<style isBold="true"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{rtype}.split("-")[1].equals("true")]]></conditionExpression>
+			<style isItalic="true"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{rtype}.split("-")[2].equals("true")]]></conditionExpression>
+			<style isUnderline="true"/>
+		</conditionalStyle>
+	</style>
+	<style name="crosstab_column_level" style="crosstab_column" hAlign="Center"/>
+	<style name="crosstab_column_data" style="crosstab_column" hAlign="Right">
+		<box rightPadding="1"/>
+	</style>
+	<style name="crosstab_column_bb" style="crosstab_column_data"/>
+	<style name="crosstab_column_dr" style="crosstab_column_data"/>
+	<style name="crosstab_column_cr" style="crosstab_column_data"/>
+	<style name="crosstab_column_mv" style="crosstab_column_data"/>
+	<style name="crosstab_column_eb" style="crosstab_column_data"/>
+	<subDataset name="report_parameters">
+		<parameter name="PARAMETERS" class="java.lang.String">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[SELECT
+ t.ord AS order,
+ t.key,
+ t.value
+FROM
+ $P!{PARAMETERS}
+ORDER BY t.ord]]>
+		</queryString>
+		<field name="order" class="java.lang.Integer"/>
+		<field name="key" class="java.lang.String"/>
+		<field name="value" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="reporting_tree">
+		<parameter name="COMPANY_PADDING" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<parameter name="REPORTING_TREE" class="java.lang.String">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[SELECT
+ t.tree_order AS tree_order,
+ t.rtype AS rtype,
+ t.cmp AS cmp,
+ t.debit AS debit,
+ t.credit AS credit,
+ t.movement AS movement,
+ t.beginning_balance AS beginning_balance,
+ t.ending_balance AS ending_balance,
+ rtn.name AS name,
+ rtn.level AS level,
+ lpad(COALESCE(com.parent_id, 0)::text, $P{COMPANY_PADDING}, '0') || com.name AS company_name
+FROM
+ $P!{REPORTING_TREE}
+ INNER JOIN via_reporting_tree_node rtn
+  ON t.node_id = rtn.id
+ INNER JOIN res_company com
+  ON t.com_id = com.id
+ORDER BY
+ t.tree_order]]>
+		</queryString>
+		<field name="tree_order" class="java.lang.Integer"/>
+		<field name="debit" class="java.math.BigDecimal"/>
+		<field name="credit" class="java.math.BigDecimal"/>
+		<field name="movement" class="java.math.BigDecimal"/>
+		<field name="beginning_balance" class="java.math.BigDecimal"/>
+		<field name="ending_balance" class="java.math.BigDecimal"/>
+		<field name="name" class="java.lang.String"/>
+		<field name="level" class="java.lang.Integer"/>
+		<field name="rtype" class="java.lang.String"/>
+		<field name="cmp" class="java.lang.String"/>
+		<field name="company_name" class="java.lang.String"/>
+	</subDataset>
+	<parameter name="NO_WRAP" class="java.lang.Boolean"/>
+	<parameter name="DECIMAL_FORMAT_STRING" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["#,##0;-#,##0"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DECIMAL_ROUNDING_MODE" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["HALF_UP"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="UNSET_DECIMAL_FORMATTER" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.text.DecimalFormat($P{DECIMAL_FORMAT_STRING})]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DECIMAL_FORMATTER" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[($P{UNSET_DECIMAL_FORMATTER}.setRoundingMode(java.math.RoundingMode.valueOf($P{DECIMAL_ROUNDING_MODE})) == null
+ ? $P{UNSET_DECIMAL_FORMATTER}
+ : $P{UNSET_DECIMAL_FORMATTER})]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ACCOUNT_TREE" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="INDENTATION_SPACE_COUNT" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[3]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COMPANY_PADDING" class="java.lang.Integer" isForPrompting="false">
+		<defaultValueExpression><![CDATA[5]]></defaultValueExpression>
+	</parameter>
+	<parameter name="USE_INDENTATION" class="java.lang.Boolean"/>
+	<parameter name="DECIMAL_PRECISION" class="java.lang.Integer"/>
+	<parameter name="REPORT_PARAMETERS_LEFT" class="java.lang.String"/>
+	<parameter name="REPORT_PARAMETERS_RIGHT" class="java.lang.String"/>
+	<parameter name="OERP_USER" class="java.lang.String"/>
+	<parameter name="TODAY" class="java.util.Date">
+		<defaultValueExpression><![CDATA[new java.util.Date()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DATE_FORMAT_STRING_TODAY" class="java.lang.String">
+		<defaultValueExpression><![CDATA["d MMM yyyy HH:mm:ss"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DATE_FORMATTER_TODAY" class="java.lang.Object">
+		<defaultValueExpression><![CDATA[new java.text.SimpleDateFormat($P{DATE_FORMAT_STRING_TODAY})]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<pageHeader>
+		<band height="30">
+			<componentElement>
+				<reportElement key="table" x="0" y="0" width="277" height="10"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="report_parameters">
+						<datasetParameter name="PARAMETERS">
+							<datasetParameterExpression><![CDATA[$P{REPORT_PARAMETERS_LEFT}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="90">
+						<jr:detailCell height="10" rowSpan="1">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="90" height="10"/>
+								<textElement>
+									<font size="8" isBold="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{key}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="207">
+						<jr:detailCell height="10" rowSpan="1">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="10" height="10"/>
+								<textElement>
+									<font size="8" isBold="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{key} == null ? null : ":"]]></textFieldExpression>
+							</textField>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToTallestObject" x="10" y="0" width="197" height="10"/>
+								<textElement>
+									<font size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{value}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<componentElement>
+				<reportElement key="table" x="278" y="0" width="277" height="10"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="report_parameters">
+						<datasetParameter name="PARAMETERS">
+							<datasetParameterExpression><![CDATA[$P{REPORT_PARAMETERS_RIGHT}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="90">
+						<jr:detailCell height="10" rowSpan="1">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="90" height="10"/>
+								<textElement>
+									<font size="8" isBold="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{key}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="207">
+						<jr:detailCell height="10" rowSpan="1">
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="10" height="10"/>
+								<textElement>
+									<font size="8" isBold="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{key} == null ? null : ":"]]></textFieldExpression>
+							</textField>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToTallestObject" x="10" y="0" width="197" height="10"/>
+								<textElement>
+									<font size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{value}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<staticText>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="10" width="555" height="20"/>
+				<textElement/>
+				<text><![CDATA[]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<pageFooter>
+		<band height="10">
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="435" y="0" width="80" height="10"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font size="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Report">
+				<reportElement stretchType="RelativeToTallestObject" x="515" y="0" width="40" height="10"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="0" width="262" height="10"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font size="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Printed by " + $P{OERP_USER} + " on " + $P{DATE_FORMATTER_TODAY}.format($P{TODAY})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="262" y="0" width="70" height="10"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom" markup="none">
+					<font size="4"/>
+				</textElement>
+				<text><![CDATA[Strictly Confidential]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="40" splitType="Stretch">
+			<crosstab columnBreakOffset="999999999" ignoreWidth="false">
+				<reportElement x="0" y="0" width="555" height="40"/>
+				<crosstabParameter name="NO_WRAP" class="java.lang.Boolean">
+					<parameterValueExpression><![CDATA[$P{NO_WRAP}]]></parameterValueExpression>
+				</crosstabParameter>
+				<crosstabParameter name="DECIMAL_FORMATTER" class="java.lang.Object">
+					<parameterValueExpression><![CDATA[$P{DECIMAL_FORMATTER}]]></parameterValueExpression>
+				</crosstabParameter>
+				<crosstabParameter name="INDENTATION_SPACE_COUNT" class="java.lang.Integer">
+					<parameterValueExpression><![CDATA[$P{INDENTATION_SPACE_COUNT}]]></parameterValueExpression>
+				</crosstabParameter>
+				<crosstabParameter name="USE_INDENTATION" class="java.lang.Boolean">
+					<parameterValueExpression><![CDATA[$P{USE_INDENTATION}]]></parameterValueExpression>
+				</crosstabParameter>
+				<crosstabParameter name="COMPANY_PADDING" class="java.lang.Integer">
+					<parameterValueExpression><![CDATA[$P{COMPANY_PADDING}]]></parameterValueExpression>
+				</crosstabParameter>
+				<crosstabParameter name="DECIMAL_PRECISION" class="java.lang.Integer">
+					<parameterValueExpression><![CDATA[$P{DECIMAL_PRECISION}]]></parameterValueExpression>
+				</crosstabParameter>
+				<crosstabDataset>
+					<dataset>
+						<datasetRun subDataset="reporting_tree">
+							<datasetParameter name="REPORTING_TREE">
+								<datasetParameterExpression><![CDATA[$P{ACCOUNT_TREE}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="COMPANY_PADDING">
+								<datasetParameterExpression><![CDATA[$P{COMPANY_PADDING}]]></datasetParameterExpression>
+							</datasetParameter>
+							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+						</datasetRun>
+					</dataset>
+				</crosstabDataset>
+				<crosstabHeaderCell>
+					<cellContents>
+						<staticText>
+							<reportElement style="crosstab_column_header_label" stretchType="RelativeToBandHeight" x="0" y="0" width="195" height="20"/>
+							<textElement/>
+							<text><![CDATA[Description]]></text>
+						</staticText>
+						<staticText>
+							<reportElement style="crosstab_column_header_level" stretchType="RelativeToBandHeight" x="195" y="0" width="10" height="20"/>
+							<textElement/>
+							<text><![CDATA[L]]></text>
+						</staticText>
+					</cellContents>
+				</crosstabHeaderCell>
+				<rowGroup name="tree_order" width="0">
+					<bucket class="java.lang.Integer">
+						<bucketExpression><![CDATA[$F{tree_order}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents/>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="rtype" width="0">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{rtype}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents/>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="name" width="0">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{name}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents/>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<rowGroup name="level" width="205">
+					<bucket class="java.lang.Integer">
+						<bucketExpression><![CDATA[$F{level}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="195" height="12">
+									<printWhenExpression><![CDATA[!$P{NO_WRAP}]]></printWhenExpression>
+								</reportElement>
+								<textElement markup="styled"/>
+								<textFieldExpression><![CDATA[$V{rtype}.split("-")[3].equals("true") ? null : (($V{level} == 0 || !$P{USE_INDENTATION}
+? ""
+: String.format("%" + ($V{level}
+                       * $P{INDENTATION_SPACE_COUNT})
+                + "s", ""))
+  + ("<style size=\"6\" isBold=\"" + $V{rtype}.split("-")[0] + "\" isItalic=\"" + $V{rtype}.split("-")[1] + "\" isUnderline=\"" + $V{rtype}.split("-")[2] + "\">"
+     + $V{name}.replace("<", "\u0000lt;").replace(">", "\u0000gt;").replace("&", "\u0000amp;").replace("\u0000", "&")
+     + "</style>"))]]></textFieldExpression>
+							</textField>
+							<textField isBlankWhenNull="true">
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="195" height="12">
+									<printWhenExpression><![CDATA[$P{NO_WRAP}]]></printWhenExpression>
+								</reportElement>
+								<textElement markup="styled"/>
+								<textFieldExpression><![CDATA[$V{rtype}.split("-")[3].equals("true") ? null : (($V{level} == 0 || !$P{USE_INDENTATION}
+? ""
+: String.format("%" + ($V{level}
+                       * $P{INDENTATION_SPACE_COUNT})
+                + "s", ""))
+  + ("<style size=\"6\" isBold=\"" + $V{rtype}.split("-")[0] + "\" isItalic=\"" + $V{rtype}.split("-")[1] + "\" isUnderline=\"" + $V{rtype}.split("-")[2] + "\">"
+     + $V{name}.replace("<", "\u0000lt;").replace(">", "\u0000gt;").replace("&", "\u0000amp;").replace("\u0000", "&")
+     + "</style>"))]]></textFieldExpression>
+							</textField>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement style="crosstab_column_level" stretchType="RelativeToBandHeight" x="195" y="0" width="10" height="12"/>
+								<textElement/>
+								<textFieldExpression><![CDATA[$V{rtype}.split("-")[3].equals("true") || $V{rtype}.split("-")[4].equals("true") ? null : $V{level}]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<columnGroup name="cmp" height="10">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{cmp}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents mode="Opaque">
+							<box>
+								<topPen lineWidth="0.2"/>
+								<leftPen lineWidth="0.2"/>
+							</box>
+							<textField isStretchWithOverflow="true">
+								<reportElement style="crosstab_column_header_cmp" stretchType="RelativeToBandHeight" x="0" y="0" width="70" height="10"/>
+								<textElement/>
+								<textFieldExpression><![CDATA[$V{cmp}.substring(1)]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents/>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<columnGroup name="company_name" height="10">
+					<bucket class="java.lang.String">
+						<bucketExpression><![CDATA[$F{company_name}]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents mode="Opaque">
+							<box>
+								<leftPen lineWidth="0.2"/>
+							</box>
+							<textField isStretchWithOverflow="true">
+								<reportElement style="crosstab_column_header_company" stretchType="RelativeToBandHeight" x="0" y="0" width="70" height="10"/>
+								<textElement/>
+								<textFieldExpression><![CDATA[$V{company_name}.substring($P{COMPANY_PADDING})]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents/>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<measure name="movement" class="java.math.BigDecimal">
+					<measureExpression><![CDATA[$F{movement}]]></measureExpression>
+				</measure>
+				<measure name="beginning_balance" class="java.math.BigDecimal">
+					<measureExpression><![CDATA[$F{beginning_balance}]]></measureExpression>
+				</measure>
+				<measure name="ending_balance" class="java.math.BigDecimal">
+					<measureExpression><![CDATA[$F{ending_balance}]]></measureExpression>
+				</measure>
+				<measure name="debit" class="java.math.BigDecimal">
+					<measureExpression><![CDATA[$F{debit}]]></measureExpression>
+				</measure>
+				<measure name="credit" class="java.math.BigDecimal">
+					<measureExpression><![CDATA[$F{credit}]]></measureExpression>
+				</measure>
+				<crosstabCell width="70" height="12">
+					<cellContents>
+						<box>
+							<leftPen lineWidth="0.2"/>
+						</box>
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement style="crosstab_column_eb" stretchType="RelativeToBandHeight" x="0" y="0" width="70" height="12"/>
+							<textElement/>
+							<textFieldExpression><![CDATA[$V{rtype}.split("-")[3].equals("true") || $V{rtype}.split("-")[4].equals("true") || $V{ending_balance} == null ? null : $P{DECIMAL_FORMATTER}.format($V{ending_balance})]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabCell>
+			</crosstab>
+		</band>
+	</summary>
+</jasperReport>

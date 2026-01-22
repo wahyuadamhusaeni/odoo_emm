@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<openerp>
+  <data>
+
+    <record id="action_account_by_product"
+            model="ir.actions.act_window">
+      <field name="name">Account by Product</field>
+      <field name="res_model">via.jasper.report</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">form</field>
+      <field name="view_id" ref="via_jasper_report_utils.via_jasper_report_main_form_view"/>
+      <field name="context">{'via_jasper_report_utils.rpt_name': 'Account by Product'}</field>
+      <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_account_by_product"
+              name="Account by Product"
+              action="action_account_by_product"
+              parent="account.menu_finance_reporting"
+              groups="account.group_account_invoice,account.group_account_user,account.group_account_manager"/>
+  </data>
+</openerp>

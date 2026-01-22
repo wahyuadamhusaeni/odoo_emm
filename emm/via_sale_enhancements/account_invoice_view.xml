@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Unlink Invoice from Sale Order is not relevant anymore in 7.0 -->
+        <delete id="invoice_via_sale_enh_tree" model="ir.ui.view"/>
+    </data>
+</openerp>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+      <data>
+        <!-- ir.values rule to enhance the default that only admin can change ir.values except for defaults -->
+        <record model="ir.rule" id="base.ir_values_default_rule">
+            <field name="model_id" ref="base.model_ir_values"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|', ('key','!=','default'), '&amp;', ('key','=','default'),('user_id','=',user.id)]</field>
+        </record>
+      </data>
+</openerp>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Partner Parameters Category -->
+        <record id="p_parameter_category" model="code.category">
+            <field name="name">Partner Parameters Category</field>
+            <field name="pinned">True</field>
+        </record>
+    </data>
+</openerp>

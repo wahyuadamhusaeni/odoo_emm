@@ -1,0 +1,1176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+    <!-- VIA Reporting Tree General Ledger Report With Moves -->
+    <record id="vfrrt_gl_pageless_with_moves"
+	    model="ir.actions.report.xml">
+      <field name="name">General Ledger/Trial Balance</field>
+      <field name="report_name">vfrrt_general_ledger_pageless_with_moves_xls</field>
+      <field name="report_type">xls</field>
+      <field name="jasper_output">xls</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/reporting_tree_general_ledger_pageless_with_moves.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/reporting_tree_general_ledger_pageless_with_moves.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+
+    <record id="vfrrt_gl_small_with_moves"
+	    model="ir.actions.report.xml">
+      <field name="name">General Ledger/Trial Balance</field>
+      <field name="report_name">vfrrt_general_ledger_small_with_moves_pdf</field>
+      <field name="report_type">pdf</field>
+      <field name="jasper_output">pdf</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/reporting_tree_general_ledger_small_with_moves.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/reporting_tree_general_ledger_small_with_moves.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+
+    <record id="vfrrt_gl_large_with_moves"
+	    model="ir.actions.report.xml">
+      <field name="name">General Ledger/Trial Balance</field>
+      <field name="report_name">vfrrt_general_ledger_large_with_moves_pdf</field>
+      <field name="report_type">pdf</field>
+      <field name="jasper_output">pdf</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/reporting_tree_general_ledger_large_with_moves.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/reporting_tree_general_ledger_large_with_moves.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+    <!-- End of VIA Reporting Tree General Ledger Report With Moves -->
+
+    <!-- VIA Reporting Tree General Ledger Report With Moves No DR/CR -->
+    <record id="vfrrt_gl_pageless_with_moves_nodrcr"
+	    model="ir.actions.report.xml">
+      <field name="name">General Ledger/Trial Balance</field>
+      <field name="report_name">vfrrt_general_ledger_pageless_with_moves_nodrcr_xls</field>
+      <field name="report_type">xls</field>
+      <field name="jasper_output">xls</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/reporting_tree_general_ledger_pageless_with_moves_nodrcr.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/reporting_tree_general_ledger_pageless_with_moves_nodrcr.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+
+    <record id="vfrrt_gl_small_with_moves_nodrcr"
+	    model="ir.actions.report.xml">
+      <field name="name">General Ledger/Trial Balance</field>
+      <field name="report_name">vfrrt_general_ledger_small_with_moves_nodrcr_pdf</field>
+      <field name="report_type">pdf</field>
+      <field name="jasper_output">pdf</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/reporting_tree_general_ledger_small_with_moves_nodrcr.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/reporting_tree_general_ledger_small_with_moves_nodrcr.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+
+    <record id="vfrrt_gl_large_with_moves_nodrcr"
+	    model="ir.actions.report.xml">
+      <field name="name">General Ledger/Trial Balance</field>
+      <field name="report_name">vfrrt_general_ledger_large_with_moves_nodrcr_pdf</field>
+      <field name="report_type">pdf</field>
+      <field name="jasper_output">pdf</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/reporting_tree_general_ledger_large_with_moves_nodrcr.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/reporting_tree_general_ledger_large_with_moves_nodrcr.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+    <!-- End of VIA Reporting Tree General Ledger Report With Moves No DR/CR -->
+
+    <!-- VIA Reporting Tree General Ledger Report -->
+    <record id="vfrrt_gl_pageless"
+	    model="ir.actions.report.xml">
+      <field name="name">General Ledger/Trial Balance</field>
+      <field name="report_name">vfrrt_general_ledger_pageless_xls</field>
+      <field name="report_type">xls</field>
+      <field name="jasper_output">xls</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/reporting_tree_general_ledger_pageless.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/reporting_tree_general_ledger_pageless.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+
+    <record id="vfrrt_gl_small"
+	    model="ir.actions.report.xml">
+      <field name="name">General Ledger/Trial Balance</field>
+      <field name="report_name">vfrrt_general_ledger_small_pdf</field>
+      <field name="report_type">pdf</field>
+      <field name="jasper_output">pdf</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/reporting_tree_general_ledger_small.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/reporting_tree_general_ledger_small.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+
+    <record id="vfrrt_gl_large"
+	    model="ir.actions.report.xml">
+      <field name="name">General Ledger/Trial Balance</field>
+      <field name="report_name">vfrrt_general_ledger_large_pdf</field>
+      <field name="report_type">pdf</field>
+      <field name="jasper_output">pdf</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/reporting_tree_general_ledger_large.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/reporting_tree_general_ledger_large.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+    <!-- End of VIA Reporting Tree General Ledger Report -->
+
+    <!-- VIA Reporting Tree General Ledger Report No DR/CR -->
+    <record id="vfrrt_gl_pageless_nodrcr"
+	    model="ir.actions.report.xml">
+      <field name="name">General Ledger/Trial Balance</field>
+      <field name="report_name">vfrrt_general_ledger_pageless_nodrcr_xls</field>
+      <field name="report_type">xls</field>
+      <field name="jasper_output">xls</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/reporting_tree_general_ledger_pageless_nodrcr.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/reporting_tree_general_ledger_pageless_nodrcr.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+
+    <record id="vfrrt_gl_small_nodrcr"
+	    model="ir.actions.report.xml">
+      <field name="name">General Ledger/Trial Balance</field>
+      <field name="report_name">vfrrt_general_ledger_small_nodrcr_pdf</field>
+      <field name="report_type">pdf</field>
+      <field name="jasper_output">pdf</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/reporting_tree_general_ledger_small_nodrcr.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/reporting_tree_general_ledger_small_nodrcr.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+
+    <record id="vfrrt_gl_large_nodrcr"
+	    model="ir.actions.report.xml">
+      <field name="name">General Ledger/Trial Balance</field>
+      <field name="report_name">vfrrt_general_ledger_large_nodrcr_pdf</field>
+      <field name="report_type">pdf</field>
+      <field name="jasper_output">pdf</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/reporting_tree_general_ledger_large_nodrcr.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/reporting_tree_general_ledger_large_nodrcr.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+    <!-- End of VIA Reporting Tree General Ledger Report No DR/CR -->
+
+    <!-- VIA Reporting Tree Balance Sheet Report -->
+    <record id="via_financial_reports_reporting_tree_bs_small"
+	    model="ir.actions.report.xml">
+      <field name="name">Balance Sheet</field>
+      <field name="report_name">via_reporting_tree_balance_sheet_small_pdf</field>
+      <field name="report_type">pdf</field>
+      <field name="jasper_output">pdf</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/reporting_tree_balance_sheet_small.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/reporting_tree_balance_sheet_small.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+
+    <record id="via_financial_reports_reporting_tree_bs_large"
+	    model="ir.actions.report.xml">
+      <field name="name">Balance Sheet</field>
+      <field name="report_name">via_reporting_tree_balance_sheet_large_pdf</field>
+      <field name="report_type">pdf</field>
+      <field name="jasper_output">pdf</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/reporting_tree_balance_sheet_large.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/reporting_tree_balance_sheet_large.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+    <!-- End of VIA Reporting Tree Balance Sheet Report -->
+
+    <!-- VIA Reporting Tree Balance Sheet Report No DR/CR -->
+    <record id="via_financial_reports_reporting_tree_bs_small_nodrcr"
+	    model="ir.actions.report.xml">
+      <field name="name">Balance Sheet</field>
+      <field name="report_name">via_reporting_tree_balance_sheet_small_nodrcr_pdf</field>
+      <field name="report_type">pdf</field>
+      <field name="jasper_output">pdf</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/reporting_tree_balance_sheet_small_nodrcr.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/reporting_tree_balance_sheet_small_nodrcr.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+
+    <record id="via_financial_reports_reporting_tree_bs_large_nodrcr"
+	    model="ir.actions.report.xml">
+      <field name="name">Balance Sheet</field>
+      <field name="report_name">via_reporting_tree_balance_sheet_large_nodrcr_pdf</field>
+      <field name="report_type">pdf</field>
+      <field name="jasper_output">pdf</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/reporting_tree_balance_sheet_large_nodrcr.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/reporting_tree_balance_sheet_large_nodrcr.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+    <!-- End of VIA Reporting Tree Balance Sheet Report No DR/CR -->
+
+    <!-- VIA Reporting Tree Balance Sheet Report Pageless -->
+    <record id="via_financial_reports_reporting_tree_bs_pageless"
+	    model="ir.actions.report.xml">
+      <field name="name">Balance Sheet</field>
+      <field name="report_name">via_reporting_tree_balance_sheet_pageless_xls</field>
+      <field name="report_type">xls</field>
+      <field name="jasper_output">xls</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/reporting_tree_balance_sheet_pageless.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/reporting_tree_balance_sheet_pageless.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+
+    <record id="via_financial_reports_reporting_tree_bs_pageless_csv"
+	    model="ir.actions.report.xml">
+      <field name="name">Balance Sheet</field>
+      <field name="report_name">via_reporting_tree_balance_sheet_pageless_csv</field>
+      <field name="report_type">csv</field>
+      <field name="jasper_output">csv</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/reporting_tree_balance_sheet_pageless.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/reporting_tree_balance_sheet_pageless.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+    <!-- End of VIA Reporting Tree Balance Sheet Report Pageless -->
+
+    <!-- VIA Reporting Tree Balance Sheet Report Pageless No DR/CR -->
+    <record id="via_financial_reports_reporting_tree_bs_pageless_nodrcr"
+	    model="ir.actions.report.xml">
+      <field name="name">Balance Sheet</field>
+      <field name="report_name">via_reporting_tree_balance_sheet_pageless_nodrcr_xls</field>
+      <field name="report_type">xls</field>
+      <field name="jasper_output">xls</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/reporting_tree_balance_sheet_pageless_nodrcr.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/reporting_tree_balance_sheet_pageless_nodrcr.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+
+    <record id="via_financial_reports_reporting_tree_bs_pageless_nodrcr_csv"
+	    model="ir.actions.report.xml">
+      <field name="name">Balance Sheet</field>
+      <field name="report_name">via_reporting_tree_balance_sheet_pageless_nodrcr_csv</field>
+      <field name="report_type">csv</field>
+      <field name="jasper_output">csv</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/reporting_tree_balance_sheet_pageless_nodrcr.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/reporting_tree_balance_sheet_pageless_nodrcr.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+    <!-- End of VIA Reporting Tree Balance Sheet Report Pageless No DR/CR -->
+
+    <!-- VIA Reporting Tree Profit/Loss Report -->
+    <record id="via_financial_reports_reporting_tree_pl_small"
+	    model="ir.actions.report.xml">
+      <field name="name">Profit/Loss</field>
+      <field name="report_name">via_reporting_tree_profit_loss_small_pdf</field>
+      <field name="report_type">pdf</field>
+      <field name="jasper_output">pdf</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/reporting_tree_profit_loss_small.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/reporting_tree_profit_loss_small.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+
+    <record id="via_financial_reports_reporting_tree_pl_large"
+	    model="ir.actions.report.xml">
+      <field name="name">Profit/Loss</field>
+      <field name="report_name">via_reporting_tree_profit_loss_large_pdf</field>
+      <field name="report_type">pdf</field>
+      <field name="jasper_output">pdf</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/reporting_tree_profit_loss_large.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/reporting_tree_profit_loss_large.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+    <!-- End of VIA Reporting Tree Profit/Loss Report -->
+
+    <!-- VIA Reporting Tree Profit/Loss Report No DR/CR -->
+    <record id="via_financial_reports_reporting_tree_pl_small_nodrcr"
+	    model="ir.actions.report.xml">
+      <field name="name">Profit/Loss</field>
+      <field name="report_name">via_reporting_tree_profit_loss_small_nodrcr_pdf</field>
+      <field name="report_type">pdf</field>
+      <field name="jasper_output">pdf</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/reporting_tree_profit_loss_small_nodrcr.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/reporting_tree_profit_loss_small_nodrcr.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+
+    <record id="via_financial_reports_reporting_tree_pl_large_nodrcr"
+	    model="ir.actions.report.xml">
+      <field name="name">Profit/Loss</field>
+      <field name="report_name">via_reporting_tree_profit_loss_large_nodrcr_pdf</field>
+      <field name="report_type">pdf</field>
+      <field name="jasper_output">pdf</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/reporting_tree_profit_loss_large_nodrcr.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/reporting_tree_profit_loss_large_nodrcr.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+    <!-- End of VIA Reporting Tree Profit/Loss Report No DR/CR -->
+
+    <!-- VIA Reporting Tree Profit/Loss Report Pageless -->
+    <record id="via_financial_reports_reporting_tree_pl_pageless"
+	    model="ir.actions.report.xml">
+      <field name="name">Profit/Loss</field>
+      <field name="report_name">via_reporting_tree_profit_loss_pageless_xls</field>
+      <field name="report_type">xls</field>
+      <field name="jasper_output">xls</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/reporting_tree_profit_loss_pageless.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/reporting_tree_profit_loss_pageless.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+
+    <record id="via_financial_reports_reporting_tree_pl_pageless_csv"
+	    model="ir.actions.report.xml">
+      <field name="name">Profit/Loss</field>
+      <field name="report_name">via_reporting_tree_profit_loss_pageless_csv</field>
+      <field name="report_type">csv</field>
+      <field name="jasper_output">csv</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/reporting_tree_profit_loss_pageless.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/reporting_tree_profit_loss_pageless.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+    <!-- End of VIA Reporting Tree Profit/Loss Report Pageless -->
+
+    <!-- VIA Reporting Tree Profit/Loss Report Pageless No DR/CR -->
+    <record id="via_financial_reports_reporting_tree_pl_pageless_nodrcr"
+	    model="ir.actions.report.xml">
+      <field name="name">Profit/Loss</field>
+      <field name="report_name">via_reporting_tree_profit_loss_pageless_nodrcr_xls</field>
+      <field name="report_type">xls</field>
+      <field name="jasper_output">xls</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/reporting_tree_profit_loss_pageless_nodrcr.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/reporting_tree_profit_loss_pageless_nodrcr.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+
+    <record id="via_financial_reports_reporting_tree_pl_pageless_nodrcr_csv"
+	    model="ir.actions.report.xml">
+      <field name="name">Profit/Loss</field>
+      <field name="report_name">via_reporting_tree_profit_loss_pageless_nodrcr_csv</field>
+      <field name="report_type">csv</field>
+      <field name="jasper_output">csv</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/reporting_tree_profit_loss_pageless_nodrcr.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/reporting_tree_profit_loss_pageless_nodrcr.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+    <!-- End of VIA Reporting Tree Profit/Loss Report Pageless No DR/CR -->
+
+    <!-- VIA Combined Balance Sheet Report -->
+    <record id="via_financial_reports_combined_bs_small"
+	    model="ir.actions.report.xml">
+      <field name="name">VIA Combined Balance Sheet</field>
+      <field name="report_name">via_combined_balance_sheet_small_pdf</field>
+      <field name="report_type">pdf</field>
+      <field name="jasper_output">pdf</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/combined_balance_sheet_small.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/combined_balance_sheet_small.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+
+    <record id="via_financial_reports_combined_bs_large"
+	    model="ir.actions.report.xml">
+      <field name="name">VIA Combined Balance Sheet</field>
+      <field name="report_name">via_combined_balance_sheet_large_pdf</field>
+      <field name="report_type">pdf</field>
+      <field name="jasper_output">pdf</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/combined_balance_sheet_large.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/combined_balance_sheet_large.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+    <!-- End of VIA Combined Balance Sheet Report -->
+
+    <!-- VIA Combined Balance Sheet Report Pageless -->
+    <record id="via_financial_reports_combined_bs_pageless"
+	    model="ir.actions.report.xml">
+      <field name="name">VIA Combined Balance Sheet</field>
+      <field name="report_name">via_combined_balance_sheet_pageless_xls</field>
+      <field name="report_type">xls</field>
+      <field name="jasper_output">xls</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/combined_balance_sheet_pageless.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/combined_balance_sheet_pageless.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+
+    <record id="via_financial_reports_combined_bs_pageless_csv"
+	    model="ir.actions.report.xml">
+      <field name="name">VIA Combined Balance Sheet</field>
+      <field name="report_name">via_combined_balance_sheet_pageless_csv</field>
+      <field name="report_type">csv</field>
+      <field name="jasper_output">csv</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/combined_balance_sheet_pageless.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/combined_balance_sheet_pageless.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+    <!-- End of VIA Combined Balance Sheet Report Pageless -->
+
+    <!-- VIA Combined Balance Sheet Report No DR/CR -->
+    <record id="via_financial_reports_combined_bs_small_nodrcr"
+	    model="ir.actions.report.xml">
+      <field name="name">VIA Combined Balance Sheet</field>
+      <field name="report_name">via_combined_balance_sheet_small_nodrcr_pdf</field>
+      <field name="report_type">pdf</field>
+      <field name="jasper_output">pdf</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/combined_balance_sheet_small_nodrcr.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/combined_balance_sheet_small_nodrcr.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+
+    <record id="via_financial_reports_combined_bs_large_nodrcr"
+	    model="ir.actions.report.xml">
+      <field name="name">VIA Combined Balance Sheet</field>
+      <field name="report_name">via_combined_balance_sheet_large_nodrcr_pdf</field>
+      <field name="report_type">pdf</field>
+      <field name="jasper_output">pdf</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/combined_balance_sheet_large_nodrcr.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/combined_balance_sheet_large_nodrcr.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+    <!-- End of VIA Combined Balance Sheet Report No DR/CR -->
+
+    <!-- VIA Combined Balance Sheet Report Pageless No DR/CR -->
+    <record id="via_financial_reports_combined_bs_pageless_nodrcr"
+	    model="ir.actions.report.xml">
+      <field name="name">VIA Combined Balance Sheet</field>
+      <field name="report_name">via_combined_balance_sheet_pageless_nodrcr_xls</field>
+      <field name="report_type">xls</field>
+      <field name="jasper_output">xls</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/combined_balance_sheet_pageless_nodrcr.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/combined_balance_sheet_pageless_nodrcr.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+
+    <record id="via_financial_reports_combined_bs_pageless_nodrcr_csv"
+	    model="ir.actions.report.xml">
+      <field name="name">VIA Combined Balance Sheet</field>
+      <field name="report_name">via_combined_balance_sheet_pageless_nodrcr_csv</field>
+      <field name="report_type">csv</field>
+      <field name="jasper_output">csv</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/combined_balance_sheet_pageless_nodrcr.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/combined_balance_sheet_pageless_nodrcr.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+    <!-- End of VIA Combined Balance Sheet Report Pageless No DR/CR -->
+
+    <!-- VIA Combined Profit/Loss Report -->
+    <record id="via_financial_reports_combined_pl_small"
+	    model="ir.actions.report.xml">
+      <field name="name">VIA Combined Profit/Loss</field>
+      <field name="report_name">via_combined_profit_loss_small_pdf</field>
+      <field name="report_type">pdf</field>
+      <field name="jasper_output">pdf</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/combined_profit_loss_small.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/combined_profit_loss_small.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+
+    <record id="via_financial_reports_combined_pl_large"
+	    model="ir.actions.report.xml">
+      <field name="name">VIA Combined Profit/Loss</field>
+      <field name="report_name">via_combined_profit_loss_large_pdf</field>
+      <field name="report_type">pdf</field>
+      <field name="jasper_output">pdf</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/combined_profit_loss_large.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/combined_profit_loss_large.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+    <!-- End of VIA Combined Profit/Loss Report -->
+
+    <!-- VIA Combined Profit/Loss Report Pageless -->
+    <record id="via_financial_reports_combined_pl_pageless"
+	    model="ir.actions.report.xml">
+      <field name="name">VIA Combined Profit/Loss</field>
+      <field name="report_name">via_combined_profit_loss_pageless_xls</field>
+      <field name="report_type">xls</field>
+      <field name="jasper_output">xls</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/combined_profit_loss_pageless.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/combined_profit_loss_pageless.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+
+    <record id="via_financial_reports_combined_pl_pageless_csv"
+	    model="ir.actions.report.xml">
+      <field name="name">VIA Combined Profit/Loss</field>
+      <field name="report_name">via_combined_profit_loss_pageless_csv</field>
+      <field name="report_type">csv</field>
+      <field name="jasper_output">csv</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/combined_profit_loss_pageless.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/combined_profit_loss_pageless.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+    <!-- End of VIA Combined Profit/Loss Report Pageless -->
+
+    <!-- VIA Combined Profit/Loss Report No DR/CR -->
+    <record id="via_financial_reports_combined_pl_small_nodrcr"
+	    model="ir.actions.report.xml">
+      <field name="name">VIA Combined Profit/Loss</field>
+      <field name="report_name">via_combined_profit_loss_small_nodrcr_pdf</field>
+      <field name="report_type">pdf</field>
+      <field name="jasper_output">pdf</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/combined_profit_loss_small_nodrcr.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/combined_profit_loss_small_nodrcr.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+
+    <record id="via_financial_reports_combined_pl_large_nodrcr"
+	    model="ir.actions.report.xml">
+      <field name="name">VIA Combined Profit/Loss</field>
+      <field name="report_name">via_combined_profit_loss_large_nodrcr_pdf</field>
+      <field name="report_type">pdf</field>
+      <field name="jasper_output">pdf</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/combined_profit_loss_large_nodrcr.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/combined_profit_loss_large_nodrcr.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+    <!-- End of VIA Combined Profit/Loss Report No DR/CR -->
+
+    <!-- VIA Combined Profit/Loss Report Pageless No DR/CR -->
+    <record id="via_financial_reports_combined_pl_pageless_nodrcr"
+	    model="ir.actions.report.xml">
+      <field name="name">VIA Combined Profit/Loss</field>
+      <field name="report_name">via_combined_profit_loss_pageless_nodrcr_xls</field>
+      <field name="report_type">xls</field>
+      <field name="jasper_output">xls</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/combined_profit_loss_pageless_nodrcr.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/combined_profit_loss_pageless_nodrcr.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+
+    <record id="via_financial_reports_combined_pl_pageless_nodrcr_csv"
+	    model="ir.actions.report.xml">
+      <field name="name">VIA Combined Profit/Loss</field>
+      <field name="report_name">via_combined_profit_loss_pageless_nodrcr_csv</field>
+      <field name="report_type">csv</field>
+      <field name="jasper_output">csv</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/combined_profit_loss_pageless_nodrcr.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/combined_profit_loss_pageless_nodrcr.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+    <!-- End of VIA Combined Profit/Loss Report Pageless No DR/CR -->
+
+    <!-- VIA Combined General Ledger -->
+    <record id="via_financial_reports_combined_gl_small"
+	    model="ir.actions.report.xml">
+      <field name="name">Trial Balance</field>
+      <field name="report_name">via_combined_general_ledger_small_pdf</field>
+      <field name="report_type">pdf</field>
+      <field name="jasper_output">pdf</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/combined_general_ledger_small.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/combined_general_ledger_small.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+
+    <record id="via_financial_reports_combined_gl_large"
+	    model="ir.actions.report.xml">
+      <field name="name">Trial Balance</field>
+      <field name="report_name">via_combined_general_ledger_large_pdf</field>
+      <field name="report_type">pdf</field>
+      <field name="jasper_output">pdf</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/combined_general_ledger_large.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/combined_general_ledger_large.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+    <!-- End of VIA Combined General Ledger -->
+
+    <!-- VIA Combined General Ledger Pageless -->
+    <record id="via_financial_reports_combined_gl_pageless"
+	    model="ir.actions.report.xml">
+      <field name="name">Trial Balance</field>
+      <field name="report_name">via_combined_general_ledger_pageless_xls</field>
+      <field name="report_type">xls</field>
+      <field name="jasper_output">xls</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/combined_general_ledger_pageless.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/combined_general_ledger_pageless.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+
+    <record id="via_financial_reports_combined_gl_pageless_csv"
+	    model="ir.actions.report.xml">
+      <field name="name">Trial Balance</field>
+      <field name="report_name">via_combined_general_ledger_pageless_csv</field>
+      <field name="report_type">csv</field>
+      <field name="jasper_output">csv</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/combined_general_ledger_pageless.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/combined_general_ledger_pageless.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+    <!-- End of VIA Combined General Ledger Pageless -->
+
+    <!-- VIA Combined General Ledger With Moves -->
+    <record id="via_financial_reports_combined_gl_small_with_moves"
+	    model="ir.actions.report.xml">
+      <field name="name">Trial Balance</field>
+      <field name="report_name">via_combined_general_ledger_small_with_moves_pdf</field>
+      <field name="report_type">pdf</field>
+      <field name="jasper_output">pdf</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/combined_general_ledger_small_with_moves.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/combined_general_ledger_small_with_moves.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+
+    <record id="via_financial_reports_combined_gl_large_with_moves"
+	    model="ir.actions.report.xml">
+      <field name="name">Trial Balance</field>
+      <field name="report_name">via_combined_general_ledger_large_with_moves_pdf</field>
+      <field name="report_type">pdf</field>
+      <field name="jasper_output">pdf</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/combined_general_ledger_large_with_moves.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/combined_general_ledger_large_with_moves.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+    <!-- End of VIA Combined General Ledger With Moves -->
+
+    <!-- VIA Combined General Ledger Pageless With Moves -->
+    <record id="via_financial_reports_combined_gl_pageless_with_moves"
+	    model="ir.actions.report.xml">
+      <field name="name">Trial Balance</field>
+      <field name="report_name">via_combined_general_ledger_pageless_with_moves_xls</field>
+      <field name="report_type">xls</field>
+      <field name="jasper_output">xls</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/combined_general_ledger_pageless_with_moves.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/combined_general_ledger_pageless_with_moves.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+
+    <record id="via_financial_reports_combined_gl_pageless_with_moves_csv"
+	    model="ir.actions.report.xml">
+      <field name="name">Trial Balance</field>
+      <field name="report_name">via_combined_general_ledger_pageless_with_moves_csv</field>
+      <field name="report_type">csv</field>
+      <field name="jasper_output">csv</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/combined_general_ledger_pageless_with_moves.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/combined_general_ledger_pageless_with_moves.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+    <!-- End of VIA Combined General Ledger Pageless With Moves -->
+
+    <!-- VIA Combined General Ledger With Moves New -->
+    <record id="via_financial_reports_combined_gl_new_small_with_moves"
+	    model="ir.actions.report.xml">
+      <field name="name">General Ledger</field>
+      <field name="report_name">via_combined_general_ledger_new_small_with_moves_pdf</field>
+      <field name="report_type">pdf</field>
+      <field name="jasper_output">pdf</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/combined_general_ledger_new_small_with_moves.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/combined_general_ledger_new_small_with_moves.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+
+    <record id="via_financial_reports_combined_gl_new_large_with_moves"
+	    model="ir.actions.report.xml">
+      <field name="name">General Ledger</field>
+      <field name="report_name">via_combined_general_ledger_new_large_with_moves_pdf</field>
+      <field name="report_type">pdf</field>
+      <field name="jasper_output">pdf</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/combined_general_ledger_new_large_with_moves.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/combined_general_ledger_new_large_with_moves.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+    <!-- End of VIA Combined General Ledger With Moves New -->
+
+    <!-- VIA Combined General Ledger Pageless With Moves New -->
+    <record id="via_financial_reports_combined_gl_new_pageless_with_moves"
+	    model="ir.actions.report.xml">
+      <field name="name">General Ledger</field>
+      <field name="report_name">via_combined_general_ledger_new_pageless_with_moves_xls</field>
+      <field name="report_type">xls</field>
+      <field name="jasper_output">xls</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/combined_general_ledger_new_pageless_with_moves.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/combined_general_ledger_new_pageless_with_moves.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+
+    <record id="via_financial_reports_combined_gl_new_pageless_with_moves_csv"
+	    model="ir.actions.report.xml">
+      <field name="name">General Ledger</field>
+      <field name="report_name">via_combined_general_ledger_new_pageless_with_moves_csv</field>
+      <field name="report_type">csv</field>
+      <field name="jasper_output">csv</field>
+      <field name="model">account.account</field>
+
+      <field name="type">ir.actions.report.xml</field>
+      <field name="auto" eval="True"/>
+      <field name="header" eval="True"/>
+      <field name="report_file">via_financial_reports/report/combined_general_ledger_new_pageless_with_moves.jrxml</field>
+      <field name="report_rml">via_financial_reports/report/combined_general_ledger_new_pageless_with_moves.jrxml</field>
+      <!-- If set to true, the action will not be displayed on the right
+           toolbar of a form view. -->
+      <field name="multi" eval="True"/>
+      <field name="attachment_use" eval="False"/>
+      <field name="jasper_report" eval="True"/>
+    </record>
+    <!-- End of VIA Combined General Ledger Pageless With Moves New -->
+  </data>
+</openerp>

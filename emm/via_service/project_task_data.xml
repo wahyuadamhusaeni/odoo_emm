@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <!-- Task Rating Category -->
+
+        <record id="task_rating_category" model="code.category">
+            <field name="name">Task Rating Category</field>
+            <field name="pinned">True</field>
+        </record>
+
+        <!-- Task Rating -->
+
+        <record id="task_rating_1" model="code.decode">
+            <field name="sequence" eval="1"/>
+            <field name="code">1</field>
+            <field name="value">1</field>
+            <field name="category" ref="task_rating_category"/>
+            <field name="pinned" eval="True"/>
+        </record>
+
+        <record id="task_rating_2" model="code.decode">
+            <field name="sequence" eval="1"/>
+            <field name="code">2</field>
+            <field name="value">2</field>
+            <field name="category" ref="task_rating_category"/>
+            <field name="pinned" eval="True"/>
+        </record>
+
+        <record id="task_rating_3" model="code.decode">
+            <field name="sequence" eval="1"/>
+            <field name="code">3</field>
+            <field name="value">3</field>
+            <field name="category" ref="task_rating_category"/>
+            <field name="pinned" eval="True"/>
+        </record>
+
+        <record id="task_rating_4" model="code.decode">
+            <field name="sequence" eval="1"/>
+            <field name="code">4</field>
+            <field name="value">4</field>
+            <field name="category" ref="task_rating_category"/>
+            <field name="pinned" eval="True"/>
+        </record>
+
+        <record id="task_rating_5" model="code.decode">
+            <field name="sequence" eval="1"/>
+            <field name="code">5</field>
+            <field name="value">5</field>
+            <field name="category" ref="task_rating_category"/>
+            <field name="pinned" eval="True"/>
+        </record>
+
+    </data>
+</openerp>

@@ -1,0 +1,1363 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* via_service
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 7.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-08-25 04:23+0000\n"
+"PO-Revision-Date: 2014-08-25 04:23+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: via_service
+#: field:spare.parts.wizard,user_pickup:0
+msgid "User Pickup"
+msgstr "User Pickup"
+
+#. module: via_service
+#: field:service.task.wizard,deadline:0
+msgid "Next Deadline"
+msgstr "Next Deadline"
+
+#. module: via_service
+#: field:service.request,change_view:0
+msgid "Change View"
+msgstr "Change View"
+
+#. module: via_service
+#: field:service.fee,service_id:0
+msgid "Service"
+msgstr "Service"
+
+#. module: via_service
+#: field:spare.parts.wizard,location_to:0
+#: field:spare.parts.wizard,location_to_request:0
+msgid "Destination"
+msgstr "Destination"
+
+#. module: via_service
+#: help:stock.move.wizard,date:0
+msgid "Move date: scheduled date until move is done, then date of actual move processing"
+msgstr "Move date: scheduled date until move is done, then date of actual move processing"
+
+#. module: via_service
+#: field:service.request,delivery_order:0
+msgid "Delivery Order"
+msgstr "Delivery Order"
+
+#. module: via_service
+#: view:hr.employee:0
+#: field:hr.employee,hr_employee_skills:0
+#: view:res.company:0
+msgid "Employee Skills"
+msgstr "Employee Skills"
+
+#. module: via_service
+#: view:service.request:0
+#: view:spare.parts.wizard:0
+msgid "Spare Parts Consume"
+msgstr "Spare Parts Consume"
+
+#. module: via_service
+#: model:ir.actions.act_window,name:via_service.action_service_make_invoice
+msgid "Make Invoices"
+msgstr "Make Invoices"
+
+#. module: via_service
+#: model:ir.actions.act_window,name:via_service.service_request_invoice_line_action
+#: model:ir.ui.menu,name:via_service.menu_service_request_invoice_line
+msgid "To Invoice"
+msgstr "To Invoice"
+
+#. module: via_service
+#: view:project.task:0
+msgid "Remaining"
+msgstr "Remaining"
+
+#. module: via_service
+#: field:service.invoice.line,uos_id:0
+#: field:stock.move.wizard,product_uom:0
+msgid "Unit of Measure"
+msgstr "Unit of Measure"
+
+#. module: via_service
+#: model:code.category,name:via_service.service_request_state
+msgid "Service Request State"
+msgstr "Service Work Order State"
+
+#. module: via_service
+#: model:ir.model,name:via_service.model_service_state
+msgid "service State"
+msgstr "service State"
+
+#. module: via_service
+#: field:service.request,message_unread:0
+msgid "Unread Messages"
+msgstr "Unread Messages"
+
+#. module: via_service
+#: code:addons/via_service/spare_parts.py:577
+#, python-format
+msgid "There Is No Product Selected !!!"
+msgstr "There Is No Product Selected !!!"
+
+#. module: via_service
+#: view:service.invoice:0
+#: field:service.invoice,stock_move:0
+msgid "Spare Parts Consumed"
+msgstr "Spare Parts Consumed"
+
+#. module: via_service
+#: field:service.request,warranty_time:0
+msgid "Warranty Time"
+msgstr "Warranty Time"
+
+#. module: via_service
+#: field:service.task.wizard,limit:0
+msgid "Employee Limit"
+msgstr "Employee Limit"
+
+#. module: via_service
+#: help:stock.move.wizard,state:0
+msgid "* New: When the stock move is created and not yet confirmed.\n"
+"* Waiting Another Move: This state can be seen when a move is waiting for another one, for example in a chained flow.\n"
+"* Waiting Availability: This state is reached when the procurement resolution is not straight forward. It may need the scheduler to run, a component to me manufactured...\n"
+"* Available: When products are reserved, it is set to 'Available'.\n"
+"* Done: When the shipment is processed, the state is 'Done'."
+msgstr "* New: When the stock move is created and not yet confirmed.\n"
+"* Waiting Another Move: This state can be seen when a move is waiting for another one, for example in a chained flow.\n"
+"* Waiting Availability: This state is reached when the procurement resolution is not straight forward. It may need the scheduler to run, a component to me manufactured...\n"
+"* Available: When products are reserved, it is set to 'Available'.\n"
+"* Done: When the shipment is processed, the state is 'Done'."
+
+#. module: via_service
+#: field:service.request,serial_number:0
+#: field:stock.move.wizard,prodlot_id:0
+msgid "Serial Number"
+msgstr "Serial Number"
+
+#. module: via_service
+#: view:hr.employee:0
+msgid "Birth"
+msgstr "Birth"
+
+#. module: via_service
+#: view:stock.picking:0
+msgid "Picking list"
+msgstr "Picking list"
+
+#. module: via_service
+#: field:service.request.skill.set,skill_child_id:0
+msgid "Child Skill Set"
+msgstr "Child Skill Set"
+
+#. module: via_service
+#: field:service.invoice.line,quantity:0
+#: field:stock.move.wizard,product_qty:0
+msgid "Quantity"
+msgstr "Quantity"
+
+#. module: via_service
+#: field:spare.parts.wizard,location_from_pickup:0
+msgid "Pickup Location From"
+msgstr "Pickup Location From"
+
+#. module: via_service
+#: selection:service.fee,service_type:0
+#: view:service.fee.wizard:0
+#: view:service.request:0
+msgid "Execute"
+msgstr "Execute"
+
+#. module: via_service
+#: model:ir.model,name:via_service.model_project_task
+#: view:project.task:0
+#: field:service.request,service_task:0
+msgid "Task"
+msgstr "Task"
+
+#. module: via_service
+#: field:service.request,sr_keyword:0
+msgid "Keyword"
+msgstr "Keyword"
+
+#. module: via_service
+#: field:project.task,document_id:0
+#: field:service.request.skill.set,doc_id:0
+msgid "Document ID"
+msgstr "Document ID"
+
+#. module: via_service
+#: view:service.fee.wizard:0
+#: view:service.invoice:0
+#: view:service.request:0
+msgid "Service Fee Execute"
+msgstr "Service Fee Execute"
+
+#. module: via_service
+#: field:service.request,message_ids:0
+msgid "Messages"
+msgstr "Messages"
+
+#. module: via_service
+#: view:spare.parts.wizard:0
+msgid "Refresh"
+msgstr "Refresh"
+
+#. module: via_service
+#: model:ir.model,name:via_service.model_service_invoice
+msgid "Service Invoices"
+msgstr "Service Invoices"
+
+#. module: via_service
+#: view:project.task:0
+msgid "Project"
+msgstr "Project"
+
+#. module: via_service
+#: code:addons/via_service/spare_parts.py:577
+#, python-format
+msgid "Error!"
+msgstr "Error!"
+
+#. module: via_service
+#: view:service.request:0
+msgid "Internal Move"
+msgstr "Internal Move"
+
+#. module: via_service
+#: field:stock.location,usage_type:0
+msgid "Location Area Type"
+msgstr "Location Area Type"
+
+#. module: via_service
+#: selection:stock.move.wizard,state:0
+msgid "Cancelled"
+msgstr "Cancelled"
+
+#. module: via_service
+#: view:hr.employee:0
+msgid "Position"
+msgstr "Position"
+
+#. module: via_service
+#: help:service.request,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr "If checked new messages require your attention."
+
+#. module: via_service
+#: help:stock.move.wizard,location_dest_id:0
+msgid "Location where the system will stock the finished products."
+msgstr "Location where the system will stock the finished products."
+
+#. module: via_service
+#: selection:stock.move.wizard,state:0
+msgid "Waiting Another Move"
+msgstr "Waiting Another Move"
+
+#. module: via_service
+#: field:service.invoice.line,origin:0
+#: field:sr.summary,origin:0
+msgid "Origin"
+msgstr "Origin"
+
+#. module: via_service
+#: field:service.request,service_execute:0
+msgid "Executed"
+msgstr "Executed"
+
+#. module: via_service
+#: field:stock.move.wizard,picking_id:0
+msgid "Reference"
+msgstr "Reference"
+
+#. module: via_service
+#: view:project.task:0
+msgid "Open Document"
+msgstr "Open Document"
+
+#. module: via_service
+#: model:ir.model,name:via_service.model_stock_move
+#: view:service.request:0
+#: view:spare.parts.wizard:0
+#: field:spare.parts.wizard,stock_move_id:0
+#: view:stock.move.wizard:0
+msgid "Stock Move"
+msgstr "Stock Move"
+
+#. module: via_service
+#: field:service.invoice.line,document_id:0
+msgid "Document Id"
+msgstr "Document Id"
+
+#. module: via_service
+#: view:service.invoice.line:0
+msgid "Create Invoices"
+msgstr "Create Invoices"
+
+#. module: via_service
+#: view:spare.parts.wizard:0
+#: field:spare.parts.wizard,stock_location:0
+msgid "Stock Location"
+msgstr "Stock Location"
+
+#. module: via_service
+#: field:service.request,location_from:0
+#: field:spare.parts.wizard,location_from:0
+#: field:spare.parts.wizard,location_from_consume:0
+#: field:spare.parts.wizard,location_from_request:0
+msgid "From Location"
+msgstr "From Location"
+
+#. module: via_service
+#: help:service.request,message_summary:0
+msgid "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
+msgstr "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
+
+#. module: via_service
+#: view:service.request:0
+#: field:service.request,spare_parts_planning:0
+#: field:service.request,spare_parts_planning_move:0
+msgid "Planning"
+msgstr "Planning"
+
+#. module: via_service
+#: model:ir.model,name:via_service.model_service_request_skill_set
+#: view:service.request.skill.set:0
+msgid "Service Request Skill Set"
+msgstr "Service Work Order Skill Set"
+
+#. module: via_service
+#: field:service.request,date:0
+msgid "Requested On"
+msgstr "Date"
+
+#. module: via_service
+#: model:ir.model,name:via_service.model_stock_picking_out
+msgid "Delivery Orders"
+msgstr "Delivery Orders"
+
+#. module: via_service
+#: field:res.company,transit_location:0
+msgid "Spare Parts Transit Location"
+msgstr "Spare Parts Transit Location"
+
+#. module: via_service
+#: field:service.fee.wizard,sr_id:0
+#: field:service.invoice,sr_id:0
+msgid "SR ID"
+msgstr "SWO ID"
+
+#. module: via_service
+#: model:ir.model,name:via_service.model_service_request_keyword
+#: view:service.request.keyword:0
+msgid "Service Request Keyword"
+msgstr "Service Work Order Keyword"
+
+#. module: via_service
+#: view:service.task.wizard:0
+msgid "Show Employee"
+msgstr "Show Employee"
+
+#. module: via_service
+#: selection:service.invoice.line,cost_method:0
+msgid "Average Price"
+msgstr "Average Price"
+
+#. module: via_service
+#: field:res.company,spare_parts_location:0
+msgid "Spare Parts Warehouse Location"
+msgstr "Spare Parts Warehouse Location"
+
+#. module: via_service
+#: view:service.request:0
+msgid "Confirm"
+msgstr "Confirm"
+
+#. module: via_service
+#: view:service.task.wizard:0
+#: view:spare.parts.wizard:0
+msgid "Create"
+msgstr "Create"
+
+#. module: via_service
+#: view:project.task:0
+msgid "Print Task"
+msgstr "Print Task"
+
+#. module: via_service
+#: field:service.request,delivery_order_date:0
+msgid "Delivery Order Date"
+msgstr "Delivery Order Date"
+
+#. module: via_service
+#: field:stock.move.wizard,origin:0
+msgid "Source"
+msgstr "Source"
+
+#. module: via_service
+#: field:service.request,state:0
+msgid "State"
+msgstr "State"
+
+#. module: via_service
+#: field:service.request,message_follower_ids:0
+msgid "Followers"
+msgstr "Followers"
+
+#. module: via_service
+#: model:ir.model,name:via_service.model_stock_location
+msgid "Location"
+msgstr "Location"
+
+#. module: via_service
+#: model:ir.model,name:via_service.model_stock_picking
+msgid "Picking List"
+msgstr "Picking List"
+
+#. module: via_service
+#: view:hr.employee:0
+#: model:ir.model,name:via_service.model_hr_employee
+msgid "Employee"
+msgstr "Employee"
+
+#. module: via_service
+#: selection:stock.move.wizard,state:0
+msgid "New"
+msgstr "New"
+
+#. module: via_service
+#: field:service.fee,service_qty:0
+msgid "Qty"
+msgstr "Qty"
+
+#. module: via_service
+#: field:service.fee,service_type:0
+#: field:stock.picking,picking_svc_type:0
+#: field:stock.picking.out,picking_svc_type:0
+msgid "Type"
+msgstr "Type"
+
+#. module: via_service
+#: view:service.request:0
+msgid "Requested Date"
+msgstr "Requested Date"
+
+#. module: via_service
+#: field:service.fee,service_total:0
+#: field:stock.move,total_price:0
+#: field:stock.move.wizard,total_price:0
+msgid "Total Price"
+msgstr "Total Price"
+
+#. module: via_service
+#: field:service.request,sr_name:0
+#: field:service.request.keyword,name:0
+#: field:service.request.skill.set,complete_name:0
+#: field:service.request.skill.set,name:0
+#: field:service.state,name:0
+msgid "Name"
+msgstr "Name"
+
+#. module: via_service
+#: selection:stock.move.wizard,state:0
+msgid "Available"
+msgstr "Available"
+
+#. module: via_service
+#: model:ir.model,name:via_service.model_product_category
+msgid "Product Category"
+msgstr "Product Category"
+
+#. module: via_service
+#: code:addons/via_service/spare_parts.py:473
+#: code:addons/via_service/stock.py:63
+#, python-format
+msgid "Error !"
+msgstr "Error !"
+
+#. module: via_service
+#: view:project.task:0
+msgid "Task Work"
+msgstr "Task Work"
+
+#. module: via_service
+#: selection:stock.move.wizard,state:0
+msgid "Waiting Availability"
+msgstr "Waiting Availability"
+
+#. module: via_service
+#: field:service.request,partner:0
+msgid "Requested By"
+msgstr "Partner"
+
+#. module: via_service
+#: field:service.task.wizard,start_date:0
+msgid "Planned Start Date"
+msgstr "Planned Start Date"
+
+#. module: via_service
+#: model:ir.model,name:via_service.model_stock_move_wizard
+msgid "Stock Move Wizard"
+msgstr "Stock Move Wizard"
+
+#. module: via_service
+#: view:service.invoice:0
+#: view:service.request:0
+#: field:service.request,service_invoice:0
+msgid "Service Invoice"
+msgstr "Service Invoice"
+
+#. module: via_service
+#: selection:service.invoice.line,cost_method:0
+msgid "Standard Price"
+msgstr "Standard Price"
+
+#. module: via_service
+#: field:service.invoice,stock_move_ids:0
+msgid "Spare Parts Consumed IDs"
+msgstr "Spare Parts Consumed IDs"
+
+#. module: via_service
+#: view:service.request:0
+msgid "Copy From DO"
+msgstr "Copy From DO"
+
+#. module: via_service
+#: field:service.request,partner_assign:0
+msgid "Assigned To"
+msgstr "Assigned To"
+
+#. module: via_service
+#: field:service.request,name:0
+msgid "Service Request No"
+msgstr "Service Work Order No"
+
+#. module: via_service
+#: field:res.company,limit:0
+msgid "No of Employee Shown"
+msgstr "No of Employee Shown"
+
+#. module: via_service
+#: field:document.page,sr_skill_set:0
+#: field:service.request,sr_skill_set:0
+#: field:service.task.wizard,sr_skill_set:0
+msgid "Skill Set"
+msgstr "Skill Set"
+
+#. module: via_service
+#: view:service.request:0
+msgid "Service Fee Request"
+msgstr "Service Work Order Fee"
+
+#. module: via_service
+#: field:service.task.wizard,planned_hours:0
+msgid "Planned Hour(s)"
+msgstr "Planned Hour(s)"
+
+#. module: via_service
+#: model:code.decode,value:via_service.stock_picking_svc_type_standard
+msgid "Standard"
+msgstr "Standard"
+
+#. module: via_service
+#: selection:service.invoice.line,cost_method:0
+msgid "Lot: LIFO"
+msgstr "Lot: LIFO"
+
+#. module: via_service
+#: view:service.invoice:0
+msgid "Service Fee Executed"
+msgstr "Service Fee Executed"
+
+#. module: via_service
+#: view:service.request:0
+msgid "Product History"
+msgstr "Product History"
+
+#. module: via_service
+#: view:hr.employee:0
+msgid "e.g. Part Time"
+msgstr "e.g. Part Time"
+
+#. module: via_service
+#: view:spare.parts.wizard:0
+msgid "Location From"
+msgstr "Location From"
+
+#. module: via_service
+#: field:service.invoice.line,zero_price:0
+msgid "Free Change"
+msgstr "Free Change"
+
+#. module: via_service
+#: view:service.request:0
+msgid "Consume"
+msgstr "Consume"
+
+#. module: via_service
+#: model:code.decode,value:via_service.stock_location_area_type_spareparts
+msgid "Spareparts"
+msgstr "Spareparts"
+
+#. module: via_service
+#: field:stock.move.wizard,location_dest_id:0
+msgid "Destination Location"
+msgstr "Destination Location"
+
+#. module: via_service
+#: model:code.decode,value:via_service.stock_location_area_type_transit
+msgid "Transit"
+msgstr "Transit"
+
+#. module: via_service
+#: model:code.category,name:via_service.stock_picking_svc_type
+msgid "Stock Picking Type"
+msgstr "Stock Picking Type"
+
+#. module: via_service
+#: view:hr.employee:0
+#: view:spare.parts.wizard:0
+msgid "Back"
+msgstr "Back"
+
+#. module: via_service
+#: selection:service.request,state:0
+msgid "Cancelled"
+msgstr "Cancelled"
+
+#. module: via_service
+#: view:service.request:0
+msgid "Spare Parts Planning"
+msgstr "Spare Parts Planning"
+
+#. module: via_service
+#: model:ir.model,name:via_service.model_sr_summary
+#: view:sr.summary:0
+msgid "Service Request Summary"
+msgstr "Service Work Order Summary"
+
+#. module: via_service
+#: view:hr.employee:0
+msgid "Related User"
+msgstr "Related User"
+
+#. module: via_service
+#: view:service.request:0
+msgid "Task ID"
+msgstr "Task ID"
+
+#. module: via_service
+#: field:sr.summary,technician_responsibility:0
+msgid "Technician Responsibility"
+msgstr "Technician Responsibility"
+
+#. module: via_service
+#: view:spare.parts.wizard:0
+msgid "Spare Parts Request"
+msgstr "Spare Parts Request"
+
+#. module: via_service
+#: selection:service.invoice.line,cost_method:0
+msgid "Lot: FIFO"
+msgstr "Lot: FIFO"
+
+#. module: via_service
+#: view:service.invoice.line:0
+msgid "or"
+msgstr "or"
+
+#. module: via_service
+#: view:service.request:0
+msgid "Untaxed Amount"
+msgstr "Untaxed Amount"
+
+#. module: via_service
+#: view:document.page:0
+msgid "Category"
+msgstr "Category"
+
+#. module: via_service
+#: field:sr.summary,request_to_be_followed_up:0
+msgid "Request To Be Followed Up"
+msgstr "Request To Be Followed Up"
+
+#. module: via_service
+#: view:project.task:0
+msgid "Spent Hours"
+msgstr "Spent Hours"
+
+#. module: via_service
+#: view:service.request:0
+msgid "No"
+msgstr "No"
+
+#. module: via_service
+#: view:service.invoice.line:0
+msgid "Create invoices"
+msgstr "Create invoices"
+
+#. module: via_service
+#: model:ir.actions.act_window,name:via_service.stock_picking_service_action
+#: model:ir.ui.menu,name:via_service.menu_stock_picking_service
+msgid "SR Internal Moves"
+msgstr "SWO Internal Moves"
+
+#. module: via_service
+#: model:code.decode,value:via_service.stock_location_area_type_pickup
+#: model:code.decode,value:via_service.stock_picking_svc_type_pickup
+#: view:service.request:0
+msgid "Pickup"
+msgstr "Pickup"
+
+#. module: via_service
+#: selection:service.request,state:0
+#: model:service.state,name:via_service.service_request_state_draft
+msgid "Draft"
+msgstr "Draft"
+
+#. module: via_service
+#: view:hr.employee:0
+msgid "Contact Information"
+msgstr "Contact Information"
+
+#. module: via_service
+#: field:stock.picking,location_from_spare_part:0
+#: field:stock.picking.in,location_from_spare_part:0
+#: field:stock.picking.out,location_from_spare_part:0
+msgid "Location From for Spare Parts Wizard"
+msgstr "Location From for Spare Parts Wizard"
+
+#. module: via_service
+#: view:project.task:0
+msgid "Cancel Task"
+msgstr "Cancel Task"
+
+#. module: via_service
+#: view:hr.employee:0
+msgid "Other Information ..."
+msgstr "Other Information ..."
+
+#. module: via_service
+#: view:service.request:0
+#: selection:service.request,state:0
+#: model:service.state,name:via_service.service_request_state_pending
+msgid "Pending"
+msgstr "Pending"
+
+#. module: via_service
+#: view:hr.employee:0
+#: field:stock.move.wizard,state:0
+msgid "Status"
+msgstr "Status"
+
+#. module: via_service
+#: view:spare.parts.wizard:0
+msgid "Spare Parts Return"
+msgstr "Spare Parts Return"
+
+#. module: via_service
+#: model:ir.model,name:via_service.model_service_invoice_line
+msgid "Service Invoice Line"
+msgstr "Service Invoice Line"
+
+#. module: via_service
+#: field:res.company,auto_create_skill_set:0
+msgid "Auto Create Skill Set"
+msgstr "Auto Create Skill Set"
+
+#. module: via_service
+#: field:hr.employee,hit:0
+msgid "Matches"
+msgstr "Matches"
+
+#. module: via_service
+#: view:service.request:0
+msgid "Total Amount"
+msgstr "Total Amount"
+
+#. module: via_service
+#: view:service.request:0
+msgid "Back Order"
+msgstr "Back Order"
+
+#. module: via_service
+#: view:spare.parts.wizard:0
+msgid "Check Stock Location"
+msgstr "Check Stock Location"
+
+#. module: via_service
+#: field:service.request,warranty_elapsed_time:0
+msgid "Warranty Elapsed Day(s)"
+msgstr "Warranty Elapsed Day(s)"
+
+#. module: via_service
+#: code:addons/via_service/spare_parts.py:473
+#: code:addons/via_service/stock.py:63
+#, python-format
+msgid "Cannot load taxform print template!  Contact your administrator"
+msgstr "Cannot load taxform print template!  Contact your administrator"
+
+#. module: via_service
+#: field:service.request,message_is_follower:0
+msgid "Is a Follower"
+msgstr "Is a Follower"
+
+#. module: via_service
+#: view:hr.employee:0
+#: field:service.request.keyword,is_active:0
+#: field:service.request.skill.set,is_active:0
+msgid "Active"
+msgstr "Active"
+
+#. module: via_service
+#: view:service.request:0
+#: view:service.task.wizard:0
+msgid "Service Task"
+msgstr "Service Task"
+
+#. module: via_service
+#: field:service.task.wizard,employee_category:0
+msgid "Tags"
+msgstr "Tags"
+
+#. module: via_service
+#: model:ir.model,name:via_service.model_service_task_wizard
+msgid "Service Task Wizard"
+msgstr "Service Task Wizard"
+
+#. module: via_service
+#: model:code.decode,value:via_service.stock_picking_svc_type_consume
+#: view:service.request:0
+#: field:service.request,spare_parts_consume:0
+#: field:service.request,spare_parts_consume_move:0
+msgid "Consumed"
+msgstr "Consumed"
+
+#. module: via_service
+#: model:ir.model,name:via_service.model_res_company
+msgid "Companies"
+msgstr "Companies"
+
+#. module: via_service
+#: view:service.request:0
+#: field:service.request,message_summary:0
+msgid "Summary"
+msgstr "Summary"
+
+#. module: via_service
+#: view:project.task:0
+msgid "Task summary..."
+msgstr "Task summary..."
+
+#. module: via_service
+#: view:spare.parts.wizard:0
+msgid "List Ready Spare Parts"
+msgstr "List Ready Spare Parts"
+
+#. module: via_service
+#: help:stock.move.wizard,location_id:0
+msgid "Sets a location if you produce at a fixed location. This can be a partner location if you subcontract the manufacturing operations."
+msgstr "Sets a location if you produce at a fixed location. This can be a partner location if you subcontract the manufacturing operations."
+
+#. module: via_service
+#: model:ir.model,name:via_service.model_spare_parts_wizard
+msgid "Spare Parts Wizard"
+msgstr "Spare Parts Wizard"
+
+#. module: via_service
+#: code:addons/via_service/project_task.py:57
+#, python-format
+msgid "Error"
+msgstr "Error"
+
+#. module: via_service
+#: code:addons/via_service/project_task.py:57
+#, python-format
+msgid "Can't print service task form."
+msgstr "Can't print service task form."
+
+#. module: via_service
+#: view:service.request:0
+msgid "Knowledge Base"
+msgstr "Knowledge Base"
+
+#. module: via_service
+#: view:hr.employee:0
+msgid "HR Settings"
+msgstr "HR Settings"
+
+#. module: via_service
+#: field:service.fee,zero_price:0
+#: field:stock.move,zero_price:0
+#: field:stock.move.wizard,zero_price:0
+msgid "Free Charge"
+msgstr "Free Charge"
+
+#. module: via_service
+#: view:service.request:0
+msgid "Spare Parts Planning Move"
+msgstr "Spare Parts Planning Move"
+
+#. module: via_service
+#: model:ir.actions.act_window,name:via_service.service_request_action
+#: model:ir.model,name:via_service.model_service_request
+#: model:ir.ui.menu,name:via_service.menu_service_request
+#: view:res.company:0
+#: field:service.fee,sr_id:0
+#: view:service.request:0
+msgid "Service Request"
+msgstr "Service Work Order"
+
+#. module: via_service
+#: view:hr.employee:0
+msgid "Citizenship & Other Info"
+msgstr "Citizenship & Other Info"
+
+#. module: via_service
+#: view:spare.parts.wizard:0
+msgid "Spare Parts Pickup"
+msgstr "Spare Parts Pickup"
+
+#. module: via_service
+#: view:service.request:0
+msgid "Residual Amount"
+msgstr "Residual Amount"
+
+#. module: via_service
+#: field:document.page,attachment:0
+msgid "Attachments"
+msgstr "Attachments"
+
+#. module: via_service
+#: view:service.task.wizard:0
+#: field:service.task.wizard,service_employee_id:0
+msgid "Service Employee"
+msgstr "Service Employee"
+
+#. module: via_service
+#: view:service.request:0
+msgid "Add description here ..."
+msgstr "Add description here ..."
+
+#. module: via_service
+#: view:hr.employee:0
+msgid "Public Information"
+msgstr "Public Information"
+
+#. module: via_service
+#: field:sr.summary,returned_to_warehouse:0
+msgid "Returned To Warehouse"
+msgstr "Returned To Warehouse"
+
+#. module: via_service
+#: field:service.fee,service_price:0
+#: field:service.invoice.line,price_unit:0
+#: field:stock.move.wizard,price_unit:0
+msgid "Unit Price"
+msgstr "Unit Price"
+
+#. module: via_service
+#: view:project.task:0
+#: view:service.request:0
+#: selection:service.request,state:0
+#: model:service.state,name:via_service.service_request_state_done
+#: selection:stock.move.wizard,state:0
+msgid "Done"
+msgstr "Done"
+
+#. module: via_service
+#: field:stock.picking,location_to_spare_part:0
+#: field:stock.picking.in,location_to_spare_part:0
+#: field:stock.picking.out,location_to_spare_part:0
+msgid "Location to for Spare Parts Wizard"
+msgstr "Location to for Spare Parts Wizard"
+
+#. module: via_service
+#: model:ir.model,name:via_service.model_account_invoice
+msgid "Invoice"
+msgstr "Invoice"
+
+#. module: via_service
+#: view:service.fee.wizard:0
+#: view:service.invoice.line:0
+#: view:service.request:0
+#: view:service.task.wizard:0
+#: view:spare.parts.wizard:0
+msgid "Cancel"
+msgstr "Cancel"
+
+#. module: via_service
+#: field:res.company,hr_employee_category:0
+msgid "HR Employee Tags"
+msgstr "HR Employee Tags"
+
+#. module: via_service
+#: field:spare.parts.wizard,location_to_pickup:0
+msgid "Pickup Location To"
+msgstr "Pickup Location To"
+
+#. module: via_service
+#: help:stock.move.wizard,prodlot_id:0
+msgid "Serial number is used to put a serial number on the production"
+msgstr "Serial number is used to put a serial number on the production"
+
+#. module: via_service
+#: view:service.request:0
+msgid "Partner History"
+msgstr "Partner History"
+
+#. module: via_service
+#: view:hr.employee:0
+msgid "Personal Information"
+msgstr "Personal Information"
+
+#. module: via_service
+#: model:ir.actions.act_window,name:via_service.sr_keyword_action
+#: model:ir.ui.menu,name:via_service.menu_sr_keyword
+msgid "SR Keyword"
+msgstr "SR Keyword"
+
+#. module: via_service
+#: selection:service.request,state:0
+#: model:service.state,name:via_service.service_request_state_inprogress
+msgid "In Progress"
+msgstr "In Progress"
+
+#. module: via_service
+#: view:service.task.wizard:0
+msgid "Search Employee"
+msgstr "Search Employee"
+
+#. module: via_service
+#: field:hr.employee,available_date:0
+msgid "Earliest Available"
+msgstr "Earliest Available"
+
+#. module: via_service
+#: view:project.task:0
+msgid "Reactivate"
+msgstr "Reactivate"
+
+#. module: via_service
+#: model:ir.model,name:via_service.model_stock_picking_in
+msgid "Incoming Shipments"
+msgstr "Incoming Shipments"
+
+#. module: via_service
+#: field:service.invoice,service_fee:0
+msgid "Service Executed"
+msgstr "Service Executed"
+
+#. module: via_service
+#: model:ir.model,name:via_service.model_document_page
+msgid "Document Page"
+msgstr "Document Page"
+
+#. module: via_service
+#: view:project.task:0
+#: view:service.request:0
+msgid "Print"
+msgstr "Print"
+
+#. module: via_service
+#: view:service.invoice:0
+#: view:service.request:0
+msgid "Create Invoice"
+msgstr "Create Invoice"
+
+#. module: via_service
+#: field:service.request,partner_type:0
+msgid "Requester Type"
+msgstr "Partner Type"
+
+#. module: via_service
+#: model:ir.model,name:via_service.model_service_fee
+#: view:service.fee:0
+#: view:service.fee.wizard:0
+#: field:service.fee.wizard,service_fee_id:0
+#: view:service.request:0
+msgid "Service Fee"
+msgstr "Service Fee"
+
+#. module: via_service
+#: field:service.task.wizard,task_name:0
+msgid "Service Task Name"
+msgstr "Service Task Name"
+
+#. module: via_service
+#: view:service.request:0
+msgid "Spare Parts"
+msgstr "Spare Parts"
+
+#. module: via_service
+#: model:res.groups,name:via_service.service_request_user
+msgid "Service Request User"
+msgstr "Service Work Order User"
+
+#. module: via_service
+#: help:stock.move.wizard,price_unit:0
+msgid "Technical field used to record the product cost set by the user during a picking confirmation (when average price costing method is used)"
+msgstr "Technical field used to record the product cost set by the user during a picking confirmation (when average price costing method is used)"
+
+#. module: via_service
+#: field:service.request.skill.set,parent_right:0
+msgid "Right Parent"
+msgstr "Right Parent"
+
+#. module: via_service
+#: field:sr.summary,requested:0
+msgid "Requested"
+msgstr "Requested"
+
+#. module: via_service
+#: model:ir.model,name:via_service.model_product_product
+#: field:service.invoice.line,product_id:0
+#: field:service.request,product_id:0
+#: field:spare.parts.wizard,product_id:0
+#: field:sr.summary,product:0
+#: field:stock.move.wizard,product_id:0
+msgid "Product"
+msgstr "Product"
+
+#. module: via_service
+#: model:code.decode,value:via_service.stock_picking_svc_type_return
+#: view:service.request:0
+msgid "Return"
+msgstr "Return"
+
+#. module: via_service
+#: view:project.task:0
+#: field:service.invoice.line,name:0
+#: field:service.request,description:0
+#: field:stock.move.wizard,name:0
+msgid "Description"
+msgstr "Description"
+
+#. module: via_service
+#: view:spare.parts.wizard:0
+msgid "Create and Print"
+msgstr "Create and Print"
+
+#. module: via_service
+#: field:service.request,warranty_start:0
+msgid "Warranty Start"
+msgstr "Warranty Start"
+
+#. module: via_service
+#: view:service.invoice.line:0
+msgid "Do you really want to create the invoice(s)?"
+msgstr "Do you really want to create the invoice(s)?"
+
+#. module: via_service
+#: field:service.fee,has_invoiced:0
+#: field:service.invoice.line,has_invoiced:0
+#: field:stock.move,has_invoiced:0
+#: field:stock.move.wizard,has_invoiced:0
+msgid "Has Invoiced"
+msgstr "Has Invoiced"
+
+#. module: via_service
+#: field:service.fee,service_uom:0
+msgid "UOM"
+msgstr "UOM"
+
+#. module: via_service
+#: field:service.request,elapsed_time:0
+msgid "SR Elapsed Day(s)"
+msgstr "SWO Elapsed Day(s)"
+
+#. module: via_service
+#: field:service.request.skill.set,skill_parent_id:0
+msgid "Parent Skill Set"
+msgstr "Parent Skill Set"
+
+#. module: via_service
+#: model:code.category,name:via_service.stock_location_area_type
+msgid "Stock Location Area Type"
+msgstr "Stock Location Area Type"
+
+#. module: via_service
+#: field:spare.parts.wizard,location_to_consume:0
+msgid "Consumer Location"
+msgstr "Consumer Location"
+
+#. module: via_service
+#: field:res.company,pickup_location:0
+msgid "Default Pickup Location"
+msgstr "Default Pickup Location"
+
+#. module: via_service
+#: view:hr.employee:0
+msgid "Skills"
+msgstr "Skills"
+
+#. module: via_service
+#: model:ir.actions.act_window,name:via_service.sr_skill_set_action
+#: model:ir.ui.menu,name:via_service.menu_sr_skill_set
+msgid "SR Skill Set"
+msgstr "SWO Skill Set"
+
+#. module: via_service
+#: view:spare.parts.wizard:0
+msgid "User Return"
+msgstr "User Return"
+
+#. module: via_service
+#: model:code.decode,value:via_service.stock_picking_svc_type_request
+#: selection:service.fee,service_type:0
+#: view:service.request:0
+#: field:service.request,service_request:0
+msgid "Request"
+msgstr "Request"
+
+#. module: via_service
+#: help:stock.move.wizard,product_qty:0
+msgid "This is the quantity of products from an inventory point of view. For moves in the state 'done', this is the quantity of products that were actually moved. For other moves, this is the quantity of product that is planned to be moved. Lowering this quantity does not generate a backorder. Changing this quantity on assigned moves affects the product reservation, and should be done with care."
+msgstr "This is the quantity of products from an inventory point of view. For moves in the state 'done', this is the quantity of products that were actually moved. For other moves, this is the quantity of product that is planned to be moved. Lowering this quantity does not generate a backorder. Changing this quantity on assigned moves affects the product reservation, and should be done with care."
+
+#. module: via_service
+#: field:project.task,origin:0
+msgid "Source Document"
+msgstr "Source Document"
+
+#. module: via_service
+#: view:service.request:0
+msgid "Create Task"
+msgstr "Create Task"
+
+#. module: via_service
+#: field:service.invoice.line,cost_method:0
+msgid "Costing Method"
+msgstr "Costing Method"
+
+#. module: via_service
+#: field:sr.summary,reserved_on_pickup_area:0
+msgid "Reserved On Pickup Area"
+msgstr "Reserved On Pickup Area"
+
+#. module: via_service
+#: field:service.invoice.line,invoice_line_tax_id:0
+msgid "Taxes"
+msgstr "Taxes"
+
+#. module: via_service
+#: field:project.task,task_task:0
+msgid "Service Requests"
+msgstr "Service Work Orders"
+
+#. module: via_service
+#: view:service.invoice.line:0
+msgid "Service Request Invoice Line"
+msgstr "Service Work Order Invoice Line"
+
+#. module: via_service
+#: field:project.task,model:0
+#: field:service.invoice.line,model:0
+#: field:service.request.skill.set,model:0
+msgid "Model"
+msgstr "Model"
+
+#. module: via_service
+#: field:service.request,warranty_warning:0
+msgid "Warranty Warning"
+msgstr "Warranty Warning"
+
+#. module: via_service
+#: help:service.request,message_ids:0
+msgid "Messages and communication history"
+msgstr "Messages and communication history"
+
+#. module: via_service
+#: field:service.request.skill.set,parent_left:0
+msgid "Left Parent"
+msgstr "Left Parent"
+
+#. module: via_service
+#: field:service.invoice.line,account_id:0
+msgid "Account"
+msgstr "Account"
+
+#. module: via_service
+#: field:stock.move.wizard,location_id:0
+msgid "Source Location"
+msgstr "Source Location"
+
+#. module: via_service
+#: model:ir.model,name:via_service.model_service_fee_wizard
+msgid "Service Fee Wizard"
+msgstr "Service Fee Wizard"
+
+#. module: via_service
+#: field:service.task.wizard,end_date:0
+msgid "Planned End Date"
+msgstr "Planned End Date"
+
+#. module: via_service
+#: view:service.request:0
+msgid "The Product Warranty Has Expired"
+msgstr "The Product Warranty Has Expired"
+
+#. module: via_service
+#: field:stock.move.wizard,date:0
+msgid "Date"
+msgstr "Date"
+
+#. module: via_service
+#: field:sr.summary,consumed_by_costumer:0
+msgid "Consume By Costumer"
+msgstr "Consume By Costumer"
+
+#. module: via_service
+#: view:service.request:0
+msgid "Spare Parts Consume Move"
+msgstr "Spare Parts Consume Move"
+
+#. module: via_service
+#: view:project.task:0
+msgid "Add a Description..."
+msgstr "Add a Description..."
+
+#. module: via_service
+#: field:res.company,hit:0
+msgid "No of Matches Shown"
+msgstr "No of Matches Shown"
+
+#. module: via_service
+#: field:hr.employee,available_duration:0
+msgid "Duration"
+msgstr "Duration"
+
+#. module: via_service
+#: view:hr.employee:0
+msgid "Skill"
+msgstr "Skill"
+
+#. module: via_service
+#: field:service.invoice.line,total:0
+msgid "Total"
+msgstr "Total"
+
+#. module: via_service
+#: field:stock.picking,user_pickup_spare_part:0
+#: field:stock.picking.in,user_pickup_spare_part:0
+#: field:stock.picking.out,user_pickup_spare_part:0
+msgid "User Pickup for Spare Parts Wizard"
+msgstr "User Pickup for Spare Parts Wizard"
+
+#. module: via_service
+#: selection:service.invoice.line,cost_method:0
+msgid "Lot Based"
+msgstr "Lot Based"
+
+#. module: via_service
+#: view:service.request:0
+msgid "Product To Service"
+msgstr "Product To Service"
+

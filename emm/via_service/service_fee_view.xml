@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!-- Service Fee Request Form View -->
+
+        <!-- <record id="view_service_fee_request_form" model="ir.ui.view">
+            <field name="name">view.service.fee.request.form</field>
+            <field name="model">service.fee.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Service Fee Request" version="7.0">
+                    <field name="service_fee_id" nolabel="1" colspan="4" widget="one2many_list">
+                        <tree string="Service Fee" editable="bottom">
+                            <field name="service_id" domain="[('type','=','service')]" on_change="onchange_service_id(service_id)"/>
+                            <field name="service_qty" on_change="onchange_service_qty(service_qty, service_id)"/>
+                            <field name="service_uom" readonly="True"/>
+                            <field name="service_price" readonly="True"/>
+                            <field name="service_total" readonly="True"/>
+                        </tree>
+                    </field>
+                    <button name="create_service_fee" string="Create" type="object" context="{'service_fee_id': service_fee_id}"/>
+                    <button string="Cancel" special="cancel"/>
+                </form>
+            </field>
+        </record> -->
+
+        <!-- Service Fee Execute Form View -->
+
+        <record id="view_service_fee_execute_form" model="ir.ui.view">
+            <field name="name">view.service.fee.execute.form</field>
+            <field name="model">service.fee.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Service Fee Execute" version="7.0">
+                    <field name="sr_id" invisible="1"/>
+                    <field name="service_fee_id" nolabel="1" colspan="4" domain="[('service_type','=','request'),('sr_id','=',sr_id)]">
+                        <tree string="Service Fee" editable="bottom" create="false" delete="false">
+                            <field name="sr_id" invisible="1"/>
+                            <field name="service_id" readonly="True"/>
+                            <field name="service_qty" readonly="True"/>
+                            <field name="service_uom" readonly="True"/>
+                            <field name="service_price" readonly="True"/>
+                            <field name="service_total" readonly="True"/>
+                            <field name="service_type" invisible="1"/>
+                        </tree>
+                    </field>
+                    <button name="execute_service_fee" string="Execute" type="object" context="{'service_fee_id': service_fee_id, 'sr_id': sr_id}"/>
+                    <button string="Cancel" special="cancel"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_service_fee_tree" model="ir.ui.view">
+            <field name="name">view.service.fee.tree</field>
+            <field name="model">service.fee</field>
+            <field name="arch" type="xml">
+                <tree string="Service Fee" version="7.0">
+                    <field name="service_id"/>
+                    <field name="service_qty"/>
+                    <field name="service_uom"/>
+                    <field name="service_price"/>
+                    <field name="has_invoiced"/>
+                    <field name="service_total"/>
+                    <field name="zero_price"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_service_fee_form" model="ir.ui.view">
+            <field name="name">view.service.fee.form</field>
+            <field name="model">service.fee</field>
+            <field name="arch" type="xml">
+                <form string="Service Fee" version="7.0">
+                <sheet>
+                    <h1>
+                        <field name="service_id"/>
+                    </h1>
+                    <group>
+                        <group col="4" colspan="4">
+                            <field name="service_qty"/>
+                            <field name="service_uom"/>
+                            <field name="service_price"/>
+                            <field name="has_invoiced"/>
+                            <field name="service_total"/>
+                            <field name="zero_price"/>
+                        </group>
+                    </group>
+                </sheet>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</openerp>

@@ -1,0 +1,831 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data noupdate="1">
+        <!-- Custom Paper Size for serial number barcode -->
+        <record id="ir_header_webkit_form_barcode" model="ir.header_webkit">
+            <field eval="&quot;&quot;&quot;Barcode Sticker W100 x H150 mm&quot;&quot;&quot;" name="name"/>
+            <field name="orientation">Portrait</field>
+            <field name="format">Custom</field>
+            <field eval="150" name="paper_height"/>
+            <field eval="100" name="paper_width"/>
+            <field eval="0.20" name="margin_top"/>
+            <field eval="1.00" name="margin_bottom"/>
+            <field eval="1.00" name="margin_left"/>
+            <field eval="0.01" name="margin_right"/>
+            <field name="css" ></field>
+            <field name="html"></field>
+            <field name="footer_html"></field>
+        </record>
+
+        <!-- Webkit Image or Logo  -->
+        <record id="ir_header_img_barcode_logo" model="ir.header_img">
+            <field eval="&quot;&quot;&quot;barcode_logo&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;jpg&quot;&quot;&quot;" name="type"/>
+            <field name="img"><![CDATA[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
+NAf/2Q==
+]]></field>
+        </record>
+
+        <!-- Mako template for Serial Barcode -->
+        <record id="ir_webkit_form_barcode" model="via.form.templates">
+            <field name="name">Barcode</field>
+            <field name="engine">mako</field>
+            <field name="model_id" ref="model_stock_production_lot"/>
+            <field eval="False" name="company_id"/>
+            <field name="report_output">pdf</field>
+            <field name="multi">True</field>
+            <field name="webkit_header" ref="ir_header_webkit_form_barcode"/>
+            <field name="tags"><![CDATA[]]></field>
+            <field name="template"><![CDATA[    <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+    <html>
+
+    <!--
+    ################################################################################
+    Nomor Template  : FRM002
+    Versi Template  : v1
+    Revisi Template : 4 Jul 2014
+    Copyright       : PT. Vikasa Infinity Anugrah (www.infi-nity.com)
+    Deskripsi:
+        Template untuk formulir sejenis barcode form atau sticker
+    Log:a
+    4 Jul 2014 [Hery Atmadja] - Formalisasi versi pertama.
+    ################################################################################
+    -->
+
+    <!--
+    ################################################################################
+    I. DEKLARASI VARIABLE - KONFIGURASI
+    ################################################################################
+    -->
+    <!-- Import library python yang dibutuhkan di sini -->
+
+    %if param:
+        <%form_layout = param%>
+    %else:
+        <%form_layout =  [["A",1]]%>
+    %endif
+
+    <%type_idx = 0%>
+    <%count_idx = 1%>
+    <!--Siapkan variabel 'penyimpanan'-->
+    <%common_label={}%>             <!--Menyimpan info/data 'common' yang harus dicetak di semua jenis layout-->
+    <%indiv_label=[]%>              <!--Menyimpan label 'individual' yang harus dicetak di  masing2 layout-->
+    <%idx = 0%>
+
+    <!--KONFIGURASI untuk menentukan layout HTML dari sticker-->
+    <%page_width_in_mm = 100%>          <!--Lebar sticker yang umum digunakan sebagai lebar tabel utama dalam mm-->
+    <%page_height_in_mm =150%>          <!--Panjang sticker yang umum digunakan sebagai panjang tabel utama dalam mm-->
+    <%mm_per_pt = 0.352777778%>         <!--1 pt = X mm-->
+    <%mm_per_px = 0.265%>               <!--1 px = X mm-->
+    <%page_width_in_pt = int(page_width_in_mm / float(mm_per_pt))%>    <!--Perlu di casting ke float dan round down dalam pt-->
+    <%page_height_in_pt = int(page_height_in_mm / float(mm_per_pt))%>  <!--Perlu di casting ke float dan round down dalam pt-->
+
+    <!--Layout untuk Tipe A -->
+    <!--Logo and company info-->
+    <%layout_A_header_width = page_width_in_mm%>
+    <%layout_A_header_height = 0.20*page_height_in_mm%>
+    <%layout_A_cpy_info_width = 0.7*page_width_in_mm%>
+    <%layout_A_cpy_info_height = layout_A_header_height%>
+    <%layout_A_logo_width = min(page_width_in_mm-layout_A_cpy_info_width,layout_A_cpy_info_height)%>
+    <%layout_A_logo_height = min(page_width_in_mm-layout_A_cpy_info_width,layout_A_cpy_info_height)%>
+    <%layout_A_logo_width_in_px = int(layout_A_logo_width / float(mm_per_px))%>
+    <%layout_A_logo_height_in_px = int(layout_A_logo_height / float(mm_per_px))%>
+    <!-- Product Category-->
+    <%layout_A_product_category_width = page_width_in_mm%>
+    <%layout_A_product_category_height = 0.08*page_height_in_mm%>
+    <!-- Product Name-->
+    <%layout_A_product_name_top_width = page_width_in_mm%>
+    <%layout_A_product_name_top_height = 0.12*page_height_in_mm%>
+    <!--Product Serial (with barcode)-->
+    <%layout_A_product_serial_width = page_width_in_mm%>
+    <%layout_A_product_serial_height = 0.20*page_height_in_mm%>
+    <%layout_A_barcode_master_width = int(0.9*layout_A_product_serial_width)%>
+    <%layout_A_barcode_master_height = int(0.9*layout_A_product_serial_height)%>
+    <!--Product Barcode-->
+    <%layout_A_barcode_area_width = page_width_in_mm%>
+    <%layout_A_barcode_area_height = 0.10*page_height_in_mm%>
+
+    <%layout_A_product_name_width = 0.20*layout_A_barcode_area_width%>
+    <%layout_A_product_name_height = layout_A_barcode_area_height%>
+    <%layout_A_barcode_box_width = layout_A_barcode_area_width-layout_A_product_name_width%>
+    <%layout_A_barcode_box_height = layout_A_barcode_area_height%>
+
+    <%layout_A_barcode_width = int(0.95*layout_A_barcode_box_width)%>
+    <%layout_A_barcode_height = int(0.95*layout_A_barcode_box_height)%>
+    <!-- Konfigurasi Opsional -->
+    <%show_debug_box = False%>
+
+    <!--
+    ################################################################################
+    II. DEFINISI CSS STYLES
+    ################################################################################
+    -->
+
+    <head>
+    <style type="text/css">
+
+    table.table_layout_A {
+    %if show_debug_box:
+        border: 1px solid brown;
+    %endif
+        height: ${page_height_in_mm}mm;
+        width: ${page_width_in_mm}mm;
+        text-align: left;
+        font-size: 10pt;
+        font-family: Sans-Serif;
+        padding-left: 0mm;
+        padding-right: 0mm;
+        padding-top: 0mm;
+        padding-bottom: 0mm;
+        border-spacing: 0mm;
+        border-collapse: collapse;
+        table-layout: fixed;
+        overflow: hidden;
+    }
+
+    table.table_barcode_box_A {
+    %if show_debug_box:
+        border: 1px solid purple;
+    %endif
+        height: ${layout_A_barcode_area_height}mm;
+        width: ${layout_A_barcode_area_width}mm;
+        text-align: left;
+        font-size: 10pt;
+        font-family: Sans-Serif;
+        padding-left: 0mm;
+        padding-right: 0mm;
+        padding-top: 0mm;
+        padding-bottom: 0mm;
+        border-spacing: 0mm;
+        border-collapse: collapse;
+        table-layout: fixed;
+        overflow: hidden;
+    }
+
+    table.table_base {
+        text-align: left;
+        font-size: 10pt;
+        font-family: Sans-Serif;
+        padding: 0mm;
+        border-spacing: 0mm;
+        border-collapse: collapse;
+        table-layout: fixed;
+    }
+
+    td.td_header_A {
+    %if show_debug_box:
+        border: 1px solid red;
+    %endif
+        height: ${layout_A_header_height}mm;
+        width: ${layout_A_header_width}mm;
+        padding: 0mm;
+    }
+
+    td.td_logo_A {
+    %if show_debug_box:
+        border: 1px solid red;
+    %endif
+        height: ${layout_A_logo_height}mm;
+        width: ${layout_A_logo_width}mm;
+        padding: 0mm;
+    }
+
+    td.td_company_info_A {
+    %if show_debug_box:
+        border: 1px solid red;
+    %endif
+        height: ${layout_A_cpy_info_height}mm;
+        width: ${layout_A_cpy_info_width}mm;
+        text-align: left;
+        padding: 0mm;
+    }
+
+    td.td_product_category_A {
+    %if show_debug_box:
+        border: 1px solid blue;
+    %endif
+        height: ${layout_A_product_category_height}mm;
+        width: ${layout_A_product_category_width}mm;
+        font-size: 14pt;
+        text-align: left;
+        padding: 0mm;
+    }
+
+    td.td_product_name_top_A {
+    %if show_debug_box:
+        border: 1px solid green;
+    %endif
+        height: ${layout_A_product_name_top_height}mm;
+        width: ${layout_A_product_name_top_width}mm;
+        font-size: 22pt;
+        text-align: left;
+        padding: 0mm;
+    }
+
+    td.td_product_serial_A {
+    %if show_debug_box:
+        border: 1px solid red;
+    %endif
+        height: ${layout_A_product_serial_height}mm;
+        width: ${layout_A_product_serial_width}mm;
+        text-align: center;
+        padding: 0mm;
+    }
+
+    td.td_barcode_area_A {
+    %if show_debug_box:
+        border: 1px solid orange;
+    %endif
+        height: ${layout_A_barcode_area_height}px;
+        width: ${layout_A_barcode_area_width}px;
+        text-align: center;
+        padding: 0mm;
+    }
+
+    td.td_barcode_box_A {
+    %if show_debug_box:
+        border: 1px solid gray;
+    %endif
+        height: ${layout_A_barcode_box_height}mm;
+        width: ${layout_A_barcode_box_width}mm;
+        text-align: center;
+        padding: 0mm;
+    }
+
+    td.td_product_name_A {
+    %if show_debug_box:
+        border: 1px solid green;
+    %endif
+        height: ${layout_A_product_name_height}mm;
+        width: ${layout_A_product_name_width}mm;
+        font-size: 5pt;
+        text-align: left;
+        padding: 0mm;
+        vertical-align: top;
+    }
+
+    td.td_base {
+        padding: 0mm;
+        margin: 0mm;
+        vertical-align: middle;
+    }
+
+    div.div_company_info_A {
+    %if show_debug_box:
+        border: 1px solid gray;
+    %endif
+        height: ${layout_A_cpy_info_height}mm;
+        line-height: ${layout_A_cpy_info_height}mm;
+        width: ${layout_A_cpy_info_width}mm;
+        text-align: left;
+        padding: 0mm;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        word-wrap:break-word;
+    }
+
+    div.div_product_category_A {
+    %if show_debug_box:
+        border: 1px solid gray;
+    %endif
+        height: ${layout_A_product_category_height}mm;
+        width: ${layout_A_product_category_width}mm;
+        line-height: ${layout_A_product_category_height}mm;
+        padding: 0mm;
+        margin: 0mm;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        word-wrap:break-word;
+    }
+
+    div.div_product_name_top_A {
+    %if show_debug_box:
+        border: 1px solid gray;
+    %endif
+        height: ${layout_A_product_name_top_height}mm;
+        width: ${layout_A_product_name_top_width}mm;
+        line-height: ${layout_A_product_name_top_height}mm;
+        padding: 0mm;
+        margin: 0mm;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        word-wrap:break-word;
+    }
+
+    div.div_product_serial_A {
+    %if show_debug_box:
+        border: 1px solid gray;
+    %endif
+        height: ${layout_A_product_serial_height}mm;
+        width: ${layout_A_product_serial_width}mm;
+        line-height: ${layout_A_product_serial_height}mm;
+        padding: 0mm;
+        margin: 0mm;    
+    }
+
+    div.div_barcode_box_A {
+    %if show_debug_box:
+        border: 1px solid blue;
+    %endif
+        height: ${layout_A_barcode_box_height}mm;
+        width: ${layout_A_barcode_box_width}mm;
+        line-height: ${layout_A_barcode_box_height}mm;
+        padding: 0mm;
+        margin: 0mm;
+        align: center:
+        text-overflow: ellipsis;
+        overflow: hidden;
+        word-wrap:break-word;
+    }
+
+    div.div_base {
+    %if show_debug_box:
+        border: 1px solid magenta;
+    %endif
+        padding: 0mm;
+        margin: 0mm;
+    }
+
+    div.truncate_ellipsis {
+    %if show_debug_box:
+        border: 1px solid magenta;
+    %endif
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        
+    }
+
+    span.span_center_middle_truncated_padded {
+    %if show_debug_box:
+        border: 1px solid yellow;
+    %endif
+        
+        line-height: normal;
+        vertical-align: middle;
+        padding-top: 0mm;
+        padding-right: 2mm;
+        padding-bottom: 0mm;
+        padding-left: 2mm;
+        margin: 0mm;
+        word-wrap:break-word;
+
+        display: inherit;
+        -webkit-line-clamp: inherit;
+        -webkit-box-orient: inherit;
+        text-overflow: inherit;
+        overflow: inherit;
+    }
+
+    span.span_center_middle_truncated {
+    %if show_debug_box:
+        border: 1px solid yellow;
+    %endif
+        display: inline-block;
+        line-height: normal;
+        vertical-align: baseline;
+        padding-top: 0mm;
+        padding-right: 0mm;
+        padding-bottom: 0mm;
+        padding-left: 0mm;
+        margin: 0mm;
+    }
+
+    span.span_left_middle_truncated_padded {
+    %if show_debug_box:
+        border: 1px solid cyan;
+    %endif
+        text-align: left;
+        display: inline-block;
+        line-height: normal;
+        vertical-align: middle;
+        padding-top: 0mm;
+        padding-right: 7mm;
+        padding-bottom: 0mm;
+        padding-left: 7mm;
+        margin: 0mm;
+        word-wrap:break-word;
+    }
+
+    span.span_left_middle_truncated {
+    %if show_debug_box:
+        border: 1px solid cyan;
+    %endif
+        text-align: left;
+        display: inline-block;
+        line-height: normal;
+        vertical-align: middle;
+        padding-top: 0mm;
+        padding-right: 4mm;
+        padding-bottom: 0mm;
+        padding-left: 2mm;
+        margin: 0mm;
+    }
+
+    p.p_clean-break {
+        page-break-after: always;
+        margin: 0mm;
+    }
+
+    body.body_base {
+        margin: 0mm;
+        padding: 0mm;
+    }
+
+    </style>
+    </head>
+
+    <!-- JavaScript Function Untuk memunculkan Barcode -->
+    <script type="text/javascript" src="${get_module_path('web') | n}/static/lib/jquery/jquery-1.8.3.js"></script>
+    <script type="text/javascript" src="${get_module_path('via_web') | n}/static/src/js/jquery-barcode.min.js"></script>
+    <!-- <script type="text/javascript" src="${get_module_path('via_web') | n}/static/src/js/jquery.qrcode.min.js"></script> -->
+    <!-- <script type="text/javascript" src="${get_module_path('via_web') | n}/static/src/js/qrcode.js"></script>
+    <script type="text/javascript" src="${get_module_path('via_web') | n}/static/src/js/jquery.qrcode.js"></script> -->
+
+    <!--pengaturan body dan tabel formulir-->
+    <body class="body_base">
+
+    <!--
+    ################################################################################
+       III. PENGAMBILAN DAN PEMROSESAN DATA-DATA DARI DOKUMEN
+    ################################################################################
+    -->
+    <!--LOOP 1: Iterasi untuk memproses setiap dokumen yang dipilih untuk di cetak-->
+    %for doc in objects:
+
+        <!-- Ambil info perusahaan -->
+        <%common_label["cpy_name"] = doc.company_id and doc.company_id.partner_id and doc.company_id.partner_id.name or ''%>
+        <%common_label["cpy_phone"] = doc.company_id and doc.company_id.partner_id and doc.company_id.partner_id.phone or ''%>
+        <%common_label["cpy_email"] = doc.company_id and doc.company_id.partner_id and doc.company_id.partner_id.email or ''%>
+
+        <!--
+        ################################################################################
+        PRA-PROSES DATA: Bagian ini untuk memproses data 'common' yang diperlukan.
+        Data 'common' adalah data yang sama atau uniform untuk setiap object yang di
+        pass.  Contoh, data kontak perusahaan dalam pencetakan barcode sticker.
+        ################################################################################
+        -->
+        <!-- Untuk setiap document, lakukan pencetakan sebanyak atau sesuai dengan yang -->
+        <!-- dispesifikasikan di form_layout. -->
+        <!-- Syntax dari form_layout adalaj sbb: [["A",1],["B",2]], yang berarti cetak -->
+        <!-- layout tipe A satu kali dilanjutkan dengan layout tipe B dua kali. -->
+        <!-- Telusuri atau proses setiap layout yang diinstruksikan dalam form_layout -->
+        %for layout in form_layout:
+            <!-- Ambil informasi jenis layout dan jumlah kopi yang akan dicetak -->
+            <%layout_type = layout[type_idx]%>          <!-- Jenis layout yang akan dicetak -->
+            <%layout_count = layout[count_idx]%>        <!-- Jumlah kopi yang akan dicetak -->
+
+            <!-- Siapkan data untuk cetakan pertama -->
+            <%indiv_label.append([])%>                  <!-- Tambahkan 1 list item baru [] -->
+            <%indiv_label[idx].append(layout_type)%>    <!-- Tambahkan kode layout di ['A'] -->
+            <%indiv_label[idx].append({})%>             <!-- Tambahkan dict info untuk dokumen ini ['A', {}]-->
+
+            <!-- Isikan info dari dokumen di ['A', {"serial_no" : "1234567"}], dst. -->
+            <!-- Layout A -->
+            %if layout_type == "A":
+                <%indiv_label[idx][1]["serial_no"] = doc.name%>
+                <%indiv_label[idx][1]["product_code"] = doc.product_id.default_code%>
+                <%indiv_label[idx][1]["product_name"] = doc.product_id.name_template%>
+                <%indiv_label[idx][1]["product_category"] = doc.product_id.product_tmpl_id.categ_id.name%>
+
+                <%prod_name = indiv_label[idx][1]["product_name"]%> 
+                <%indiv_label[idx][1]["product_mdl"] = ''%>
+                <%indiv_label[idx][1]["product_machine"] = ''%>
+                <%indiv_label[idx][1]["product_name_truncated"] = ''%>
+                %if ":" in prod_name:
+                    <%product_name_1= prod_name.split(':')%>
+                    <%product_machine= product_name_1[0].strip()%>
+                    <%indiv_label[idx][1]["product_machine"] = product_machine%>
+                    <%product_mdl= product_name_1[1].strip()%>
+                    <%indiv_label[idx][1]["product_mdl"] = product_mdl%>
+                %else:
+                    <%product_name_strip= prod_name.strip()%>
+                    <%product_name_truncated = prod_name.strip()%>
+                    %if len(product_name_strip) >= 50:
+                        <%product_name_truncated = product_name_strip[:50]%>
+                    %endif
+                    <%indiv_label[idx][1]["product_name_1"] = product_name_strip%>
+                    <%indiv_label[idx][1]["product_name_truncated"] = product_name_truncated%>
+                %endif
+
+            <!-- Layout B -->
+            %elif layout_type == "B":
+                <%indiv_label[idx][1]["serial_no"] = doc.name%>
+                <%indiv_label[idx][1]["product_code"] = doc.product_id.default_code%>
+            %endif
+
+            <!-- Panggil JavaScript untuk men'cetak' barcode yang disesuaikan dengan nilai idx -->
+    <script type="text/javascript">
+    $( document ).ready(function() {
+       $('.barcode_${idx | entity}_top').barcode("${doc.name}", "code128", {barWidth: 1, barHeight: 60, showHRI: true, fontSize: 12});
+    });
+    $( document ).ready(function() {
+       $('.barcode_${idx | entity}').barcode("${doc.name}", "code128", {barWidth: 1, barHeight: 35, showHRI: true, fontSize: 10});
+    });
+    </script>
+
+            <!-- Nilai akhir dari (idx+1) menunjukkan berapa kali barcode ini akan dicetak-->
+            <!-- Semua barcode yang dicetak dalam 1 'cetakan' akan menggunakan idx yang sama-->
+            <%idx += 1%>
+            <!-- Untuk setiap layout cetak seusai jumlah yang diminta, dikurangi cetakan pertama di atas -->
+            %for count in range(1,layout_count):
+                <!-- Duplicate last layout -->
+                <%indiv_label.append(indiv_label[idx-1])%>
+    <script type="text/javascript">
+    $( document ).ready(function() {
+       $('.barcode_${idx | entity}_top').barcode("${doc.name}", "code128", {barWidth: 1, barHeight: 60, showHRI: true, fontSize: 12});
+    });
+    $( document ).ready(function() {
+       $('.barcode_${idx | entity}').barcode("${doc.name}", "code128", {barWidth: 1, barHeight: 35, showHRI: true, fontSize: 10});
+    });
+    </script>
+                <%idx += 1%>
+            %endfor
+        %endfor
+        <% doc.write({'barcode_printed': True}) %>
+    %endfor
+
+    <!--
+    ################################################################################
+    VI. CETAK SEMUA
+    ################################################################################
+    -->
+    %for count in range (0,idx):
+        %if (indiv_label[count][0] == "A"):
+    <table class="table_base">
+        <!-- Layout tipe A -->
+        <tr>
+            <td class="td_header_A">
+                <table class="table_base">
+                    <tr>
+                        <!--Area Logo-->
+                        <td class="td_logo_A">
+                            <div class="div_base">
+                                ${helper.embed_logo_by_name('barcode_logo', layout_A_logo_width_in_px, layout_A_logo_height_in_px) | n}
+                            </div>
+                        </td>
+                        <!--Area Company Info-->
+                        <td class="td_company_info_A">
+                            <div class="div_company_info_A">
+                                <span class="span_left_middle_truncated">
+                                    <table class="table_base">
+                                        <tr>
+                                            <td class="td_base">
+                                                <b style="font-size:12pt">${common_label["cpy_name"] or ''|entity}</b><br>
+                                                Untuk service dan maintenace<br>
+                                                hubungi: <br>
+                                                <b style="font-size:11pt">${common_label["cpy_phone"] or ''|entity}</b>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+        <tr>
+            <!-- Product Category -->
+            <td class="td_product_category_A">
+                <div class="div_product_category_A">
+                    <span class="span_left_middle_truncated_padded">
+                        ${indiv_label[count][1]["product_mdl"] or indiv_label[count][1]["product_name_1"] or ''|entity}
+                    </span>
+                </div>
+            </td>
+        </tr>
+
+        <tr>
+            <!-- Product Name -->
+            <td class="td_product_name_top_A">
+                <div class="div_product_name_top_A">
+                    <span class="span_left_middle_truncated_padded">
+                        <b>${indiv_label[count][1]["product_machine"] or ''|entity}</b>
+                    </span>
+                </div>
+            </td>
+        </tr>
+
+        <tr>
+            <!-- Product Serial (& Barcode) -->
+            <td class="td_product_serial_A">
+                <div class="div_product_serial_A">
+                    <span class="span_center_middle_truncated">
+                        <div class="barcode_${count | entity}_top"></div>
+                    </span>
+                </div>
+            </td>
+        </tr>
+
+        <tr>
+            <!-- Product Barcode -->
+            <td class="td_barcode_area_A">
+                <table class="table_base">
+                    <tr>
+                        <td class="td_product_name_A">
+                            <div class="truncate_ellipsis">
+                                <span class="span_center_middle_truncated_padded">
+                                    ${indiv_label[count][1]["product_name_truncated"] or indiv_label[count][1]["product_machine"] or ''|entity}
+                                </span>
+                            </div>
+                        </td>
+                        <td class="td_barcode_box_A">
+                            <div class="div_barcode_box_A">
+                                <span class="span_center_middle_truncated">
+                                    <div class="barcode_${count | entity}"></div>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <!-- Product Barcode -->
+            <td class="td_barcode_area_A">
+                <table class="table_base">
+                    <tr>
+                        <td class="td_product_name_A">
+                            <div class="truncate_ellipsis">
+                                <span class="span_center_middle_truncated_padded">
+                                    ${indiv_label[count][1]["product_name_truncated"] or indiv_label[count][1]["product_machine"] or ''|entity}
+                                </span>
+                            </div>
+                        </td>
+                        <td class="td_barcode_box_A">
+                            <div class="div_barcode_box_A">
+                                <span class="span_center_middle_truncated">
+                                    <div class="barcode_${count | entity}"></div>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <!-- Product Barcode -->
+            <td class="td_barcode_area_A">
+                <table class="table_base">
+                    <tr>
+                        <td class="td_product_name_A">
+                            <div class="truncate_ellipsis">
+                                <span class="span_center_middle_truncated_padded">
+                                    ${indiv_label[count][1]["product_name_truncated"] or indiv_label[count][1]["product_machine"] or ''|entity}
+                                </span>
+                            </div>
+                        </td>
+                        <td class="td_barcode_box_A">
+                            <div class="div_barcode_box_A">
+                                <span class="span_center_middle_truncated">
+                                    <div class="barcode_${count | entity}"></div>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <!-- Product Barcode -->
+            <td class="td_barcode_area_A">
+                <table class="table_base">
+                    <tr>
+                        <td class="td_product_name_A">
+                            <div class="truncate_ellipsis">
+                                <span class="span_center_middle_truncated_padded">
+                                    ${indiv_label[count][1]["product_name_truncated"] or indiv_label[count][1]["product_machine"] or ''|entity}
+                                </span>
+                            </div>
+                        </td>
+                        <td class="td_barcode_box_A">
+                            <div class="div_barcode_box_A">
+                                <span class="span_center_middle_truncated">
+                                    <div class="barcode_${count | entity}"></div>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        %endif
+    </table>
+
+        %if count < (idx-1):
+            <p class="p_clean-break"></p>
+        %endif
+
+    %endfor
+
+    </body>
+    </html>]]></field>
+        </record>
+        <function model="via.form.templates" name="activate"
+            eval="[ ref('ir_webkit_form_barcode') ], " />
+    </data>
+</openerp>
+

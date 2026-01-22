@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+
+    <!-- Menu -->
+    <menuitem id="menu_via_reporting_tree_root"
+              name="Reporting Tree"
+              groups="group_via_reporting_tree_manager"
+              web_icon="images/reporting_tree.png"
+              web_icon_hover="images/reporting_tree-hover.png"
+              parent="base.menu_config"/>
+    <!-- END: Menu -->
+
+    <!-- Tree Type -->
+    <record id="tree_view_via_reporting_tree_type" model="ir.ui.view">
+      <field name="name">VIA Reporting Tree Type (Tree View)</field>
+      <field name="model">via.reporting.tree.type</field>
+      <field name="type">tree</field>
+      <field name="arch" type="xml">
+        <tree string="Reporting Tree Types">
+          <field name="name"/>
+          <field name="tree_node_type"/>
+        </tree>
+      </field>
+    </record>
+    <record id="form_view_via_reporting_tree_type" model="ir.ui.view">
+      <field name="name">VIA Reporting Tree Type (Form View)</field>
+      <field name="model">via.reporting.tree.type</field>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+        <form string="Reporting Tree Type">
+          <field name="id" invisible="1"/>
+          <field name="name"/>
+          <field name="tree_node_type"/>
+        </form>
+      </field>
+    </record>
+    <!-- END: Tree Type -->
+
+    <!-- Tree -->
+    <record id="tree_view_via_reporting_tree" model="ir.ui.view">
+      <field name="name">VIA Reporting Tree (Tree View)</field>
+      <field name="model">via.reporting.tree</field>
+      <field name="type">tree</field>
+      <field name="arch" type="xml">
+        <tree string="Reporting Trees">
+          <field name="name"/>
+          <field name="tree_type_id"/>
+          <field name="company_id"/>
+        </tree>
+      </field>
+    </record>
+    <record id="chart_view_via_reporting_tree_node" model="ir.ui.view">
+      <field name="name">VIA Reporting Tree</field>
+      <field name="model">via.reporting.tree.node</field>
+      <field name="type">tree</field>
+      <field name="field_parent">children</field>
+      <field name="arch" type="xml">
+        <tree string="Reporting Tree" colors="blue:dummy_node==1; black:dummy_node==0">
+          <field name="name"/>
+          <field name="calculation"/>
+          <field name="dummy_node"/>
+          <field name="sequence"/>
+          <field name="parent_id" invisible="1"/>
+        </tree>
+      </field>
+    </record>
+    <record id="action_via_reporting_tree_node_chart" model="ir.actions.act_window">
+      <field name="name">Reporting Tree</field>
+      <field name="res_model">via.reporting.tree.node</field>
+      <field name="view_type">tree</field>
+      <field name="view_id" ref="chart_view_via_reporting_tree_node"/>
+    </record>
+    <record id="form_view_via_reporting_tree" model="ir.ui.view">
+      <field name="name">VIA Reporting Tree (Form View)</field>
+      <field name="model">via.reporting.tree</field>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+        <form string="Reporting Tree">
+          <field name="id" invisible="1"/>
+          <group colspan="4" col="6">
+            <field name="name"/>
+            <field name="tree_type_id"/>
+            <field name="company_id"/>
+          </group>
+          <field name="tree_type_name" invisible="1"/>
+          <field name="node_ids" colspan="4" nolabel="1"
+                 context="{'via_reporting_tree.tree_id': id, 'via_reporting_tree.tree_type_name': tree_type_name, 'via_reporting_tree.tree_node_specialization_name': context.get('via_reporting_tree.tree_node_specialization_name', False)}">
+            <tree string="Reporting Tree Nodes" colors="blue:dummy_node==1; black:dummy_node==0">
+              <field name="dummy_node" invisible="1"/>
+              <field name="name"/>
+              <field name="calculation"/>
+              <field name="sequence"/>
+              <field name="level"/>
+              <field name="parent_id"/>
+            </tree>
+          </field>
+          <button colspan="4" name="action_via_reporting_tree_node_chart"
+                  string="View Tree" type="object" icon="gtk-go-forward"/>
+        </form>
+      </field>
+    </record>
+    <!-- END: Tree -->
+
+    <!-- Tree Node -->
+    <record id="tree_view_via_reporting_tree_node" model="ir.ui.view">
+      <field name="name">VIA Reporting Tree Node (Tree View)</field>
+      <field name="model">via.reporting.tree.node</field>
+      <field name="type">tree</field>
+      <field name="arch" type="xml">
+        <tree string="Reporting Tree Nodes" colors="blue:dummy_node==1; black:dummy_node==0">
+          <field name="dummy_node" invisible="1"/>
+          <field name="name"/>
+          <field name="calculation"/>
+          <field name="sequence"/>
+          <field name="level"/>
+          <field name="parent_id"/>
+          <field name="tree_id"/>
+          <field name="company_id"/>
+        </tree>
+      </field>
+    </record>
+    <record id="form_view_via_reporting_tree_node" model="ir.ui.view">
+      <field name="name">VIA Reporting Tree Node (Form View)</field>
+      <field name="model">via.reporting.tree.node</field>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+        <form string="Reporting Tree Node">
+          <field name="tree_type_name" invisible="1"/>
+	  <field name="tree_node_type" invisible="1"/>
+          <group colspan="4" col="6">
+            <field name="name"/>
+            <field name="tree_id"/>
+            <field name="company_id"/>
+            <field name="parent_id"/>
+            <field name="calculation"/>
+            <field name="sequence"/>
+          </group>
+          <group colspan="4" col="10">
+            <separator colspan="10" string="Formatting"/>
+            <field name="bold"/>
+            <field name="italic"/>
+            <field name="underline"/>
+            <field name="blank_line"/>
+            <field name="title_line"/>
+          </group>
+          <notebook colspan="4">
+            <page string="Objects"/>
+            <page string="Associated Nodes">
+              <field name="dummy_node"/>
+              <field string="Associated Nodes" name="associated_node_ids"
+                     nolabel="1" colspan="4"
+                     attrs="{'readonly': [('dummy_node','=',False)]}"
+                     domain="[('tree_id','=',tree_id)]"/>
+            </page>
+          </notebook>
+        </form>
+      </field>
+    </record>
+    <!-- END: Tree Node -->
+
+  </data>
+</openerp>

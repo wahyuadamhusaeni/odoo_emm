@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<openerp>
+<data>
+
+<record id="view_picking_in_hook_form_" model="ir.ui.view">
+    <field name="name">Stock Picking In EMM Stock Enhanced Hook Form View</field>
+    <field name="model">stock.picking.in</field>
+    <field name="inherit_id" ref="emm_stock_enhancements.view_picking_in_form"/>
+    <field name="arch" type="xml">
+    	<xpath expr="//field[@name='partner_id']" position="before">
+    		<field name="auto_approval_func" invisible="1"/>
+    		<field name="auto_approval" invisible="1"/>
+    	</xpath>
+        <xpath expr="//button[@string='Assign Serial Number']" position="replace">
+            <button type="object" name="action_prodlot_assign" string="Assign Serial Number" states="draft,confirmed,assigned" attrs="{'invisible': [('type', 'not in', ['in'])]}"/>
+        </xpath>
+    </field>
+</record>
+
+<record id="emm_stock_picking_out_form_enhancement" model="ir.ui.view">
+	<field name="name">Stock Picking Out Enhancement View for EMM</field>
+	<field name="model">stock.picking.out</field>
+	<field name="inherit_id" ref="emm_stock_enhancements.emm_stock_picking_out_form_enhanced" />
+	<field name="arch" type="xml">
+		<xpath expr="//field[@name='ready_for_transfer']" position="before">
+			<field name="ready_for_transfer_visibility" invisible="1"/>
+		</xpath>
+		<xpath expr="//field[@name='ready_for_transfer']" position="before">
+			<field name="auto_approval_func" invisible="1"/>
+		</xpath>
+		<xpath expr="//field[@name='ready_for_transfer']" position="before">
+			<field name="auto_approval" invisible="1"/>
+		</xpath>
+		<xpath expr="//field[@name='ready_for_transfer']" position="attributes">
+			<attribute name="attrs">{'invisible': [('ready_for_transfer_visibility','=',True)]}</attribute>
+		</xpath>
+		<xpath expr="//label[@for='ready_for_transfer']" position="attributes">
+			<attribute name="attrs">{'invisible': [('ready_for_transfer_visibility','=',True)]}</attribute>
+		</xpath>
+	</field>
+</record>
+
+</data>
+</openerp>

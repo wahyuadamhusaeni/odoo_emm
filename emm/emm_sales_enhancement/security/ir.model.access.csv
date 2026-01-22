@@ -1,0 +1,5 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"access_sale_revision_history_all","sale_revision_history all","model_sale_revision_history",,1,0,0,0
+"access_sale_revision_history_salesman","sale_revision_history salesman","model_sale_revision_history","base.group_sale_salesman",1,1,1,0
+"access_sale_revision_history_sale_mgr","sale_revision_history sale_manager","model_sale_revision_history","base.group_sale_manager",1,1,1,0
+"access_sale_revision_history_accountant","sale_revision_history accountant","model_sale_revision_history","account.group_account_user",1,1,0,0

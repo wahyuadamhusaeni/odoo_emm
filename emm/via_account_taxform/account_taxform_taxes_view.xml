@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Tax Form Taxes -->
+        <record id="view_taxform_taxes_tree" model="ir.ui.view">
+            <field name="name">Taxes</field>
+            <field name="model">account.taxform.taxes</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Taxes">
+                    <field name="tariff" />
+                    <field name="tax_base" />
+                    <field name="amount_tax" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_taxform_taxes" model="ir.ui.view">
+            <field name="name">Taxes</field>
+            <field name="model">account.taxform.taxes</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Taxes">
+                    <group col="2" colspan="4">
+                        <field name="taxform_id"/>
+                        <field name="invoice_id"/>
+                        <field name="tax_id"/>
+                        <field name="tariff"/>
+                        <field name="tax_base"/>
+                        <field name="amount_tax"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+    </data>
+</openerp>

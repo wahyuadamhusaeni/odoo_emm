@@ -1,0 +1,865 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pr_fulfillment_and_po_tracking_val" language="groovy" pageWidth="1190" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="1150" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isSummaryWithPageHeaderAndFooter="true">
+	<property name="ireport.zoom" value="1.9487171000000019"/>
+	<property name="ireport.x" value="731"/>
+	<property name="ireport.y" value="0"/>
+	<style name="0" isBlankWhenNull="true"/>
+	<style name="1" style="0" fontSize="11" isBold="true">
+		<box bottomPadding="20"/>
+	</style>
+	<style name="2" style="0" hAlign="Left" vAlign="Top" fontSize="7">
+		<box leftPadding="1" rightPadding="1"/>
+	</style>
+	<style name="2.1" style="2" isBold="true">
+		<box>
+			<topPen lineWidth="0.2"/>
+		</box>
+	</style>
+	<style name="2.1.1" style="2.1" hAlign="Right"/>
+	<style name="2.1.2" style="2.1">
+		<box>
+			<leftPen lineWidth="0.2"/>
+		</box>
+	</style>
+	<style name="2.2" style="2" hAlign="Right" isBold="true">
+		<box>
+			<topPen lineWidth="0.2"/>
+		</box>
+	</style>
+	<style name="2.2.1" style="2.2">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{sum-pr_dept-over_amt} != 0]]></conditionExpression>
+			<style forecolor="#FF0000">
+				<box>
+					<topPen lineColor="#000000"/>
+				</box>
+			</style>
+		</conditionalStyle>
+	</style>
+	<style name="2.2.2" style="2.2">
+		<box>
+			<topPen lineWidth="0.0"/>
+			<leftPen lineWidth="0.2"/>
+		</box>
+	</style>
+	<style name="2.2.3" style="2.2">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{sum-global-over_amt} != 0]]></conditionExpression>
+			<style forecolor="#FF0000">
+				<box>
+					<topPen lineColor="#000000"/>
+				</box>
+			</style>
+		</conditionalStyle>
+	</style>
+	<style name="2.2.4" style="2.2">
+		<box>
+			<topPen lineWidth="0.0"/>
+		</box>
+	</style>
+	<style name="2.2.5" style="2.2" hAlign="Left"/>
+	<style name="2.3" style="2" hAlign="Right"/>
+	<style name="2.3.1" style="2.3">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{po_amount_over} != 0]]></conditionExpression>
+			<style forecolor="#FF0000"/>
+		</conditionalStyle>
+	</style>
+	<style name="2.4" style="2">
+		<box>
+			<leftPen lineWidth="0.2"/>
+		</box>
+	</style>
+	<style name="2.5" style="2" hAlign="Right"/>
+	<style name="2.5.1" style="2.5">
+		<box>
+			<leftPen lineWidth="0.2"/>
+		</box>
+	</style>
+	<style name="3" style="0">
+		<box>
+			<leftPen lineWidth="0.2"/>
+			<bottomPen lineWidth="0.2"/>
+		</box>
+	</style>
+	<style name="3.1" style="3">
+		<box>
+			<leftPen lineWidth="0.0"/>
+		</box>
+	</style>
+	<style name="99" style="0" vAlign="Bottom" fontSize="6"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="STOPWATCH" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[(new java.net.URLClassLoader(
+    ([new java.net.URL("file://" + $P{SUBREPORT_DIR})]
+    ).toArray(new java.net.URL[0]), getClass().getClassLoader()
+)).loadClass("Stopwatch").newInstance().start()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="VCD" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[(new java.net.URLClassLoader(
+    ([new java.net.URL("file://" + $P{SUBREPORT_DIR})]
+    ).toArray(new java.net.URL[0]), getClass().getClassLoader()
+)).loadClass("ValueChangeDetector").newInstance()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SHOW_STOPWATCH" class="java.lang.Boolean"/>
+	<parameter name="OERP_USER" class="java.lang.String"/>
+	<parameter name="COMPANY_NAME" class="java.lang.String"/>
+	<parameter name="COMPANY_IDS" class="java.lang.String"/>
+	<parameter name="DATE_FORMAT_STRING_DEFAULT" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["d MMM yyyy"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DATE_FORMATTER_DEFAULT" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.text.SimpleDateFormat($P{DATE_FORMAT_STRING_DEFAULT})]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DATE_FORMAT_STRING_TIME_DEFAULT" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{DATE_FORMAT_STRING_DEFAULT} + " HH:mm:ss"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DATE_FORMATTER_TIME_DEFAULT" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.text.SimpleDateFormat($P{DATE_FORMAT_STRING_TIME_DEFAULT})]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DECIMAL_FORMAT_STRING_DEFAULT" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["#,##0.00;-#,##0.00"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DECIMAL_ROUNDING_MODE_DEFAULT" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["HALF_UP"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DECIMAL_FORMATTER_DEFAULT" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.text.DecimalFormat($P{DECIMAL_FORMAT_STRING_DEFAULT})]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TODAY" class="java.util.Date" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.util.Date()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SELECTED_FILTER_SELECTION" class="java.lang.String"/>
+	<parameter name="DEPT_IDS" class="java.lang.String"/>
+	<parameter name="DEPT_IDS_INCLUDE_NULL" class="java.lang.Boolean"/>
+	<parameter name="FROM_DATE_2_YR" class="java.lang.Integer"/>
+	<parameter name="FROM_DATE_2_MO" class="java.lang.Integer"/>
+	<parameter name="FROM_DATE_2_DY" class="java.lang.Integer"/>
+	<parameter name="TO_DATE_2_YR" class="java.lang.Integer"/>
+	<parameter name="TO_DATE_2_MO" class="java.lang.Integer"/>
+	<parameter name="TO_DATE_2_DY" class="java.lang.Integer"/>
+	<parameter name="FROM_DATE_2" class="java.util.Date" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.util.Date($P{FROM_DATE_2_YR} - 1900 , $P{FROM_DATE_2_MO} - 1, $P{FROM_DATE_2_DY})]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TO_DATE_2" class="java.util.Date" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.util.Date($P{TO_DATE_2_YR} - 1900 , $P{TO_DATE_2_MO} - 1, $P{TO_DATE_2_DY})]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PR_WHERE_CLAUSE" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{SELECTED_FILTER_SELECTION} == "pr"
+? String.format(
+    " AND pr_table.pr_date BETWEEN '%d-%d-%d' AND '%d-%d-%d'"
+    + " AND ((%s AND pr_table.department_id IS NULL) OR pr_table.department_id IN (%s))",
+        $P{FROM_DATE_2_YR}, $P{FROM_DATE_2_MO}, $P{FROM_DATE_2_DY},
+        $P{TO_DATE_2_YR}, $P{TO_DATE_2_MO}, $P{TO_DATE_2_DY},
+        $P{DEPT_IDS_INCLUDE_NULL},
+        $P{DEPT_IDS})
+: ""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PO_WHERE_CLAUSE" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{SELECTED_FILTER_SELECTION} == "po"
+? String.format(
+    " AND po_table.po_date BETWEEN '%d-%d-%d' AND '%d-%d-%d'",
+    $P{FROM_DATE_2_YR}, $P{FROM_DATE_2_MO}, $P{FROM_DATE_2_DY},
+    $P{TO_DATE_2_YR}, $P{TO_DATE_2_MO}, $P{TO_DATE_2_DY})
+: ""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SETTERS" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{DECIMAL_FORMATTER_DEFAULT}.setRoundingMode(java.math.RoundingMode.valueOf($P{DECIMAL_ROUNDING_MODE_DEFAULT})) == null
+/* Further setter can be added by this pattern: && $P{DECIMAL_FORMATTER_DEFAULT}.setXXX() == null */
+? null
+: null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PRINTED_PAGE_FOOTER" class="java.util.Collection" isForPrompting="false">
+		<defaultValueExpression><![CDATA[[]]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+    CASE WHEN dataset.department = 'Non-department' THEN 1 ELSE 0 END AS pr_dept_order,
+    dataset.department AS pr_dept,
+    dataset.pr_number AS pr_no,
+    dataset.pr_date::DATE AS pr_date,
+    dataset.po_number AS po_no,
+    dataset.po_date::DATE AS po_date,
+    dataset.supplier_name AS po_supplier,
+    dataset.po_total AS po_amount,
+    (CASE WHEN dataset.po_inv_total - dataset.po_total < 0.0 THEN 0.0
+    ELSE dataset.po_inv_total - dataset.po_total
+    END) AS po_amount_over,
+    dataset.po_inv_total AS po_amount_invoiced,
+    dataset.po_inv_total - dataset.po_inv_residual AS po_amount_paid,
+    dataset.po_inv_residual AS po_amount_residual,
+    dataset.inv_number AS inv_no,
+    dataset.inv_date::DATE AS inv_date,
+    dataset.inv_total AS inv_amount,
+    dataset.inv_total - dataset.inv_residual AS inv_amount_paid,
+    dataset.inv_residual AS inv_amount_residual,
+    dataset.pay_number AS payment_no,
+    dataset.pay_date::DATE AS payment_date,
+    dataset.paid_amount AS payment_amount_paid
+FROM (
+    SELECT
+        -- Purchase Requisition Table
+        pr_table.department, -- Department
+        pr_table.department_id, -- Department ID
+        pr_table.pr_number, -- PR Number
+        pr_table.pr_date, -- PR Date
+
+        -- Purchase Order Table
+        po_table.po_id, -- PO ID
+        po_table.po_number, -- PO Number
+        po_table.po_date, -- PO Date
+        po_table.supplier_name, -- Supplier
+        po_table.po_total AS po_total, -- PO Amount
+        -- Over Amount = (Invoiced Amount - PO Amount)
+        sup_inv_by_po.inv_by_po_amount AS po_inv_total, -- Invoiced Amount
+        sup_inv_by_po.inv_by_po_residual AS po_inv_residual, -- Residual Amount
+
+        -- Supplier Invoice
+        po_sup_inv.inv_number AS inv_number, -- Invoice Number
+        po_sup_inv.inv_date AS inv_date, -- Invoice Date
+        po_sup_inv.inv_amount AS inv_total, -- Invoice Amount
+        -- Invoice Paid Amount is calculated from (Invoice Amount - Invoice Residual Amt.)
+        po_sup_inv.inv_residual AS inv_residual, -- Invoice Residual Amt.
+        po_sup_inv.inv_company_id AS inv_company_id, -- Invoice Residual Amt.
+
+        -- Supplier Payment
+        sup_inv_pay.pay_number AS pay_number,
+        sup_inv_pay.pay_date AS pay_date,
+        sup_inv_pay.paid_amount AS paid_amount
+    FROM
+        (-- PO Supplier Invoice
+            SELECT DISTINCT
+                po.requisition_id AS pr_id,
+                po.id AS po_id,
+                ai.id AS inv_id,
+                ai.company_id AS inv_company_id,
+                ai.number AS inv_number,
+                ai.date_invoice AS inv_date,
+                ai.amount_total / (CASE WHEN si_coy.currency_id != ai.currency_id THEN (SELECT COALESCE(rate, 1.0) FROM res_currency_rate WHERE res_currency_rate.currency_id = ai.currency_id AND res_currency_rate.name <= ai.date_invoice ORDER BY name DESC LIMIT 1) ELSE 1.0 END) AS inv_amount,
+                ai.residual / (CASE WHEN si_coy.currency_id != ai.currency_id THEN (SELECT COALESCE(rate, 1.0) FROM res_currency_rate WHERE res_currency_rate.currency_id = ai.currency_id AND res_currency_rate.name <= ai.date_invoice ORDER BY name DESC LIMIT 1) ELSE 1.0 END) AS inv_residual
+            FROM account_invoice ai
+                LEFT JOIN purchase_invoice_rel poair ON ai.id = poair.invoice_id
+                LEFT JOIN purchase_order po ON po.id = poair.purchase_id
+                LEFT JOIN res_company si_coy ON ai.company_id = si_coy.id
+            WHERE (ai.state IN ('open', 'paid') OR ai.state IS NULL)
+                AND (po.state IN ('approved', 'done'))
+        ) AS po_sup_inv
+    LEFT JOIN
+        (-- Invoice Calculated Value by PO
+            SELECT DISTINCT
+                po.id AS po_id,
+                SUM(ai.amount_total / (CASE WHEN si_coy.currency_id != ai.currency_id THEN (SELECT COALESCE(rate, 1.0) FROM res_currency_rate WHERE res_currency_rate.currency_id = ai.currency_id AND res_currency_rate.name <= ai.date_invoice ORDER BY name DESC LIMIT 1) ELSE 1.0 END)) AS inv_by_po_amount,
+                SUM(ai.residual / (CASE WHEN si_coy.currency_id != ai.currency_id THEN (SELECT COALESCE(rate, 1.0) FROM res_currency_rate WHERE res_currency_rate.currency_id = ai.currency_id AND res_currency_rate.name <= ai.date_invoice ORDER BY name DESC LIMIT 1) ELSE 1.0 END)) AS inv_by_po_residual
+            FROM account_invoice ai
+                LEFT JOIN purchase_invoice_rel poair ON ai.id = poair.invoice_id
+                LEFT JOIN purchase_order po ON po.id = poair.purchase_id
+                LEFT JOIN res_company si_coy ON ai.company_id = si_coy.id
+            WHERE (ai.state IN ('open', 'paid') OR ai.state IS NULL)
+                AND (po.state IN ('approved', 'done'))
+            GROUP BY po.id
+        ) AS sup_inv_by_po
+    ON sup_inv_by_po.po_id = po_sup_inv.po_id
+    LEFT JOIN
+        (-- Supplier Invoice Payments
+            SELECT
+                ai_si_rel.inv_id AS inv_id,
+                ai_si_rel.inv_date AS inv_date,
+                ai_si_rel.pay_id AS pay_id,
+                ai_si_rel.pay_number AS pay_number,
+                ai_si_rel.pay_date AS pay_date,
+                ai_si_rel.pay_debit - ai_si_rel.pay_credit AS paid_amount
+            FROM
+            (
+                (-- Full reconciliation
+                SELECT DISTINCT
+                    ai.id AS inv_id,
+                    aiml.date AS inv_date,
+                    pml.id AS pay_id,
+                    pml.ref AS pay_number,
+                    pml.date AS pay_date,
+                    pml.debit AS pay_debit,
+                    pml.credit AS pay_credit
+                FROM
+                    account_invoice_line AS ail
+                    INNER JOIN account_invoice AS ai
+                        ON ail.invoice_id = ai.id
+                    INNER JOIN account_move_line AS aiml
+                        ON aiml.move_id = ai.move_id
+                    INNER JOIN account_move_line AS pml
+                        ON (pml.reconcile_id = aiml.reconcile_id
+                        AND pml.id != aiml.id
+                        AND pml.journal_id != aiml.journal_id)
+                    INNER JOIN account_voucher AS av
+                        ON pml.move_id = av.move_id
+                WHERE aiml.reconcile_id IS NOT NULL AND aiml.reconcile_partial_id IS NULL
+                AND ai.state IN ('open', 'paid') AND (av.state IN ('posted') OR av.state IS NULL)
+                )
+            UNION ALL
+                (-- Partial reconciliation
+                SELECT DISTINCT
+                    ai.id AS inv_id,
+                    aiml.date AS inv_date,
+                    pml.id AS pay_id,
+                    pml.ref AS pay_number,
+                    pml.date AS pay_date,
+                    pml.debit AS pay_debit,
+                    pml.credit AS pay_credit
+                FROM
+                    account_invoice_line AS ail
+                    INNER JOIN account_invoice AS ai
+                        ON ail.invoice_id = ai.id
+                    INNER JOIN account_move_line AS aiml
+                        ON aiml.move_id = ai.move_id
+                    INNER JOIN account_move_line AS pml
+                        ON (pml.reconcile_partial_id = aiml.reconcile_partial_id
+                        AND pml.id != aiml.id
+                        AND pml.journal_id != aiml.journal_id)
+                    INNER JOIN account_voucher AS av
+                        ON pml.move_id = av.move_id
+                WHERE aiml.reconcile_id IS NULL AND aiml.reconcile_partial_id IS NOT NULL
+                AND ai.state IN ('open', 'paid') AND (av.state IN ('posted') OR av.state IS NULL)
+                )
+            ) AS ai_si_rel
+        ) AS sup_inv_pay
+    ON sup_inv_pay.inv_id = po_sup_inv.inv_id
+    FULL JOIN
+        (-- Purchase Order Table
+            SELECT
+                -- Purchase Order Table
+                po.requisition_id AS pr_id,
+                po.id AS po_id,
+                po.company_id AS po_company_id,
+                po.order_number AS po_number,
+                po.date_approve AS po_date,
+                supplier.name AS supplier_name,
+                po.amount_total / (CASE WHEN po_pl.currency_id != po_coy.currency_id THEN (SELECT COALESCE(rate, 1.0) FROM res_currency_rate WHERE res_currency_rate.currency_id = po_pl.currency_id AND res_currency_rate.name <= po.date_order ORDER BY name DESC LIMIT 1) ELSE 1.0 END) AS po_total
+             FROM purchase_order po
+                LEFT JOIN res_partner supplier ON po.partner_id = supplier.id
+                LEFT JOIN res_company po_coy ON po.company_id = po_coy.id
+                LEFT JOIN product_pricelist po_pl ON po.pricelist_id = po_pl.id
+            WHERE po.state IN ('approved', 'done')
+        ) po_table
+    ON po_sup_inv.po_id = po_table.po_id
+    FULL JOIN
+        (-- Purchase Requisition Table
+            SELECT
+                -- Purchase Requisition Table
+                COALESCE (dept.name, 'Non-department') AS department,
+                pr.department_id AS department_id,
+                pr.id AS pr_id,
+                pr.company_id AS pr_company_id,
+                pr.name AS pr_number,
+                pr.date_start AS pr_date
+            FROM purchase_requisition pr
+                LEFT JOIN hr_department dept ON pr.department_id = dept.id
+            WHERE pr.state IN ('in_progress', 'done')
+        ) pr_table
+    ON po_table.pr_id = pr_table.pr_id
+    WHERE
+        (pr_table.pr_company_id IN ($P!{COMPANY_IDS}) OR pr_table.pr_company_id IS NULL) -- PR Company ID
+        AND (po_table.po_company_id IN ($P!{COMPANY_IDS}) OR po_table.po_company_id IS NULL) -- PO Company ID
+        AND (po_sup_inv.inv_company_id IN ($P!{COMPANY_IDS}) OR po_sup_inv.inv_company_id IS NULL)-- Invoice Company ID
+        $P!{PR_WHERE_CLAUSE}
+        $P!{PO_WHERE_CLAUSE}
+) dataset
+ORDER BY
+    pr_dept_order,
+    pr_dept,
+    pr_no,
+    pr_date,
+    po_no,
+    po_date,
+    inv_no,
+    inv_date,
+    payment_no,
+    payment_date]]>
+	</queryString>
+	<field name="pr_dept" class="java.lang.String"/>
+	<field name="pr_no" class="java.lang.String"/>
+	<field name="pr_date" class="java.util.Date"/>
+	<field name="po_no" class="java.lang.String"/>
+	<field name="po_date" class="java.util.Date"/>
+	<field name="po_supplier" class="java.lang.String"/>
+	<field name="po_amount" class="java.math.BigDecimal"/>
+	<field name="po_amount_over" class="java.math.BigDecimal"/>
+	<field name="po_amount_invoiced" class="java.math.BigDecimal"/>
+	<field name="po_amount_paid" class="java.math.BigDecimal"/>
+	<field name="po_amount_residual" class="java.math.BigDecimal"/>
+	<field name="inv_no" class="java.lang.String"/>
+	<field name="inv_date" class="java.util.Date"/>
+	<field name="inv_amount" class="java.math.BigDecimal"/>
+	<field name="inv_amount_paid" class="java.math.BigDecimal"/>
+	<field name="inv_amount_residual" class="java.math.BigDecimal"/>
+	<field name="payment_no" class="java.lang.String"/>
+	<field name="payment_date" class="java.util.Date"/>
+	<field name="payment_amount_paid" class="java.math.BigDecimal"/>
+	<variable name="sum-pr_dept-po_amt" class="java.math.BigDecimal" resetType="Group" resetGroup="pr_dept" incrementType="Group" incrementGroup="po_no" calculation="Sum">
+		<variableExpression><![CDATA[$F{po_amount}]]></variableExpression>
+	</variable>
+	<variable name="sum-pr_dept-over_amt" class="java.math.BigDecimal" resetType="Group" resetGroup="pr_dept" incrementType="Group" incrementGroup="po_no" calculation="Sum">
+		<variableExpression><![CDATA[$F{po_amount_over}]]></variableExpression>
+	</variable>
+	<variable name="sum-pr_dept-invoiced_amt" class="java.math.BigDecimal" resetType="Group" resetGroup="pr_dept" incrementType="Group" incrementGroup="po_no" calculation="Sum">
+		<variableExpression><![CDATA[$F{po_amount_invoiced}]]></variableExpression>
+	</variable>
+	<variable name="sum-pr_dept-paid_amt" class="java.math.BigDecimal" resetType="Group" resetGroup="pr_dept" incrementType="Group" incrementGroup="po_no" calculation="Sum">
+		<variableExpression><![CDATA[$F{po_amount_paid}]]></variableExpression>
+	</variable>
+	<variable name="sum-pr_dept-residual_amt" class="java.math.BigDecimal" resetType="Group" resetGroup="pr_dept" incrementType="Group" incrementGroup="po_no" calculation="Sum">
+		<variableExpression><![CDATA[$F{po_amount_residual}]]></variableExpression>
+	</variable>
+	<variable name="sum-global-po_amt" class="java.math.BigDecimal" resetType="Group" resetGroup="global" incrementType="Group" incrementGroup="po_no" calculation="Sum">
+		<variableExpression><![CDATA[$F{po_amount}]]></variableExpression>
+	</variable>
+	<variable name="sum-global-over_amt" class="java.math.BigDecimal" resetType="Group" resetGroup="global" incrementType="Group" incrementGroup="po_no" calculation="Sum">
+		<variableExpression><![CDATA[$F{po_amount_over}]]></variableExpression>
+	</variable>
+	<variable name="sum-global-invoiced_amt" class="java.math.BigDecimal" resetType="Group" resetGroup="global" incrementType="Group" incrementGroup="po_no" calculation="Sum">
+		<variableExpression><![CDATA[$F{po_amount_invoiced}]]></variableExpression>
+	</variable>
+	<variable name="sum-global-paid_amt" class="java.math.BigDecimal" resetType="Group" resetGroup="global" incrementType="Group" incrementGroup="po_no" calculation="Sum">
+		<variableExpression><![CDATA[$F{po_amount_paid}]]></variableExpression>
+	</variable>
+	<variable name="sum-global-residual_amt" class="java.math.BigDecimal" resetType="Group" resetGroup="global" incrementType="Group" incrementGroup="po_no" calculation="Sum">
+		<variableExpression><![CDATA[$F{po_amount_residual}]]></variableExpression>
+	</variable>
+	<variable name="distinct_count-pr_dept-pr_count" class="java.lang.Integer" resetType="Group" resetGroup="pr_dept" calculation="DistinctCount">
+		<variableExpression><![CDATA[$F{pr_no}]]></variableExpression>
+	</variable>
+	<variable name="distinct_count-pr_no-po_count" class="java.lang.Integer" resetType="Group" resetGroup="pr_no" calculation="DistinctCount">
+		<variableExpression><![CDATA[$F{po_no}]]></variableExpression>
+	</variable>
+	<group name="global" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[true]]></groupExpression>
+		<groupFooter>
+			<band height="20" splitType="Prevent">
+				<textField isStretchWithOverflow="true">
+					<reportElement style="2.2.4" stretchType="RelativeToTallestObject" x="0" y="0" width="184" height="20"/>
+					<textElement/>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="2.2.2" stretchType="RelativeToTallestObject" x="184" y="0" width="123" height="20"/>
+					<textElement/>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="2.2.2" stretchType="RelativeToTallestObject" x="688" y="0" width="282" height="20"/>
+					<textElement/>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="2.2.2" stretchType="RelativeToTallestObject" x="970" y="0" width="180" height="20"/>
+					<textElement/>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="2.2.5" stretchType="RelativeToTallestObject" x="307" y="10" width="61" height="10"/>
+					<textElement/>
+					<textFieldExpression><![CDATA["GRAND TOTAL"]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="2.2" stretchType="RelativeToTallestObject" x="368" y="10" width="64" height="10"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$V{sum-global-po_amt} == null ? null : $P{DECIMAL_FORMATTER_DEFAULT}.format($V{sum-global-po_amt})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="2.2.3" stretchType="RelativeToTallestObject" x="432" y="10" width="64" height="10"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$V{sum-global-over_amt} == null ? null : $P{DECIMAL_FORMATTER_DEFAULT}.format($V{sum-global-over_amt})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="2.2" stretchType="RelativeToTallestObject" x="496" y="10" width="64" height="10"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$V{sum-global-invoiced_amt} == null ? null : $P{DECIMAL_FORMATTER_DEFAULT}.format($V{sum-global-invoiced_amt})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="2.2" stretchType="RelativeToTallestObject" x="560" y="10" width="64" height="10"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$V{sum-global-paid_amt} == null ? null : $P{DECIMAL_FORMATTER_DEFAULT}.format($V{sum-global-paid_amt})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="2.2" stretchType="RelativeToTallestObject" x="624" y="10" width="64" height="10"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$V{sum-global-residual_amt} == null ? null : $P{DECIMAL_FORMATTER_DEFAULT}.format($V{sum-global-residual_amt})]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="pr_dept" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{pr_dept}]]></groupExpression>
+		<groupHeader>
+			<band height="1" splitType="Prevent">
+				<textField isStretchWithOverflow="true">
+					<reportElement style="3.1" stretchType="RelativeToTallestObject" x="0" y="0" width="184" height="1"/>
+					<textElement/>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="3" stretchType="RelativeToTallestObject" x="184" y="0" width="504" height="1"/>
+					<textElement/>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="3" stretchType="RelativeToTallestObject" x="688" y="0" width="282" height="1"/>
+					<textElement/>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="3" stretchType="RelativeToTallestObject" x="970" y="0" width="180" height="1"/>
+					<textElement/>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="10" splitType="Prevent">
+				<textField isStretchWithOverflow="true">
+					<reportElement style="2.2.4" stretchType="RelativeToTallestObject" x="0" y="0" width="184" height="10"/>
+					<textElement/>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="2.2.2" stretchType="RelativeToTallestObject" x="184" y="0" width="123" height="10"/>
+					<textElement/>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="2.2.5" stretchType="RelativeToTallestObject" x="307" y="0" width="61" height="10"/>
+					<textElement/>
+					<textFieldExpression><![CDATA["Subtotal"]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="2.2" stretchType="RelativeToTallestObject" x="368" y="0" width="64" height="10"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$V{sum-pr_dept-po_amt} == null ? null : $P{DECIMAL_FORMATTER_DEFAULT}.format($V{sum-pr_dept-po_amt})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+					<reportElement style="2.2.1" stretchType="RelativeToTallestObject" x="432" y="0" width="64" height="10"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$V{sum-pr_dept-over_amt} == null ? null : $P{DECIMAL_FORMATTER_DEFAULT}.format($V{sum-pr_dept-over_amt})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="2.2" stretchType="RelativeToTallestObject" x="496" y="0" width="64" height="10"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$V{sum-pr_dept-invoiced_amt} == null ? null : $P{DECIMAL_FORMATTER_DEFAULT}.format($V{sum-pr_dept-invoiced_amt})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="2.2" stretchType="RelativeToTallestObject" x="560" y="0" width="64" height="10"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$V{sum-pr_dept-paid_amt} == null ? null : $P{DECIMAL_FORMATTER_DEFAULT}.format($V{sum-pr_dept-paid_amt})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="2.2" stretchType="RelativeToTallestObject" x="624" y="0" width="64" height="10"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$V{sum-pr_dept-residual_amt} == null ? null : $P{DECIMAL_FORMATTER_DEFAULT}.format($V{sum-pr_dept-residual_amt})]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="2.2.2" stretchType="RelativeToTallestObject" x="688" y="0" width="282" height="10"/>
+					<textElement/>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="2.2.2" stretchType="RelativeToTallestObject" x="970" y="0" width="180" height="10"/>
+					<textElement/>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="pr_no" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{pr_no}]]></groupExpression>
+	</group>
+	<group name="po_no" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{po_no}]]></groupExpression>
+	</group>
+	<group name="inv_no" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{inv_no}]]></groupExpression>
+	</group>
+	<pageHeader>
+		<band height="20" splitType="Prevent">
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" style="1" x="0" y="0" width="1150" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["Company Name: " + $P{COMPANY_NAME} + "\n"
++ "Report Name: " + "Purchase Requisition Fulfillment & Purchase Order Tracking" + "\n"
++ "Periode" + ": " + $P{DATE_FORMATTER_DEFAULT}.format($P{FROM_DATE_2}) + " \u2013 " + $P{DATE_FORMATTER_DEFAULT}.format($P{TO_DATE_2})]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="10" splitType="Prevent">
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1" stretchType="RelativeToTallestObject" x="0" y="0" width="50" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["Department"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1" stretchType="RelativeToTallestObject" x="50" y="0" width="13" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1" stretchType="RelativeToTallestObject" x="63" y="0" width="66" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["PR No."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1" stretchType="RelativeToTallestObject" x="129" y="0" width="55" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["PR Date"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1.2" stretchType="RelativeToTallestObject" x="184" y="0" width="13" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1" stretchType="RelativeToTallestObject" x="197" y="0" width="55" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["PO No."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1" stretchType="RelativeToTallestObject" x="252" y="0" width="55" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["PO Date"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1" stretchType="RelativeToTallestObject" x="307" y="0" width="61" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["Supplier"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1.1" stretchType="RelativeToTallestObject" x="368" y="0" width="64" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["PO Amt. (Rp)"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1.1" stretchType="RelativeToTallestObject" x="432" y="0" width="64" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["Over Amt. (Rp)"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1.1" stretchType="RelativeToTallestObject" x="496" y="0" width="64" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["Invoiced Amt."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1.1" stretchType="RelativeToTallestObject" x="560" y="0" width="64" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["Paid Amt. (Rp)"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1.1" stretchType="RelativeToTallestObject" x="624" y="0" width="64" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["Residual Amt."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1.2" stretchType="RelativeToTallestObject" x="688" y="0" width="50" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["Invoice No."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1" stretchType="RelativeToTallestObject" x="738" y="0" width="55" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["Invoice Date"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1.1" stretchType="RelativeToTallestObject" x="793" y="0" width="59" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["Invoice Amt"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1.1" stretchType="RelativeToTallestObject" x="852" y="0" width="59" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["Paid Amt. (Rp)"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1.1" stretchType="RelativeToTallestObject" x="911" y="0" width="59" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["Residual Amt. (Rp)"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1.2" stretchType="RelativeToTallestObject" x="970" y="0" width="66" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["Payment No."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1" stretchType="RelativeToTallestObject" x="1036" y="0" width="55" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["Payment Date"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1.1" stretchType="RelativeToTallestObject" x="1091" y="0" width="59" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["Paid Amt. (Rp)"]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="10" splitType="Prevent">
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2" stretchType="RelativeToTallestObject" x="0" y="0" width="50" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{VCD}.detectChange("department", [$F{pr_dept}])
+? ($F{pr_dept})
+: null]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.5" stretchType="RelativeToTallestObject" x="50" y="0" width="13" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{VCD}.detectChange("pr-penomoran", [$F{pr_no}])
+? ($V{distinct_count-pr_dept-pr_count} == 0 ? null : $V{distinct_count-pr_dept-pr_count})
+: null]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2" stretchType="RelativeToTallestObject" x="63" y="0" width="66" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{VCD}.detectChange("pr_no", [$F{pr_no}])
+? ($F{pr_no})
+: null]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2" stretchType="RelativeToTallestObject" x="129" y="0" width="55" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{VCD}.detectChange("pr_date", [$F{pr_no}])
+? ($F{pr_date} == null ? null : $P{DATE_FORMATTER_DEFAULT}.format($F{pr_date}))
+: null]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.5.1" stretchType="RelativeToTallestObject" x="184" y="0" width="13" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{VCD}.detectChange("po-penomoran", [$F{pr_no}, $F{po_no}])
+? ($V{distinct_count-pr_no-po_count} == 0 ? null : $V{distinct_count-pr_no-po_count})
+: null]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2" stretchType="RelativeToTallestObject" x="197" y="0" width="55" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{VCD}.detectChange("po_no", [$F{pr_no}, $F{po_no}])
+? ($F{po_no})
+: null]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2" stretchType="RelativeToTallestObject" x="252" y="0" width="55" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{VCD}.detectChange("po_date", [$F{pr_no}, $F{po_no}])
+? ($F{po_date} == null ? null : $P{DATE_FORMATTER_DEFAULT}.format($F{po_date}))
+: null]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="2" stretchType="RelativeToTallestObject" x="307" y="0" width="61" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{VCD}.detectChange("supplier", [$F{pr_no}, $F{po_no}])
+? ($F{po_supplier})
+: null]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.3" stretchType="RelativeToTallestObject" x="368" y="0" width="64" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{VCD}.detectChange("po_amt_rp", [$F{pr_no}, $F{po_no}])
+? ($F{po_amount} == null ? null : $P{DECIMAL_FORMATTER_DEFAULT}.format($F{po_amount}))
+: null]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="2.3.1" stretchType="RelativeToTallestObject" x="432" y="0" width="64" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{VCD}.detectChange("over_amt_rp", [$F{pr_no}, $F{po_no}])
+? ($F{po_amount_over} == null ? null : $P{DECIMAL_FORMATTER_DEFAULT}.format($F{po_amount_over}))
+: null]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.3" stretchType="RelativeToTallestObject" x="496" y="0" width="64" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{VCD}.detectChange("invoiced_amt", [$F{pr_no}, $F{po_no}])
+? ($F{po_amount_invoiced} == null ? null : $P{DECIMAL_FORMATTER_DEFAULT}.format($F{po_amount_invoiced}))
+: null]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.3" stretchType="RelativeToTallestObject" x="560" y="0" width="64" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{VCD}.detectChange("po-paid_amt_rp", [$F{pr_no}, $F{po_no}])
+? ($F{po_amount_paid} == null ? null : $P{DECIMAL_FORMATTER_DEFAULT}.format($F{po_amount_paid}))
+: null]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.3" stretchType="RelativeToTallestObject" x="624" y="0" width="64" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{VCD}.detectChange("residual_amt", [$F{pr_no}, $F{po_no}])
+? ($F{po_amount_residual} == null ? null : $P{DECIMAL_FORMATTER_DEFAULT}.format($F{po_amount_residual}))
+: null]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.4" stretchType="RelativeToTallestObject" x="688" y="0" width="50" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{VCD}.detectChange("invoice_no", [$F{pr_no}, $F{po_no}, $F{inv_no}])
+? ($F{inv_no})
+: null]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2" stretchType="RelativeToTallestObject" x="738" y="0" width="55" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{VCD}.detectChange("invoice_date", [$F{pr_no}, $F{po_no}, $F{inv_no}])
+? ($F{inv_date} == null ? null : $P{DATE_FORMATTER_DEFAULT}.format($F{inv_date}))
+: null]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.3" stretchType="RelativeToTallestObject" x="793" y="0" width="59" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{VCD}.detectChange("invoice_amt", [$F{pr_no}, $F{po_no}, $F{inv_no}])
+? ($F{inv_amount} == null ? null : $P{DECIMAL_FORMATTER_DEFAULT}.format($F{inv_amount}))
+: null]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.3" stretchType="RelativeToTallestObject" x="852" y="0" width="59" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{VCD}.detectChange("inv-paid_amt_rp", [$F{pr_no}, $F{po_no}, $F{inv_no}])
+? ($F{inv_amount_paid} == null ? null : $P{DECIMAL_FORMATTER_DEFAULT}.format($F{inv_amount_paid}))
+: null]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.3" stretchType="RelativeToTallestObject" x="911" y="0" width="59" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{VCD}.detectChange("residual_amt_rp", [$F{pr_no}, $F{po_no}, $F{inv_no}])
+? ($F{inv_amount_residual} == null ? null : $P{DECIMAL_FORMATTER_DEFAULT}.format($F{inv_amount_residual}))
+: null]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.4" stretchType="RelativeToTallestObject" x="970" y="0" width="66" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{payment_no}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2" stretchType="RelativeToTallestObject" x="1036" y="0" width="55" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{payment_date} == null ? null : $P{DATE_FORMATTER_DEFAULT}.format($F{payment_date})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.3" stretchType="RelativeToTallestObject" x="1091" y="0" width="59" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{payment_amount_paid} == null ? null : $P{DECIMAL_FORMATTER_DEFAULT}.format($F{payment_amount_paid})]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="20" splitType="Prevent">
+			<printWhenExpression><![CDATA[$P{PRINTED_PAGE_FOOTER}.indexOf($V{PAGE_NUMBER}) == -1
+? $P{PRINTED_PAGE_FOOTER}.add($V{PAGE_NUMBER})
+: false]]></printWhenExpression>
+			<textField evaluationTime="Report">
+				<reportElement style="99" x="0" y="0" width="538" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["Printed by " + $P{OERP_USER}
++ " on " + $P{DATE_FORMATTER_TIME_DEFAULT}.format($P{TODAY})
++ ($P{SHOW_STOPWATCH}
+   ? String.format(" in %.3fs", $P{STOPWATCH}.stop().computeDeltaMs().deltaMs / 1000.0)
+   : "")]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="99" x="538" y="0" width="75" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Strictly Confidential]]></text>
+			</staticText>
+			<textField>
+				<reportElement style="99" x="1045" y="0" width="80" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER} + " of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement style="99" x="1125" y="0" width="25" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

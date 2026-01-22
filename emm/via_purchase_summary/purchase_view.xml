@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!--
+        ==========================================================
+        Purchase Order Form Inherit
+        ==========================================================
+        -->
+
+        <record id="purchase_order_summary_form_view" model="ir.ui.view">
+            <field name="name">purchase.order.summary.form.view</field>
+            <field name="model">purchase.order</field>
+            <field name="priority">10</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                    <page string="Summary" attrs="{'invisible': [('state', 'in', ('draft', 'sent'))]}">
+                        <separator colspan="4" string="Payment Summary"/>
+                        <group>
+                            <group>
+                                <field name="po_amount_total" string="Amount Total" readonly="1"/>
+                                <field name="amount_to_invoice" readonly="1"/>
+                                <field name="amount_to_pay" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="amount_invoiced" readonly="1"/>
+                                <field name="amount_paid" readonly="1"/>
+                            </group>
+                        </group>
+                        <separator colspan="4" string="Shipment Summary"/>
+                        <field name="po_summary" view_mode="tree"/>
+                        <separator colspan="4" string="Invoices &amp; Refunds"/>
+                        <field name="invoice_ids" readonly="True">
+                            <tree colors="blue:state == 'draft';black:state in ('proforma','proforma2','open');gray:state == 'cancel'" string="Invoice">
+                                <field name="date_invoice"/>
+                                <field name="number"/>
+                                <field name="date_due"/>
+                                <field name="origin"/>
+                                <field name="currency_id" groups="base.group_multi_currency"/>
+                                <field name="amount_total" sum="Total Amount"/>
+                                <field name="residual" sum="Residual Amount"/>
+                                <field name="state"/>
+                            </tree>
+                        </field>
+                        <separator colspan="4" string="Shipments &amp; Returns"/>
+                        <field name="picking_ids" readonly="True">
+                            <tree colors="blue:state == 'draft';grey:state == 'cancel';red:state not in ('cancel', 'done') and min_date &lt; current_date" string="Delivery Orders">
+                                <field name="partner_id"/>
+                                <field name="date"/>
+                                <field name="min_date"/>
+                                <field name="name"/>
+                                <field name="backorder_id"/>
+                                <field name="invoice_state"/>
+                                <field name="state"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+
+    </data>
+</openerp>

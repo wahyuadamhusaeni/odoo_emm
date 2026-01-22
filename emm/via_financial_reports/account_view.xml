@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+    <record model="ir.ui.view" id="form_view_via_financial_reports_account_type">
+      <field name="name">VIA Financial Reports Account Type Configuration</field>
+      <field name="inherit_id" ref="account.view_account_type_form"/>
+      <field name="model">account.account.type</field>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+        <field name="report_type" position="after">
+          <field name="conversion_method"/>
+	</field>
+      </field>
+    </record>
+  </data>
+</openerp>

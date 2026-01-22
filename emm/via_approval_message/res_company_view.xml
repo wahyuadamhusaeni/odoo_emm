@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!-- Company Form View -->
+
+        <record id="view_company_approval_form" model="ir.ui.view">
+            <field name="name">view.company.approval.form</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                    <page string="Approval Message">
+                        <form string="Approval" version="7.0">
+                            <group col="4" colspan="4">
+                                <field name="default_message_type"/>
+                            </group>
+                        </form>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+
+    </data>
+</openerp>

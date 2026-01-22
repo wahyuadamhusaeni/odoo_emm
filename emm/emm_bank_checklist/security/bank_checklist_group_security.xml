@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+    <record id="group_bank_manager" model="res.groups">
+        <field name="name">Bank Checklist / Manager</field>
+    </record>
+    <record id="group_bank_invoicing" model="res.groups">
+        <field name="name">Bank Checklist / Invoicing</field>
+    </record>
+    <record id="group_bank_accountant" model="res.groups">
+        <field name="name">Bank Checklist / Accountant</field>
+    </record>
+  </data>
+</openerp>

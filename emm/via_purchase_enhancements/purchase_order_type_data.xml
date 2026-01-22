@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <record model="ir.sequence.type" id="ir_sequence_purchase_order_type">
+            <field name="name">Purchase Order Types</field>
+            <field name="code">purchase.order.type</field>
+        </record>
+    </data>
+</openerp>

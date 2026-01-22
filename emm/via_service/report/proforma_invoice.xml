@@ -1,0 +1,760 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data noupdate="1">
+        <record id="proforma_invoice_form_template" model="via.form.templates">
+            <field name="name">Tanda Terima Sementara</field>
+            <field name="model_id" ref="model_account_invoice"/>
+            <field name="multi">True</field>
+            <field eval="False" name="company_id"/>
+            <field name="tags"><![CDATA[]]></field>
+            <field name="engine">mako</field>
+            <field name="webkit_header" ref="via_report_webkit.ir_header_webkit_plain_a5l"/>
+            <field name="template"><![CDATA[
+                <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+
+<%from math import fmod%>
+<%front_max_page_lines = 4%>
+<%max_page_lines = 19%>
+<%see_more = False%>
+<%wrong_document_state = [] %>
+<!--
+####################################################
+# PENGATURAN KERTAS DAN JUMLAH KOPI                #
+####################################################
+-->
+<%page_width = 793%>
+<%page_height = 466%>
+<%no_of_copies = 1%>
+
+<!--
+####################################################
+# BANNER                                           #
+####################################################
+-->
+<%banner_height = 100%>
+<%banner_doc_number_height = 25%>
+<%banner_tittle_co_height = banner_height-banner_doc_number_height%>
+<%banner_co_info_width = 0.6*page_height%>
+<%banner_tittle_width = page_height-banner_co_info_width%>
+
+<!--
+####################################################
+# CONTENT WIDTH                                    #
+####################################################
+-->
+<%content_tittle_width = 120%>
+<%colon_width = 5%>
+<%content_value_width = page_width-content_tittle_width-colon_width%>
+
+<!--
+####################################################
+# CONTENT WITH DYNAMIC HEIGHT                      #
+####################################################
+-->
+<%content_height = 20%>
+
+<!--
+####################################################
+# SIGNATORY                                        #
+####################################################
+-->
+<%signatory_height = 150%>
+<%signatory_width = page_width/4%>
+<%notes_tittle_width = 40%>
+<%notes_value_width = page_width - 2*signatory_width - notes_tittle_width%>
+
+<!--
+####################################################
+# TAIL                                             #
+####################################################
+-->
+<%no_of_tail = 2%>
+<%tail_height = 15%>
+<%tail_audit_width = page_width/2%>
+<%tail_page_width = page_width-tail_audit_width%>
+
+<!--
+####################################################
+# KONFIGURASI UNTUK CURRENCY DAN BAHASA            #
+####################################################
+-->
+<%setLang('id_ID')%>
+
+<!--
+####################################################
+# KONFIGURASI UNTUK DEBUG                          #
+####################################################
+-->
+<%show_debug_box = False%>
+<%show_company = False%>
+
+
+<head>
+<style type="text/css">
+body.base {
+        font-size:12px;
+        font-family: Sans-Serif;
+        margin: 0px;
+}
+
+table.banner {
+%if show_debug_box:
+        border: 1px solid brown;
+%endif
+        height: ${banner_height}px;
+        width: ${page_width}px;
+        text-align: left;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+        border-spacing: 0px;
+        border-collapse: collapse;
+        table-layout: auto;
+}
+
+td.banner_tittle {
+%if show_debug_box:
+        border: 1px solid blue;
+%endif
+        height: ${banner_tittle_co_height}px;
+        width: ${banner_tittle_width}px;
+        border-bottom: 1px solid black;
+        text-align: left;
+        vertical-align: bottom;
+        font-size: 15px;
+        font-style: italic;
+        font-weight: bold;
+        font-family: Sans-Serif;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+}
+
+td.banner_co_info {
+%if show_debug_box:
+        border: 1px solid yellow;
+%endif
+        height: ${banner_tittle_co_height}px;
+        width: ${banner_co_info_width}px;
+        border-bottom: 1px solid black;
+        text-align: right;
+        vertical-align: bottom;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+}
+
+td.banner_doc_number{
+%if show_debug_box:
+        border: 1px solid red;
+%endif
+        height: ${banner_doc_number_height}px;
+        width: ${page_width}px;
+        text-align: left;
+        vertical-align: top;
+        font-size: 12px;
+        font-weight: bold;
+        font-family: Sans-Serif;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+}
+
+table.content {
+%if show_debug_box:
+        border: 1px solid brown;
+%endif
+        width: ${page_width}px;
+        text-align: left;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+        border-spacing: 0px;
+        border-collapse: collapse;
+        table-layout: auto;
+}
+
+td.content_tittle {
+%if show_debug_box:
+        border: 1px solid red;
+%endif
+        height: ${content_height}px;
+        width: ${content_tittle_width}px;
+        text-align: left;
+        vertical-align: top;
+        font-size: 12px;
+        font-weight: bold;
+        font-family: Sans-Serif;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+}
+
+td.colon {
+%if show_debug_box:
+        border: 1px solid cyan;
+%endif
+        height: ${content_height}px;
+        width: ${colon_width}px;
+        text-align: left;
+        vertical-align: top;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+}
+
+table.content_value {
+%if show_debug_box:
+        border: 1px solid brown;
+%endif
+        width: ${content_value_width}px;
+        text-align: left;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+        border-spacing: 0px;
+        border-collapse: collapse;
+        table-layout: auto;
+}
+
+td.content_value {
+%if show_debug_box:
+        border: 1px solid red;
+%endif
+        height: ${content_height}px;
+        width: ${content_value_width}px;
+        text-align: left;
+        vertical-align: top;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+}
+
+table.signatory {
+%if show_debug_box:
+        border: 1px solid blue;
+%endif
+        width: ${page_width}px;
+        text-align: left;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+        border-spacing: 0px;
+        border-collapse: collapse;
+        table-layout: auto;
+}
+
+td.notes_tittle {
+%if show_debug_box:
+        border: 1px solid green;
+%endif
+        height: ${signatory_height}px;
+        width: ${notes_tittle_width}px;
+        text-align: left;
+        vertical-align: top;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+}
+
+td.notes_value {
+%if show_debug_box:
+        border: 1px solid green;
+%endif
+        height: ${signatory_height}px;
+        width: ${notes_value_width}px;
+        text-align: left;
+        vertical-align: top;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+}
+
+td.signatory {
+%if show_debug_box:
+        border: 1px solid purple;
+%endif
+        height: ${signatory_height}px;
+        width: ${signatory_width}px;
+        text-align: left;
+        vertical-align: top;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        padding-left: 5px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+}
+
+table.tail {
+%if show_debug_box:
+        border: 1px solid blue;
+%endif
+        width: ${page_width}px;
+        text-align: left;
+        font-size: 12px;
+        font-family: Sans-Serif;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+        border-spacing: 0px;
+        border-collapse: collapse;
+        table-layout: auto;
+}
+
+td.tail_note {
+%if show_debug_box:
+        border: 1px solid green;
+%endif
+        height: ${tail_height}px;
+        width: ${page_width}px;
+        text-align: left;
+        vertical-align: bottom;
+        font-size: 9px;
+        font-family: Sans-Serif;
+        font-style: italic;
+        font-weight: bold;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+}
+
+td.tail_audit {
+%if show_debug_box:
+        border: 1px solid yellow;
+%endif
+        height: ${tail_height}px;
+        width: ${tail_audit_width}px;
+        text-align: left;
+        vertical-align: bottom;
+        font-size: 9px;
+        font-family: Sans-Serif;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        word-wrap:break-word;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+}
+
+td.tail_page {
+%if show_debug_box:
+        border: 1px solid magenta;
+%endif
+        height: ${tail_height}px;
+        width: ${tail_page_width}px;
+        text-align: right;
+        vertical-align: bottom;
+        font-size: 9px;
+        font-family: Sans-Serif;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        word-wrap:break-word;
+        padding-left: 0px;
+        padding-right: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+}
+
+table {
+        border: 0px;
+        padding: 0px;
+        border-spacing: 0px;
+        border-collapse: collapse;
+        table-layout:fixed;
+        border-color: white;
+}
+
+td {
+        padding: 0px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+}
+
+p {
+        white-space: normal;
+        text-overflow:ellipsis;
+        font-size: 12px;
+}
+
+sup, sub
+{
+        vertical-align: 0;
+        position: relative;
+}
+
+sup { bottom: 1ex; }
+sub { top: 0.8ex; }
+
+</style>
+</head>
+
+<!--pengaturan body dan tabel formulir-->
+<body class="base">
+
+%for doc in objects:
+
+    %if doc.state in ['draft']:
+        <% wrong_document_state.append('%s: %s' % (doc.name, doc.state)) %>
+    %else:
+<!--
+####################################################
+# PENENTUAN JUMLAH HALAMAN YANG AKAN DIPRINT       #
+####################################################
+-->
+    <%page_lines = len(doc.invoice_line)%>
+    %if page_lines > front_max_page_lines:
+        <%see_more = True%>
+        <% total_page = (page_lines - front_max_page_lines) / max_page_lines + 1%>
+        %if fmod((page_lines - front_max_page_lines), max_page_lines) > 0:
+            <%total_page = total_page + 1%>
+        %endif
+    %else:
+        <%total_page = 1%>
+    %endif
+
+<!--
+####################################################
+# PENGAMBILAN LINE DATA DARI OBJEK                 #
+####################################################
+-->
+    <%front_data_lines = []%>
+    <%data_lines = []%>
+    <%count = 0%>
+    %for line in doc.invoice_line:
+        %if count < front_max_page_lines:
+            <%front_data_lines.append(line.name)%>
+        %else:
+            <%data_lines.append(line.name)%>
+        %endif
+        <%count += 1%>
+    %endfor
+
+    <%page_data_lines = {}%>
+    %if total_page > 1:
+        %for page in range(total_page - 1):
+            <%page_data_lines[page+2] = data_lines[(page*max_page_lines):((page+1)*max_page_lines)]%>
+        %endfor
+    %endif
+
+    %for copy_no in range(0,no_of_copies):
+    %for current_page in range(1, total_page + 1):
+    <%content_count = 0%>
+    <table>
+        <tr>
+            <td>
+                <table class="banner">
+                    <tr>
+                        <td class="banner_tittle">TANDA TERIMA SEMENTARA</td>
+                        %if show_company:
+                        <td class="banner_co_info">
+                        ${doc.company_id and doc.company_id.name or ''|entity}<br>
+                        ${doc.company_id and doc.company_id.street or ''|entity}<br>
+                        ${doc.company_id and doc.company_id.partner_id.street2 or ''|entity} <br>
+                        ${doc.company_id and doc.company_id.city or ''|entity} - ${doc.company_id and doc.company_id.zip or ''|entity}<br>
+                        t: ${doc.company_id and doc.company_id.partner_id and doc.company_id.partner_id.phone or '' |entity} f: ${doc.company_id and doc.company_id.partner_id and doc.company_id.partner_id.fax or '' |entity}
+                        </td>
+                        %endif
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="banner_doc_number">
+                        No. ${doc.number or ''|entity}
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        %if current_page == 1:
+        <tr>
+            <td>
+                <table class="content">
+                    <tr>
+                        <td class="content_tittle">Diterima dari</td>
+                        <td class="colon">:&nbsp;&nbsp;</td>
+                        <td>
+                            <table class="content_value">
+                                %if doc.partner_id and doc.partner_id.name:
+                                <%content_count += 1%>
+                                <tr>
+                                    <td class="content_value">
+                                    <%name = doc.partner_id and doc.partner_id.name%>
+                                    ${strip_name(name, maxlen=250) or ''|entity}
+                                    </td>
+                                </tr>
+                                %endif
+                                %if doc.partner_id and doc.partner_id.parent_id and doc.partner_id.parent_id.name:
+                                <%content_count += 1%>
+                                <tr>
+                                    <td class="content_value">
+                                    <%parent = doc.partner_id and doc.partner_id.parent_id and doc.partner_id.parent_id.name%>
+                                    ${strip_name(parent, maxlen=100) or ''|entity}
+                                    </td>
+                                </tr>
+                                %endif
+                                %if doc.partner_id and doc.partner_id.street:
+                                <%content_count += 1%>
+                                <tr>
+                                    <td class="content_value">
+                                    <%street = doc.partner_id and doc.partner_id.street%>
+                                    ${strip_name(street, maxlen=100) or ''|entity}
+                                    </td>
+                                </tr>
+                                %endif
+                                %if doc.partner_id and doc.partner_id.street2:
+                                <%content_count += 1%>
+                                <tr>
+                                    <td class="content_value">
+                                    <%street2 = doc.partner_id and doc.partner_id.street2%>
+                                    ${strip_name(street2, maxlen=100) or ''|entity}
+                                    </td>
+                                </tr>
+                                %endif
+                                %if doc.partner_id and doc.partner_id.city:
+                                <%content_count += 1%>
+                                <tr>
+                                    <td class="content_value">
+                                    <%city = doc.partner_id and doc.partner_id.city%>
+                                    ${strip_name(city, maxlen=100) or ''|entity}
+                                    </td>
+                                </tr>
+                                %endif
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table class="content">
+                    <tr>
+                        <td class="content_tittle">Sejumlah</td>
+                        <td class="colon">:&nbsp;&nbsp;</td>
+                        <td>
+                            <table class="content_value">
+                                <%content_count += 1%>
+                                <tr>
+                                    <td class="content_value">
+                                    ${doc.currency_id and doc.currency_id.symbol or ''|entity} ${formatLang(doc.amount_total, digits=2) or ''|n}
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table class="content">
+                    <tr>
+                        <td class="content_tittle">Terbilang</td>
+                        <td class="colon">:&nbsp;&nbsp;</td>
+                        <td>
+                            <table class="content_value">
+                                <%content_count += 1%>
+                                <tr>
+                                    <td class="content_value">
+                                    <%amount=amount_to_text(abs(doc.amount_total),lang=getLang(),currency_obj=doc.currency_id)%>
+                                    #${amount or ''|n}#
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        %endif
+        <tr>
+            <td>
+                <table class="content">
+                    <tr>
+                        <td class="content_tittle">Untuk pembayaran</td>
+                        <td class="colon">:&nbsp;&nbsp;</td>
+                        <td>
+                            <table class="content_value">
+                            %if current_page == 1:
+                                %for line in front_data_lines:
+                                <%content_count += 1%>
+                                <tr>
+                                    <td class="content_value">
+                                    - ${strip_name(line, maxlen=100)or ''|entity}
+                                    </td>
+                                </tr>
+                                %endfor
+                                %if see_more:
+                                <%content_count += 1%>
+                                <tr>
+                                    <td class="content_value">
+                                    <span style="font-size:10px;font-style:italic;font-weight:bold;">*lihat lampiran untuk detail
+                                    </td>
+                                </tr>
+                                %endif
+                            %else:
+                                %for line in page_data_lines.get(current_page):
+                                <tr>
+                                    <td class="content_value">
+                                    - ${strip_name(line, maxlen=100)or ''|entity}
+                                    </td>
+                                </tr>
+                                %endfor
+                                %if max_page_lines > len(page_data_lines.get(current_page)):
+                                    %for line in range(max_page_lines - len(page_data_lines.get(current_page))):
+                                <tr>
+                                    <td class="content_value"></td>
+                                </tr>
+                                    %endfor
+                                %endif
+                            %endif
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+<!--
+####################################################
+# PENENTUAN TINGGI FILLER                          #
+####################################################
+-->
+
+    <%first_page_filler_height = page_height - banner_height - (content_count - 3)*content_height - signatory_height - no_of_tail*tail_height%>
+    <%page_filler_height = page_height - banner_height - (max_page_lines - 3)*content_height - no_of_tail*tail_height%>
+
+        <tr>
+            %if current_page == 1:
+            <td style="height:${first_page_filler_height}px;"></td>
+            %else:
+            <td style="height:${page_filler_height}px;"></td>
+            %endif
+        </tr>
+        %if current_page == 1:
+        <tr>
+            <td>
+                <table class="signatory">
+                    <tr>
+                        <td class="notes_tittle"><b>Note:&nbsp;</b></td>
+                        <td class="notes_value">
+                            <%comment = doc.comment%>
+                            ${strip_name(comment, maxlen=500) or ''|entity}
+                        </td>
+                        <td class="signatory">
+                            Pembayaran diterima oleh<br/>
+                            Tgl.
+                        </td>
+                        <td class="signatory">
+                            Kwitansi diterima oleh<br/>
+                            Tgl.
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        %endif
+
+        <tr>
+            <td>
+                <table class="tail">
+                    <tr>
+                        <td class="tail_note" colspan="2">
+                        *harap membawa tanda terima sementara ini ketika menukarkan dengan kwitansi
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="tail_audit">
+                            Dicetak oleh ${user.name or '-' |entity } pada ${time.strftime('%d %h %Y %r')}
+                        </td>
+                        <td class="tail_page" >
+                            Hal ${current_page} dari ${total_page}
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+    %if current_page < total_page:
+    <p style="page-break-after:always; margin: 0px;"></p>
+    %endif
+    %endfor
+
+    %if copy_no < (no_of_copies-1):
+    <p style="page-break-after:always; margin: 0px;"></p>
+    %endif
+    %endfor
+    %endif
+%endfor
+
+%if wrong_document_state:
+<p style="page-break-after:always"></p>
+<small>
+<br/><br/><br/>
+<b>Dokumen-dokumen ini tidak dicetak karena statusnya:</b><br/>
+${', '.join(wrong_document_state)}
+</small>
+%endif
+</body>
+</html>
+]]></field>
+        </record>
+
+        <function model="via.form.templates" name="activate"
+            eval="[ ref('proforma_invoice_form_template') ], " />
+    </data>
+</openerp>

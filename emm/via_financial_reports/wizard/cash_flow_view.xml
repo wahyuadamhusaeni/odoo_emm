@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<openerp>
+  <data>
+    <record id="action_via_financial_cf"
+            model="ir.actions.act_window">
+      <field name="name">Cash Flow</field>
+      <field name="res_model">via.jasper.report</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">form</field>
+      <field name="view_id" ref="via_jasper_report_utils_account.via_jasper_report_main_form_view_account"/>
+      <field name="context">{'via_jasper_report_utils.rpt_name': 'Cash Flow'}</field>
+      <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_via_financial_cf"
+              name="Cash Flow"
+              parent="menu_via_reporting_financial_root"
+              action="action_via_financial_cf"/>
+  </data>
+</openerp>

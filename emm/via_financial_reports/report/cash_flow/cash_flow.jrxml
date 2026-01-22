@@ -1,0 +1,699 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="cash_flow" language="groovy" pageWidth="842" pageHeight="595" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isSummaryWithPageHeaderAndFooter="true">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="via.crosstab.1.rowGroup.1.bucket.rtn_order" value=""/>
+	<property name="via.crosstab.1.columnGroup.1.bucket.period_order" value=""/>
+	<property name="via.crosstab.1.columnGroup.2.bucket.com_order" value=""/>
+	<style name="0" isBlankWhenNull="true"/>
+	<style name="1" style="0" fontSize="8" isBold="true">
+		<box bottomPadding="20"/>
+	</style>
+	<style name="2" style="0" hAlign="Left" vAlign="Top" fontSize="6">
+		<box leftPadding="1" rightPadding="1"/>
+	</style>
+	<style name="2.1" style="2" hAlign="Center" isBold="true"/>
+	<style name="2.2" style="2" hAlign="Center" isBold="true"/>
+	<style name="2.3" style="2" hAlign="Center" vAlign="Middle" isBold="true"/>
+	<style name="2.4" style="2" hAlign="Right"/>
+	<style name="2.4.1" style="2.4" hAlign="Left" isBold="true"/>
+	<style name="2.4.2" style="2.4">
+		<box>
+			<leftPen lineWidth="0.2"/>
+		</box>
+	</style>
+	<style name="2.4.3" style="2.4"/>
+	<style name="2.4.4" style="2.4"/>
+	<style name="2.4.5" style="2.4"/>
+	<style name="8" style="0">
+		<box>
+			<topPen lineWidth="0.2"/>
+			<leftPen lineWidth="0.2"/>
+			<bottomPen lineWidth="0.2"/>
+			<rightPen lineWidth="0.2"/>
+		</box>
+	</style>
+	<style name="8.1" style="8">
+		<box>
+			<leftPen lineWidth="0.0"/>
+		</box>
+	</style>
+	<style name="8.2" style="8">
+		<box>
+			<leftPen lineWidth="0.0"/>
+		</box>
+	</style>
+	<style name="8.3" style="8">
+		<box>
+			<leftPen lineWidth="0.0"/>
+		</box>
+	</style>
+	<style name="8.4" style="8">
+		<box>
+			<topPen lineWidth="0.0"/>
+			<leftPen lineWidth="0.0"/>
+		</box>
+	</style>
+	<style name="8.5" style="8">
+		<box>
+			<leftPen lineWidth="0.0"/>
+		</box>
+	</style>
+	<style name="8.6" style="8">
+		<box>
+			<topPen lineWidth="0.0"/>
+			<leftPen lineWidth="0.0"/>
+		</box>
+	</style>
+	<style name="8.7" style="8">
+		<box>
+			<topPen lineWidth="0.0"/>
+			<leftPen lineWidth="0.0"/>
+		</box>
+	</style>
+	<style name="8.8" style="8">
+		<box>
+			<topPen lineWidth="0.0"/>
+			<leftPen lineWidth="0.0"/>
+		</box>
+	</style>
+	<style name="8.9" style="8">
+		<box>
+			<topPen lineWidth="0.0"/>
+			<leftPen lineWidth="0.0"/>
+		</box>
+	</style>
+	<style name="99" style="0" vAlign="Bottom" fontSize="6"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="STOPWATCH" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[(new java.net.URLClassLoader(
+    ([new java.net.URL("file://" + $P{SUBREPORT_DIR})]
+    ).toArray(new java.net.URL[0]), getClass().getClassLoader()
+)).loadClass("Stopwatch").newInstance().start()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="VCD" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[(new java.net.URLClassLoader(
+    ([new java.net.URL("file://" + $P{SUBREPORT_DIR})]
+    ).toArray(new java.net.URL[0]), getClass().getClassLoader()
+)).loadClass("ValueChangeDetector").newInstance()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SHOW_STOPWATCH" class="java.lang.Boolean"/>
+	<parameter name="OERP_USER" class="java.lang.String"/>
+	<parameter name="COMPANY_NAME" class="java.lang.String"/>
+	<parameter name="COMPANY_ID" class="java.lang.Integer"/>
+	<parameter name="COMPANY_IDS" class="java.lang.String"/>
+	<parameter name="ACC_IDS" class="java.lang.String"/>
+	<parameter name="USE_INDENTATION" class="java.lang.Boolean"/>
+	<parameter name="NO_ZERO" class="java.lang.Boolean"/>
+	<parameter name="REPORTING_TREE_ID" class="java.lang.Integer"/>
+	<parameter name="REPORTING_TREE_NAME" class="java.lang.String"/>
+	<parameter name="DATE_FORMAT_STRING_DEFAULT" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["d MMM yyyy"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DATE_FORMATTER_DEFAULT" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.text.SimpleDateFormat($P{DATE_FORMAT_STRING_DEFAULT})]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DATE_FORMAT_STRING_TIME_DEFAULT" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{DATE_FORMAT_STRING_DEFAULT} + " HH:mm:ss"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DATE_FORMATTER_TIME_DEFAULT" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.text.SimpleDateFormat($P{DATE_FORMAT_STRING_TIME_DEFAULT})]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DATE_FORMAT_STRING_HEADER" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["yyyy-MM-dd"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DATE_FORMATTER_HEADER" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.text.SimpleDateFormat($P{DATE_FORMAT_STRING_HEADER})]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DATE_FORMAT_STRING_PERIOD" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["MM/yyyy"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DATE_FORMATTER_PERIOD" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.text.SimpleDateFormat($P{DATE_FORMAT_STRING_PERIOD})]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DECIMAL_FORMAT_STRING_DEFAULT" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["#,##0;-#,##0"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DECIMAL_ROUNDING_MODE_DEFAULT" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["HALF_UP"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DECIMAL_FORMATTER_DEFAULT" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.text.DecimalFormat($P{DECIMAL_FORMAT_STRING_DEFAULT})]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DECIMAL_FORMAT_STRING_LEVEL" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["#,##0;-#,##0"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DECIMAL_ROUNDING_MODE_LEVEL" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["HALF_UP"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DECIMAL_FORMATTER_LEVEL" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.text.DecimalFormat($P{DECIMAL_FORMAT_STRING_LEVEL})]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TODAY" class="java.util.Date" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.util.Date()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PRINTED_PAGE_FOOTER" class="java.util.Collection" isForPrompting="false">
+		<defaultValueExpression><![CDATA[[]]]></defaultValueExpression>
+	</parameter>
+	<parameter name="FISCALYEAR_START_YR" class="java.lang.Integer"/>
+	<parameter name="FISCALYEAR_START_MO" class="java.lang.Integer"/>
+	<parameter name="FISCALYEAR_START_DY" class="java.lang.Integer"/>
+	<parameter name="FROM_DATE_2_YR" class="java.lang.Integer"/>
+	<parameter name="FROM_DATE_2_MO" class="java.lang.Integer"/>
+	<parameter name="FROM_DATE_2_DY" class="java.lang.Integer"/>
+	<parameter name="TO_DATE_2_YR" class="java.lang.Integer"/>
+	<parameter name="TO_DATE_2_MO" class="java.lang.Integer"/>
+	<parameter name="TO_DATE_2_DY" class="java.lang.Integer"/>
+	<parameter name="FROM_DATE_2" class="java.util.Date" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.util.Date($P{FROM_DATE_2_YR} - 1900 , $P{FROM_DATE_2_MO} - 1, $P{FROM_DATE_2_DY})]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TO_DATE_2" class="java.util.Date" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.util.Date($P{TO_DATE_2_YR} - 1900 , $P{TO_DATE_2_MO} - 1, $P{TO_DATE_2_DY})]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SETTERS" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{DECIMAL_FORMATTER_DEFAULT}.setRoundingMode(java.math.RoundingMode.valueOf($P{DECIMAL_ROUNDING_MODE_DEFAULT})) == null
+&& $P{DECIMAL_FORMATTER_LEVEL}.setRoundingMode(java.math.RoundingMode.valueOf($P{DECIMAL_ROUNDING_MODE_LEVEL})) == null
+/* Further setter can be added by this pattern: && $P{DECIMAL_FORMATTER_DEFAULT}.setXXX() == null */
+? null
+: null]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[WITH RECURSIVE
+ period_axis AS (
+  SELECT
+   ap.id,
+   ap.date_start,
+   ap.date_stop
+  FROM account_period ap
+  WHERE
+   ap.company_id = $P!{COMPANY_ID}
+   AND ap.date_stop::DATE >= '$P!{FROM_DATE_2_YR}-$P!{FROM_DATE_2_MO}-$P!{FROM_DATE_2_DY}'::DATE
+   AND ap.date_start::DATE <= '$P!{TO_DATE_2_YR}-$P!{TO_DATE_2_MO}-$P!{TO_DATE_2_DY}'::DATE
+ ),
+ company_axis AS (
+  SELECT *
+  FROM via_tree_node_level_tagger((SELECT
+                                    ARRAY_AGG((id,
+                                               CASE id
+                                                WHEN $P!{COMPANY_ID} THEN NULL
+                                                ELSE COALESCE(parent_id, -1)
+                                               END)::VIA_TREE_NODE)
+                                   FROM res_company))
+ ),
+ data_points AS (
+  (-- Beginning balance
+   SELECT
+    period.id AS period_id,
+    aml.account_id AS account_id,
+    aml.company_id AS com_id,
+    SUM(COALESCE(aml.debit, 0.0)
+        - COALESCE(aml.credit, 0.0)) AS amount,
+    'beginning'::VARCHAR AS type
+   FROM account_move_line aml
+    INNER JOIN account_move am
+     ON am.id = aml.move_id
+    INNER JOIN account_account a
+     ON aml.account_id = a.id
+    INNER JOIN UNNEST(ARRAY[$P!{COMPANY_IDS}]) selected_company_id
+     ON a.company_id = selected_company_id
+    INNER JOIN UNNEST(ARRAY[$P!{ACC_IDS}]) selected_account_id
+     ON a.id = selected_account_id
+    INNER JOIN period_axis period
+     ON (aml.date >= '$P!{FISCALYEAR_START_YR}-$P!{FISCALYEAR_START_MO}-$P!{FISCALYEAR_START_DY}'
+         AND aml.date < (CASE
+                          WHEN ('$P!{FROM_DATE_2_YR}-$P!{FROM_DATE_2_MO}-$P!{FROM_DATE_2_DY}' BETWEEN period.date_start
+                                AND period.date_stop) THEN '$P!{FROM_DATE_2_YR}-$P!{FROM_DATE_2_MO}-$P!{FROM_DATE_2_DY}'
+                          ELSE period.date_start
+                         END))
+   WHERE
+    aml.state = 'valid'
+    AND am.state = 'posted'
+    AND NOT ((aml.debit IS NULL AND aml.credit IS NULL)
+             OR (aml.debit = 0 AND aml.credit = 0))
+   GROUP BY
+    period.id,
+    aml.account_id,
+    aml.company_id
+  ) UNION
+  (-- Ending balance
+   SELECT
+    period.id AS period_id,
+    aml.account_id AS account_id,
+    aml.company_id AS com_id,
+    SUM(COALESCE(aml.debit, 0.0)
+        - COALESCE(aml.credit, 0.0)) AS amount,
+    'ending'::VARCHAR AS type
+   FROM account_move_line aml
+    INNER JOIN account_move am
+     ON am.id = aml.move_id
+    INNER JOIN account_account a
+     ON aml.account_id = a.id
+    INNER JOIN UNNEST(ARRAY[$P!{COMPANY_IDS}]) selected_company_id
+     ON a.company_id = selected_company_id
+    INNER JOIN UNNEST(ARRAY[$P!{ACC_IDS}]) selected_account_id
+     ON a.id = selected_account_id
+    INNER JOIN period_axis period
+     ON (aml.date
+         BETWEEN '$P!{FISCALYEAR_START_YR}-$P!{FISCALYEAR_START_MO}-$P!{FISCALYEAR_START_DY}'
+         AND (CASE
+               WHEN ('$P!{TO_DATE_2_YR}-$P!{TO_DATE_2_MO}-$P!{TO_DATE_2_DY}' BETWEEN period.date_start
+                     AND period.date_stop) THEN '$P!{TO_DATE_2_YR}-$P!{TO_DATE_2_MO}-$P!{TO_DATE_2_DY}'
+               ELSE period.date_stop
+              END))
+   WHERE
+    aml.state = 'valid'
+    AND am.state = 'posted'
+    AND NOT ((aml.debit IS NULL AND aml.credit IS NULL)
+             OR (aml.debit = 0 AND aml.credit = 0))
+   GROUP BY
+    period.id,
+    aml.account_id,
+    aml.company_id
+  ) UNION
+  (-- Income/Expense
+   SELECT
+    period.id AS period_id,
+    aml.account_id AS account_id,
+    aml.company_id AS com_id,
+    SUM(COALESCE(aml.credit, 0.0)
+        - COALESCE(aml.debit, 0.0)) AS amount,
+    dataset.type_ AS type
+   FROM cash_flow_items('$P!{FISCALYEAR_START_YR}-$P!{FISCALYEAR_START_MO}-$P!{FISCALYEAR_START_DY}',
+                        '$P!{TO_DATE_2_YR}-$P!{TO_DATE_2_MO}-$P!{TO_DATE_2_DY}',
+                        ARRAY[$P!{COMPANY_IDS}],
+                        ARRAY[$P!{ACC_IDS}]) dataset
+    INNER JOIN account_move_line aml
+     ON dataset.id_ = aml.id
+    INNER JOIN period_axis period
+     ON (dataset.date_
+         BETWEEN (CASE
+                   WHEN ('$P!{FROM_DATE_2_YR}-$P!{FROM_DATE_2_MO}-$P!{FROM_DATE_2_DY}' BETWEEN period.date_start
+                         AND period.date_stop) THEN '$P!{FROM_DATE_2_YR}-$P!{FROM_DATE_2_MO}-$P!{FROM_DATE_2_DY}'
+                   ELSE period.date_start
+                  END)
+         AND (CASE
+               WHEN ('$P!{TO_DATE_2_YR}-$P!{TO_DATE_2_MO}-$P!{TO_DATE_2_DY}' BETWEEN period.date_start
+                     AND period.date_stop) THEN '$P!{TO_DATE_2_YR}-$P!{TO_DATE_2_MO}-$P!{TO_DATE_2_DY}'
+               ELSE period.date_stop
+              END))
+   GROUP BY
+    period.id,
+    dataset.type_,
+    aml.account_id,
+    aml.company_id
+  )
+ ),
+ axes_data_points AS (
+  SELECT
+   rtn.id AS rtn_id,
+   rtn.parent_id AS rtn_parent_id,
+   rtn.level AS rtn_level,
+   rtn.parent_left AS rtn_parent_left,
+   rtn.parent_right AS rtn_parent_right,
+   pa.id AS period_id,
+   ca.id AS com_id,
+   ca.parent_id AS com_parent_id,
+   ca.level AS com_level,
+   ca.parent_left AS com_parent_left,
+   ca.parent_right AS com_parent_right,
+   SUM(dp.amount) AS amount
+  FROM via_reporting_tree_node rtn
+   INNER JOIN period_axis pa
+    ON TRUE
+   INNER JOIN company_axis ca
+    ON TRUE
+   LEFT JOIN via_account_tree_node atn
+    ON rtn.id = atn.node_id
+   LEFT JOIN data_points dp
+    ON (atn.tag = dp.type
+        AND dp.period_id = pa.id
+        AND dp.com_id = ca.id
+        AND dp.account_id = atn.account_id)
+  WHERE
+   rtn.tree_id = $P!{REPORTING_TREE_ID}
+  GROUP BY
+   rtn.id,
+   rtn.parent_id,
+   rtn.level,
+   rtn.parent_left,
+   rtn.parent_right,
+   pa.id,
+   ca.id,
+   ca.parent_id,
+   ca.level,
+   ca.parent_left,
+   ca.parent_right
+ ),
+ cash_flow_tree_calculated(rtn_id, rtn_parent_id, rtn_level, rtn_parent_left, rtn_parent_right,
+                           period_id,
+                           com_id, com_parent_id, com_level, com_parent_left, com_parent_right,
+                           amount) AS (
+  (SELECT
+    rtn_id,
+    rtn_parent_id,
+    rtn_level,
+    rtn_parent_left,
+    rtn_parent_right,
+    period_id,
+    com_id,
+    com_parent_id,
+    com_level,
+    com_parent_left,
+    com_parent_right,
+    amount
+   FROM axes_data_points
+   WHERE rtn_level = (SELECT MAX(rtn_level)
+                      FROM axes_data_points)
+  ) UNION ALL (
+   WITH
+    frozen_cash_flow_tree_calculated AS (
+     SELECT * FROM cash_flow_tree_calculated
+    )
+   SELECT
+    adp.rtn_id,
+    adp.rtn_parent_id,
+    adp.rtn_level,
+    adp.rtn_parent_left,
+    adp.rtn_parent_right,
+    adp.period_id,
+    adp.com_id,
+    adp.com_parent_id,
+    adp.com_level,
+    adp.com_parent_left,
+    adp.com_parent_right,
+    (CASE
+      WHEN (NOT rtn.dummy_node) AND rtn.calculation = 'sum'
+       THEN COALESCE(SUM(CASE
+                          WHEN fcftc_rtn.dummy_node = TRUE THEN NULL
+                          ELSE fcftc.amount
+                         END) + COALESCE(adp.amount, 0.0),
+                     adp.amount)
+      ELSE adp.amount
+     END) AS amount
+   FROM axes_data_points adp
+    INNER JOIN via_reporting_tree_node rtn
+     ON rtn.id = adp.rtn_id
+    LEFT JOIN frozen_cash_flow_tree_calculated fcftc
+     ON (adp.rtn_parent_left < fcftc.rtn_parent_left
+         AND adp.rtn_parent_right > fcftc.rtn_parent_right
+         AND adp.rtn_level = fcftc.rtn_level - 1
+         AND adp.period_id = fcftc.period_id
+         AND adp.com_id = fcftc.com_id)
+    LEFT JOIN via_reporting_tree_node fcftc_rtn
+     ON fcftc_rtn.id = fcftc.rtn_id
+   WHERE
+    adp.rtn_level = (SELECT DISTINCT rtn_level - 1
+                     FROM frozen_cash_flow_tree_calculated)
+   GROUP BY
+    adp.rtn_id,
+    adp.rtn_parent_id,
+    adp.rtn_level,
+    adp.rtn_parent_left,
+    adp.rtn_parent_right,
+    adp.period_id,
+    adp.com_id,
+    adp.com_parent_id,
+    adp.com_level,
+    adp.com_parent_left,
+    adp.com_parent_right,
+    adp.amount,
+    rtn.dummy_node,
+    rtn.calculation
+  )
+ ),
+ cash_flow_tree_dummy_nodes_calculated AS (
+  SELECT
+   cftc.rtn_id,
+   cftc.rtn_parent_id,
+   cftc.rtn_level,
+   cftc.rtn_parent_left,
+   cftc.rtn_parent_right,
+   cftc.period_id,
+   cftc.com_id,
+   cftc.com_parent_id,
+   cftc.com_level,
+   cftc.com_parent_left,
+   cftc.com_parent_right,
+   (CASE
+     WHEN rtn.dummy_node AND rtn.calculation = 'sum'
+      THEN COALESCE(SUM(associates.amount) + COALESCE(cftc.amount, 0.0), cftc.amount)
+     ELSE cftc.amount
+    END) AS amount
+  FROM cash_flow_tree_calculated cftc
+   INNER JOIN via_reporting_tree_node rtn
+    ON cftc.rtn_id = rtn.id
+   LEFT JOIN via_reporting_tree_node_rel rtn_rel
+    ON cftc.rtn_id = rtn_rel.node_id
+   LEFT JOIN cash_flow_tree_calculated associates
+    ON (rtn_rel.associate_id,
+        cftc.period_id,
+        cftc.com_id) = (associates.rtn_id,
+                        associates.period_id,
+                        associates.com_id)
+  GROUP BY
+   cftc.rtn_id,
+   cftc.rtn_parent_id,
+   cftc.rtn_level,
+   cftc.rtn_parent_left,
+   cftc.rtn_parent_right,
+   cftc.period_id,
+   cftc.com_id,
+   cftc.com_parent_id,
+   cftc.com_level,
+   cftc.com_parent_left,
+   cftc.com_parent_right,
+   cftc.amount,
+   rtn.dummy_node,
+   rtn.calculation
+ ),
+ sans_grand_total AS (
+  SELECT
+   cftdnc.rtn_parent_left AS rtn_order,
+   ROW_NUMBER() OVER (PARTITION BY cftdnc.rtn_parent_left, cftdnc.com_parent_left ORDER BY ap.date_start) AS period_order,
+   cftdnc.com_parent_left AS com_order,
+   (CASE
+     WHEN $P!{USE_INDENTATION}
+      THEN
+       LPAD(rtn.name,
+            (4 * (rtn.level
+                  - FIRST_VALUE(rtn.level) OVER (ORDER BY rtn.level ASC))
+             + LENGTH(rtn.name))::INTEGER)
+     ELSE rtn.name
+    END) AS rtn_name,
+   rtn.level AS rtn_level,
+   rtn.node_tag AS rtn_tag,
+   DATE_TRUNC('month', ap.date_start)::DATE AS period,
+   com.name AS com_name,
+   cftdnc.amount,
+   SUM(cftdnc.amount) OVER (PARTITION BY cftdnc.rtn_parent_left, ap.date_start
+                            ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS period_total
+  FROM cash_flow_tree_dummy_nodes_calculated cftdnc
+   INNER JOIN via_reporting_tree_node rtn
+    ON rtn.id = cftdnc.rtn_id
+   INNER JOIN account_period ap
+    ON cftdnc.period_id = ap.id
+   INNER JOIN res_company com
+    ON com.id = cftdnc.com_id
+ ),
+ with_grand_total_and_all_nulls_to_zero AS (
+  SELECT
+   rtn_order,
+   period_order,
+   com_order,
+   rtn_name,
+   rtn_level,
+   rtn_tag,
+   period,
+   com_name,
+   COALESCE(amount, 0.0) AS amount,
+   FIRST_VALUE(COALESCE(period_total, 0.0)) OVER period_window AS first_period_total,
+   LAST_VALUE(COALESCE(period_total, 0.0)) OVER period_window AS last_period_total
+  FROM sans_grand_total
+  WINDOW period_window AS (PARTITION BY rtn_order
+                           ORDER BY period_order
+                           ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING)
+ )
+SELECT *
+FROM with_grand_total_and_all_nulls_to_zero
+WHERE
+ NOT $P!{NO_ZERO}
+ OR amount != 0.0
+ORDER BY
+ rtn_order,
+ period_order,
+ com_order]]>
+	</queryString>
+	<field name="rtn_order" class="java.math.BigDecimal"/>
+	<field name="period_order" class="java.math.BigDecimal"/>
+	<field name="com_order" class="java.math.BigDecimal"/>
+	<field name="rtn_name" class="java.lang.String"/>
+	<field name="rtn_level" class="java.math.BigDecimal"/>
+	<field name="rtn_tag" class="java.lang.String"/>
+	<field name="period" class="java.util.Date"/>
+	<field name="com_name" class="java.lang.String"/>
+	<field name="amount" class="java.math.BigDecimal">
+		<property name="via.crosstab.1.measure.calculation.sum" value=""/>
+	</field>
+	<field name="first_period_total" class="java.math.BigDecimal"/>
+	<field name="last_period_total" class="java.math.BigDecimal"/>
+	<pageHeader>
+		<band height="20" splitType="Prevent">
+			<textField isStretchWithOverflow="true">
+				<reportElement style="1" x="0" y="0" width="401" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["Company Name: " + $P{COMPANY_NAME} + "\n"
++ "Report Name: " + "Cash Flow" + "\n"
++ "From (YYYY-MM-DD)" + ": " + $P{DATE_FORMATTER_HEADER}.format($P{FROM_DATE_2})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="1" x="401" y="0" width="401" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["Reporting Tree: " + $P{REPORTING_TREE_NAME} + "\n"
++ "\n"
++ "To (YYYY-MM-DD)" + ": " + $P{DATE_FORMATTER_HEADER}.format($P{TO_DATE_2})]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="20" splitType="Prevent">
+			<frame>
+				<reportElement style="8.1" stretchType="RelativeToTallestObject" x="142" y="0" width="130" height="10">
+					<property name="via.crosstab.1.columnGroup.1" value=""/>
+				</reportElement>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="2.1" stretchType="RelativeToTallestObject" x="0" y="0" width="130" height="10"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{period} == null ? null : $P{DATE_FORMATTER_PERIOD}.format($F{period})]]></textFieldExpression>
+				</textField>
+			</frame>
+			<frame>
+				<reportElement style="8.5" stretchType="RelativeToTallestObject" x="272" y="0" width="65" height="20">
+					<property name="via.crosstab.1.columnGroup.1.total" value=""/>
+				</reportElement>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="2.3" stretchType="RelativeToTallestObject" x="0" y="0" width="65" height="20"/>
+					<textElement/>
+					<textFieldExpression><![CDATA["Total"]]></textFieldExpression>
+				</textField>
+			</frame>
+			<frame>
+				<reportElement style="8.4" x="0" y="0" width="142" height="20">
+					<property name="via.crosstab.1.header" value=""/>
+				</reportElement>
+			</frame>
+		</band>
+		<band height="10" splitType="Prevent">
+			<frame>
+				<reportElement style="8.2" stretchType="RelativeToTallestObject" x="142" y="0" width="65" height="10">
+					<property name="via.crosstab.1.columnGroup.2" value=""/>
+				</reportElement>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="2.2" stretchType="RelativeToTallestObject" x="0" y="0" width="65" height="10"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{com_name}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<frame>
+				<reportElement style="8.3" stretchType="RelativeToTallestObject" x="207" y="0" width="65" height="10">
+					<property name="via.crosstab.1.columnGroup.2.total" value=""/>
+				</reportElement>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="2.2" stretchType="RelativeToTallestObject" x="0" y="0" width="65" height="10"/>
+					<textElement/>
+					<textFieldExpression><![CDATA["Total"]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+		<band height="10" splitType="Prevent">
+			<frame>
+				<reportElement style="8.6" stretchType="RelativeToTallestObject" x="0" y="0" width="142" height="10">
+					<property name="via.crosstab.1.rowGroup.1" value=""/>
+				</reportElement>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="2.4.1" stretchType="RelativeToTallestObject" x="0" y="0" width="133" height="10"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{rtn_name}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="2.4.2" stretchType="RelativeToTallestObject" x="133" y="0" width="9" height="10"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{rtn_level} == null ? null : $P{DECIMAL_FORMATTER_LEVEL}.format($F{rtn_level})]]></textFieldExpression>
+				</textField>
+			</frame>
+			<frame>
+				<reportElement style="8.7" stretchType="RelativeToTallestObject" x="142" y="0" width="65" height="10">
+					<property name="via.crosstab.1.cell" value=""/>
+				</reportElement>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="2.4.3" stretchType="RelativeToTallestObject" x="0" y="0" width="65" height="10"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{amount} == null ? null : $P{DECIMAL_FORMATTER_DEFAULT}.format($F{amount})]]></textFieldExpression>
+				</textField>
+			</frame>
+			<frame>
+				<reportElement style="8.8" stretchType="RelativeToTallestObject" x="207" y="0" width="65" height="10">
+					<property name="via.crosstab.1.cell.columnGroup.2" value=""/>
+				</reportElement>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="2.4.4" stretchType="RelativeToTallestObject" x="0" y="0" width="65" height="10"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{amount} == null ? null : $P{DECIMAL_FORMATTER_DEFAULT}.format($F{amount})]]></textFieldExpression>
+				</textField>
+			</frame>
+			<frame>
+				<reportElement style="8.9" stretchType="RelativeToTallestObject" x="272" y="0" width="65" height="10">
+					<property name="via.crosstab.1.cell.columnGroup.1" value=""/>
+				</reportElement>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="2.4.5" stretchType="RelativeToTallestObject" x="0" y="0" width="65" height="10"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$F{rtn_tag} == "beginning"
+? ($F{first_period_total} == null
+   ? null
+   : $P{DECIMAL_FORMATTER_DEFAULT}.format($F{first_period_total}))
+: ($F{rtn_tag} == "ending"
+   ? ($F{last_period_total} == null
+      ? null
+      : $P{DECIMAL_FORMATTER_DEFAULT}.format($F{last_period_total}))
+   : ($F{amount} == null
+      ? null
+      : $P{DECIMAL_FORMATTER_DEFAULT}.format($F{amount})))]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="20" splitType="Prevent">
+			<printWhenExpression><![CDATA[$P{PRINTED_PAGE_FOOTER}.indexOf($V{PAGE_NUMBER}) == -1
+? $P{PRINTED_PAGE_FOOTER}.add($V{PAGE_NUMBER})
+: false]]></printWhenExpression>
+			<textField evaluationTime="Report">
+				<reportElement style="99" x="0" y="0" width="364" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["Printed by " + $P{OERP_USER}
++ " on " + $P{DATE_FORMATTER_TIME_DEFAULT}.format($P{TODAY})
++ ($P{SHOW_STOPWATCH}
+   ? String.format(" in %.3fs", $P{STOPWATCH}.stop().computeDeltaMs().deltaMs / 1000.0)
+   : "")]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="99" x="364" y="0" width="75" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Strictly Confidential]]></text>
+			</staticText>
+			<textField>
+				<reportElement style="99" x="697" y="0" width="80" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER} + " of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement style="99" x="777" y="0" width="25" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

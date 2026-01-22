@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    	<record id="purchase_order_line_form_emm" model="ir.ui.view">
+            <field name="name">purchase.order.line.form.emm</field>
+            <field name="model">purchase.order.line</field>
+            <field name="inherit_id" ref="purchase.purchase_order_line_form"/>
+            <field name="arch" type="xml">
+                <field name="price_unit" position="attributes">
+                    <attribute name="groups">purchase.group_purchase_manager,account.group_account_invoice,account.group_account_user,account.group_account_manager</attribute>
+                </field>
+                <field name="invoice_lines" position="replace">
+                    <field name="invoice_lines" groups="purchase.group_purchase_manager,account.group_account_invoice,account.group_account_user,account.group_account_manager">
+                        <tree>
+                            <field name="name"/>
+                            <field name="account_id" groups="account.group_account_user"/>
+                            <field name="quantity"/>
+                            <field name="uos_id" groups="product.group_uom"/>
+                            <field name="price_unit" groups="purchase.group_purchase_manager,account.group_account_invoice,account.group_account_user,account.group_account_manager"/>
+                            <field name="discount" groups="sale.group_discount_per_so_line,purchase.group_purchase_manager,account.group_account_invoice,account.group_account_user,account.group_account_manager"/>
+                            <field name="price_subtotal" groups="purchase.group_purchase_manager,account.group_account_invoice,account.group_account_user,account.group_account_manager"/>
+                            <!-- sale.group_discount_per_so_line is implemented as "Discount on lines" in user setting menu. To disable this group, uncheck "Discount on lines"-->
+                        </tree>
+                    </field>
+                </field>
+            </field>
+        </record>
+
+        <record id="purchase_order_form_emm" model="ir.ui.view">
+            <field name="name">purchase.order.form.emm</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <field name="pricelist_id" position="replace">
+                    <field domain="[('type','=','purchase')]" name="pricelist_id" groups="product.group_purchase_pricelist,purchase.group_purchase_manager,account.group_account_invoice,account.group_account_user,account.group_account_manager" on_change="onchange_pricelist(pricelist_id, context)"/>
+                </field>
+                <field name="price_unit" position="attributes">
+                    <attribute name="groups">purchase.group_purchase_manager,account.group_account_invoice,account.group_account_user,account.group_account_manager</attribute>
+                </field>
+                <field name="taxes_id" position="attributes">
+                    <attribute name="groups">purchase.group_purchase_manager,account.group_account_invoice,account.group_account_user,account.group_account_manager</attribute>
+                </field>
+                <field name="price_subtotal" position="attributes">
+                    <attribute name="groups">purchase.group_purchase_manager,account.group_account_invoice,account.group_account_user,account.group_account_manager</attribute>
+                </field>
+                <xpath expr="//field[@name='amount_untaxed']/.." position="attributes">
+                    <attribute name="groups">purchase.group_purchase_manager,account.group_account_invoice,account.group_account_user,account.group_account_manager</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="via_message_ids_emm" model="ir.rule">
+            <field name="name">Message in Purchase Order</field>
+            <field model="ir.model" name="model_id" ref="mail.model_mail_message"/>
+            <field eval="[(6, 0, [ref('purchase.group_purchase_manager'),ref('account.group_account_invoice'),ref('account.group_account_user'),ref('account.group_account_manager')])]" name="groups"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
+            <field name="domain_force">[('model', 'in', ['purchase.order'])]</field>
+        </record>
+
+        <record id="via_no_message_ids_emm" model="ir.rule">
+            <field name="name">Message not in Purchase Order</field>
+            <field model="ir.model" name="model_id" ref="mail.model_mail_message"/>
+            <field eval="[(6, 0, [ref('stock.group_stock_user'),ref('stock.group_stock_manager')])]" name="groups"/>
+            <field eval="True" name="perm_read"/>
+            <field eval="False" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
+            <field name="domain_force">['|', ('model', 'not in', ['purchase.order']), ('type','not in',['notification'])]</field>
+        </record>
+    </data>
+</openerp>

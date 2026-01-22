@@ -1,0 +1,1266 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data noupdate="1">
+        <record id="service_work_order_form_template" model="via.form.templates">
+            <field name="name">Surat Perintah Kerja</field>
+            <field name="model_id" ref="model_service_request"/>
+            <field name="multi">True</field>
+            <field eval="False" name="company_id"/>
+            <field name="tags"><![CDATA[]]></field>
+            <field name="engine">mako</field>
+            <field name="webkit_header" ref="via_report_webkit.ir_header_webkit_plain_a4p"/>
+            <field name="template"><![CDATA[
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+
+<!--
+################################################################################
+Nomor Template  : FRMSR01
+Versi Template  : v1
+Revisi Template : 12 September 2014
+Copyright       : PT. Vikasa Infinity Anugrah (www.infi-nity.com)
+Deskripsi:
+Template untuk Service Request
+Log:
+################################################################################
+-->
+
+<%from math import log10%>
+<%from math import fmod%>
+<%import re%>
+
+<!--
+####################################################
+# PENGATURAN KERTAS DAN JUMLAH KOPI                #
+####################################################
+-->
+<%no_of_copies = 1%>
+<%front_max_page_lines = 20%>
+<%max_page_lines = 58%>
+<%last_max_page_lines = 48%>
+<%wrong_document_state = [] %>
+<%font_size = 13%>                                      <!--Ukuran tulisan yang digunakan secara umum, dapat di-override apabila font-size juga ditentukan pada setiap tr atau td-->
+<%page_width = 793%>                                    <!--Lebar formulir yang umum digunakan sebagai lebar tabel utama-->
+<%page_height = 1100%>
+
+<!--
+####################################################
+# LINE ITEM                                        #
+####################################################
+-->
+<%banner_height = 85%>
+
+<!--
+####################################################
+# LINE ITEM                                        #
+####################################################
+-->
+<%line_item_height = 17%>
+<%line_item_col_1_width = 30%>
+<%line_item_col_2_width = 400%>
+<%line_item_col_3_width = 80%>
+<%line_item_col_4_width = 80%>
+<%line_item_col_5_width = page_width - line_item_col_1_width - line_item_col_2_width - line_item_col_3_width - line_item_col_4_width%>
+
+<!--
+####################################################
+# FOOTER                                           #
+####################################################
+-->
+<%footer_height = 20%>
+<%footer_title_width = 0.25*page_width%>
+<%footer_value_width = 0.1*page_width%>
+<%footer_space_width = page_width - footer_title_width - footer_value_width%>
+
+<!--
+####################################################
+# TAIL                                             #
+####################################################
+-->
+<%tail_height = 15%>
+<%tail_audit_width = page_width/2%>
+<%tail_page_width = page_width-tail_audit_width%>
+
+<!--
+####################################################
+# FILLER                                           #
+####################################################
+-->
+<%def_filler_height = page_height + 10 - banner_height - (max_page_lines)*line_item_height - tail_height%>
+<%filler_last_height = page_height + 11 - banner_height - (last_max_page_lines-1)*line_item_height - footer_height - tail_height%>
+
+<!--
+####################################################
+# KONFIGURASI UNTUK CURRENCY DAN BAHASA            #
+####################################################
+-->
+<%setLang('id_ID')%>
+
+<!--
+####################################################
+# KONFIGURASI UNTUK DEBUG                          #
+####################################################
+-->
+<%show_debug_box = False%>
+<%show_debug_value = False%>
+<%see_more_item = False%>
+
+<head>
+<style type="text/css">
+
+body.base {
+font-size: 13px;
+font-family: Sans-Serif;
+margin: 0px;
+}
+
+table.all{
+height:1100px;
+width:793px;
+}
+
+td.banner{
+%if show_debug_box:
+border: solid yellow;
+%endif
+height: ${banner_height}px;
+text-align: right;
+vertical-align: top;
+text-overflow: ellipsis;
+overflow: hidden;
+padding-left: 0px;
+padding-right: 0px;
+padding-top: 0px;
+padding-bottom: 0px;
+}
+
+td.product{
+%if show_debug_box:
+border: solid purple;
+%endif
+height:110px;
+width:392px;
+text-align: left;
+vertical-align: top;
+text-overflow: ellipsis;
+overflow: hidden;
+padding-left: 0px;
+padding-right: 0px;
+padding-top: 0px;
+padding-bottom: 0px;
+}
+
+td.customer{
+%if show_debug_box:
+border: solid brown;
+%endif
+height:110px;
+width:392px;
+text-align: right;
+vertical-align: top;
+text-overflow: ellipsis;
+overflow: hidden;
+padding-left: 0px;
+padding-right: 0px;
+padding-top: 0px;
+padding-bottom: 0px;
+}
+
+td.space_customer_product{
+height:110px;
+width:9px;
+}
+
+td.description{
+border-left: 1px solid black;
+border-right: 1px solid black;
+border-top: 1px solid black;
+border-bottom: 1px solid black;
+height: 150px;
+width:793px;
+text-overflow: ellipsis;
+font-size: 13px;
+text-align: left;
+vertical-align: top;
+overflow: hidden;
+padding-left: 2px;
+padding-right: 2px;
+padding-top: 0px;
+padding-bottom: 0px;
+display: inherit;
+display: -webkit-box;
+-webkit-line-clamp: 10;
+-webkit-box-orient: vertical;
+}
+
+
+td.history{
+%if show_debug_box:
+border: solid green;
+%endif
+height: 625px;
+width: 392px;
+vertical-align: top;
+}
+
+td.history_tittle{
+%if show_debug_box:
+border: solid yellow;
+%endif
+height:15px;
+width: 392px;
+text-align: left;
+vertical-align: top;
+overflow: hidden;
+padding-left: 0px;
+padding-right: 0px;
+padding-top: 0px;
+padding-bottom: 0px;
+}
+
+td.space_history_servis_tittle{
+height: 15px;
+width: 9px;
+}
+
+td.servis_tittle{
+%if show_debug_box:
+border: solid yellow;
+%endif
+height:15px;
+width: 392px;
+text-align: left;
+vertical-align: top;
+overflow: hidden;
+padding-left: 0px;
+padding-right: 0px;
+padding-top: 0px;
+padding-bottom: 0px;
+}
+
+tr.history_filler{
+height: 120px;
+}
+
+td.history_technician_tiba{
+%if show_debug_box:
+border: solid blue;
+%endif
+width:99px;
+height:15px;
+text-align: left;
+vertical-align: top;
+overflow: hidden;
+padding-left: 0px;
+padding-right: 0px;
+padding-top: 0px;
+padding-bottom: 0px;
+}
+
+td.history_visit_selesai{
+%if show_debug_box:
+border: solid blue;
+%endif
+width:99px;
+height:15px;
+text-align: right;
+vertical-align: top;
+overflow: hidden;
+padding-left: 0px;
+padding-right: 0px;
+padding-top: 0px;
+padding-bottom: 0px;
+}
+
+td.langkah_teknisi{
+height: 10px;
+}
+
+td.lingkari{
+height:10px;
+vertical-align: top;
+text-align: left;
+}
+
+td.paraf_cust{
+height:10px;
+vertical-align: top;
+text-align: right
+}
+
+td.history_value{
+%if show_debug_box:
+border: solid grey;
+%endif
+width:99px;
+height:15px;
+}
+
+td.baik_buruk{
+height:15px;
+width:70px;
+}
+
+td.baik_buruk_value{
+height:15px;
+width:30px;
+}
+
+td.paraf_space{
+height:15px;
+width:106px;
+}
+
+td.biaya_servis{
+%if show_debug_box:
+border: solid blue;
+%endif
+width:392px;
+height: 640px;
+vertical-align: top;
+}
+
+tr.filler_biaya{
+height:15px;
+}
+
+td.total{
+height:15px;
+text-align: right;
+}
+
+td.total_amount{
+height:15px;
+text-align: right;
+}
+
+td.space_history_biaya_servis{
+height:640px;
+width:9px;
+}
+
+table.line_item_header {
+%if show_debug_box:
+border: 1px solid blue;
+%endif
+width: ${page_width}px;
+text-align: left;
+font-family: Sans-Serif;
+padding-left: 0px;
+padding-right: 0px;
+padding-top: 0px;
+padding-bottom: 0px;
+border-spacing: 0px;
+border-collapse: collapse;
+table-layout: auto;
+}
+
+td.line_item_header_col_left{
+%if show_debug_box:
+border: 1px solid blue;
+%endif
+height: ${line_item_height}px;
+border-left: 1px solid black;
+border-top: 1px solid black;
+border-bottom: 1px solid black;
+text-align: center;
+vertical-align: center;
+font-family: Sans-Serif;
+text-overflow: ellipsis;
+overflow: hidden;
+padding-left: 0px;
+padding-right: 0px;
+padding-top: 0px;
+padding-bottom: 0px;
+}
+
+td.line_item_header_col_left_right{
+%if show_debug_box:
+border: 1px solid green;
+%endif
+height: ${line_item_height}px;
+border-left: 1px solid black;
+border-right: 1px solid black;
+border-top: 1px solid black;
+border-bottom: 1px solid black;
+text-align: center;
+vertical-align: center;
+font-family: Sans-Serif;
+text-overflow: ellipsis;
+overflow: hidden;
+padding-left: 0px;
+padding-right: 0px;
+padding-top: 0px;
+padding-bottom: 0px;
+}
+
+td.line_item_col_left{
+%if show_debug_box:
+border: 1px solid blue;
+%endif
+height: ${line_item_height}px;
+border-left: 1px solid black;
+text-align: center;
+vertical-align: center;
+font-family: Sans-Serif;
+text-overflow: ellipsis;
+overflow: hidden;
+padding-left: 0px;
+padding-right: 0px;
+padding-top: 0px;
+padding-bottom: 0px;
+}
+
+td.line_item_col_left_right{
+%if show_debug_box:
+border: 1px solid green;
+%endif
+height: ${line_item_height}px;
+border-left: 1px solid black;
+border-right: 1px solid black;
+text-align: center;
+vertical-align: center;
+font-family: Sans-Serif;
+text-overflow: ellipsis;
+overflow: hidden;
+padding-left: 0px;
+padding-right: 0px;
+padding-top: 0px;
+padding-bottom: 0px;
+}
+
+td.line_item_col_no{
+%if show_debug_box:
+border: 1px solid blue;
+%endif
+height: ${line_item_height}px;
+text-align: center;
+vertical-align: center;
+font-family: Sans-Serif;
+text-overflow: ellipsis;
+overflow: hidden;
+padding-left: 0px;
+padding-right: 0px;
+padding-top: 0px;
+padding-bottom: 0px;
+}
+
+table.pindahan{
+%if show_debug_box:
+border: 1px solid brown;
+%endif
+width: ${page_width}px;
+text-align: left;
+font-family: Sans-Serif;
+padding-left: 0px;
+padding-right: 0px;
+padding-top: 0px;
+padding-bottom: 0px;
+border-spacing: 0px;
+border-collapse: collapse;
+table-layout: auto;
+}
+
+td.pindahan{
+%if show_debug_box:
+border: 1px solid red;
+%endif
+height: ${line_item_height}px;
+border-left: 1px solid black;
+border-right: 1px solid black;
+border-bottom: 1px solid black;
+font-size: 10px;
+text-align: right;
+vertical-align: bottom;
+font-family: Sans-Serif;
+text-overflow: ellipsis;
+overflow: hidden;
+padding-left: 0px;
+padding-right: 5px;
+padding-top: 0px;
+padding-bottom: 0px;
+}
+
+table.dipindahkan{
+%if show_debug_box:
+border: 1px solid brown;
+%endif
+width: ${page_width}px;
+text-align: left;
+font-family: Sans-Serif;
+padding-left: 0px;
+padding-right: 0px;
+padding-top: 0px;
+padding-bottom: 0px;
+border-spacing: 0px;
+border-collapse: collapse;
+table-layout: auto;
+}
+
+td.dipindahkan{
+%if show_debug_box:
+border: 1px solid red;
+%endif
+height: ${line_item_height}px;
+border-left: 1px solid black;
+border-right: 1px solid black;
+border-bottom: 1px solid black;
+font-size: 10px;
+text-align: right;
+vertical-align: top;
+font-family: Sans-Serif;
+text-overflow: ellipsis;
+overflow: hidden;
+padding-left: 0px;
+padding-right: 5px;
+padding-top: 0px;
+padding-bottom: 0px;
+}
+
+table.footer{
+%if show_debug_box:
+border: 1px solid brown;
+%endif
+width: ${page_width}px;
+text-align: left;
+font-family: Sans-Serif;
+padding-left: 0px;
+padding-right: 0px;
+padding-top: 0px;
+padding-bottom: 0px;
+border-spacing: 0px;
+border-collapse: collapse;
+table-layout: auto;
+}
+
+td.footer_space{
+%if show_debug_box:
+border: 1px solid red;
+%endif
+height: ${footer_height}px;
+width: ${footer_space_width}px;
+}
+
+td.footer_tittle{
+%if show_debug_box:
+border: 1px solid red;
+%endif
+height: ${footer_height}px;
+width: ${footer_title_width}px;
+text-align: left;
+vertical-align: top;
+font-family: Sans-Serif;
+text-overflow: ellipsis;
+overflow: hidden;
+padding-left: 0px;
+padding-right: 0px;
+padding-top: 0px;
+padding-bottom: 0px;
+}
+
+td.footer_value{
+%if show_debug_box:
+border: 1px solid red;
+%endif
+height: ${footer_height}px;
+width: ${footer_value_width}px;
+text-align: right;
+vertical-align: top;
+font-family: Sans-Serif;
+text-overflow: ellipsis;
+overflow: hidden;
+padding-left: 0px;
+padding-right: 0px;
+padding-top: 0px;
+padding-bottom: 0px;
+}
+
+td.filler{
+%if show_debug_box:
+border: 1px solid yellow;
+%endif
+height: ${def_filler_height}px;
+width: ${page_width}px;
+}
+
+td.filler_last{
+%if show_debug_box:
+border: 1px solid cyan;
+%endif
+height: ${filler_last_height}px;
+width: ${page_width}px;
+}
+
+table.tail {
+%if show_debug_box:
+border: 1px solid blue;
+%endif
+width: ${page_width}px;
+text-align: left;
+font-size: 12px;
+font-family: Sans-Serif;
+padding-left: 0px;
+padding-right: 0px;
+padding-top: 0px;
+padding-bottom: 0px;
+border-spacing: 0px;
+border-collapse: collapse;
+table-layout: auto;
+}
+td.tail_audit {
+%if show_debug_box:
+border: 1px solid yellow;
+%endif
+height: ${tail_height}px;
+width: ${tail_audit_width}px;
+text-align: left;
+vertical-align: bottom;
+font-size: 9px;
+font-family: Sans-Serif;
+text-overflow: ellipsis;
+overflow: hidden;
+word-wrap:break-word;
+padding-left: 0px;
+padding-right: 0px;
+padding-top: 0px;
+padding-bottom: 0px;
+}
+
+td.tail_page {
+%if show_debug_box:
+border: 1px solid magenta;
+%endif
+height: ${tail_height}px;
+width: ${tail_page_width}px;
+text-align: right;
+vertical-align: bottom;
+font-size: 9px;
+font-family: Sans-Serif;
+text-overflow: ellipsis;
+overflow: hidden;
+word-wrap:break-word;
+padding-left: 0px;
+padding-right: 0px;
+padding-top: 0px;
+padding-bottom: 0px;
+}
+
+table {
+border: 0px;
+padding: 0px;
+border-spacing: 0px;
+border-collapse: collapse;
+border-color: white;
+}
+
+td {
+padding: 0px;
+text-overflow: ellipsis;
+overflow: hidden;
+}
+
+</style>
+</head>
+
+<body class="base">
+
+%for doc in objects:
+
+%if doc.state in []:
+
+<% wrong_document_state.append('%s: %s' % (doc.name, doc.state)) %>
+%else:
+
+%if len(doc.service_request) > 15:
+<%see_more_item = True%>
+%endif
+<!--
+####################################################
+# PENENTUAN JUMLAH HALAMAN YANG AKAN DIPRINT       #
+####################################################
+-->
+<%page_lines = len(doc.service_request)%>
+%if page_lines > front_max_page_lines:
+<%see_more = True%>
+<% total_page = (page_lines - front_max_page_lines) / max_page_lines + 1%>
+%if fmod((page_lines - front_max_page_lines), max_page_lines) > 0:
+<%total_page = total_page + 1%>
+%endif
+%else:
+<%total_page = 1%>
+%endif
+
+<!--
+####################################################
+# PENGAMBILAN LINE DATA DARI OBJEK                 #
+####################################################
+-->
+<%front_data_lines = []%>
+<%data_lines = []%>
+<%count = 0%>
+<%total_value = 0.0%>
+%for line in doc.service_request:
+%if count < front_max_page_lines:
+<%front_data_lines.append([line.service_id.name, line.service_qty, line.service_uom.name, line.service_total])%>
+%else:
+<%data_lines.append([line.service_id.name, line.service_qty, line.service_uom.name, line.service_total])%>
+%endif
+<%total_value += line.service_total%>
+<%count += 1%>
+%endfor
+
+<%page_data_lines = {}%>
+%if total_page > 1:
+%for page in range(total_page - 1):
+<%page_data_lines[page+2] = data_lines[(page*max_page_lines):((page+1)*max_page_lines)]%>
+%endfor
+%endif
+
+%for copy_no in range(0,no_of_copies):
+%for current_page in range(1, total_page + 1):
+<table class="all">
+%if current_page == 1:
+<tr>
+<td colspan="3" class="banner">
+<span style="font-size:25px; font-weight:bold;">SERVICE WORK ORDER</span><br>
+NO. SWO.: ${doc.name or ''|entity}<br>
+TGL SWO.: ${formatDate(doc.date, format='%d %b %Y')}
+</td>
+</tr>
+<tr>
+<td class="product">
+PRODUK YANG AKAN DISERVIS:<br>
+<b>${doc.product_id and doc.product_id.name or ''|entity}</b><br>
+<b>S/N: ${doc.serial_number and doc.serial_number.name or ''|entity}</b>
+</td>
+<td class="space_customer_product"></td>
+<td class="customer">
+DATA PELANGGAN DAN ALAMAT:<br>
+<b>${strip_name(doc.partner and doc.partner.name, maxlen=53) or ''|entity}</b><br>
+%if doc.partner and doc.partner.street:
+${strip_name(doc.partner and doc.partner.street, maxlen=100) or ''|entity}<br>
+%else:
+${}
+%endif
+%if doc.partner and doc.partner.city:
+${strip_name(doc.partner and doc.partner.city, maxlen=40) or ''|entity}, ${strip_name(doc.partner and doc.partner.country.name, maxlen=40) or ''|entity}<br>
+%else:
+${}
+%endif
+%if doc.partner and doc.partner.phone:
+TEL. ${doc.partner and doc.partner.phone or ''|entity}
+%endif
+</td>
+</tr>
+<tr>
+<td colspan="3" style="height:15px;">
+<b>DESKRIPSI PERMINTAAN SERVIS:</b>
+</td>
+</tr>
+<tr>
+<td colspan="3">
+<table>
+<tr>
+    <td class="description">
+    ${strip_name(doc.description, maxlen=1200) or ''|entity}
+    </td>
+</tr>
+</table>
+</td>
+</tr>
+<tr style="height:10px;"></tr>
+<tr>
+<td class="history_tittle">
+<b>TEKNISI &amp; RIWAYAT SERVIS</b>
+</td>
+<td class="space_history_servis_tittle"></td>
+<td class="servis_tittle">
+<b>BIAYA SERVIS &amp; SPARE PART</b>
+</td>
+</tr>
+<tr>
+<td class="history">
+<table>
+<tr>
+    <td colspan="8">
+        <hr noshade>
+    </td>
+</tr>
+<tr>
+    <td colspan="5">
+        <table>
+            <tr>
+                <td class="history_technician_tiba">TEKNISI:</td>
+                <td class="history_value"></td>
+            </tr>
+        </table>
+    </td>
+    <td colspan="3">
+        <table>
+            <tr>
+                <td class="history_visit_selesai">TGL VISIT:</td>
+                <td class="history_value"></td>
+            </tr>
+        </table>
+    </td>
+</tr>
+<tr>
+    <td colspan="5">
+        <table>
+            <tr>
+                <td class="history_technician_tiba">JAM TIBA:</td>
+                <td class="history_value"></td>
+            </tr>
+        </table>
+    </td>
+    <td colspan="3">
+        <table>
+            <tr>
+                <td class="history_visit_selesai">JAM SELESAI:</td>
+                <td class="history_value"></td>
+            </tr>
+        </table>
+    </td>
+</tr>
+<tr>
+    <td colspan="8">
+        <hr noshade>
+    </td>
+</tr>
+<tr>
+    <td colspan="8"  class="langkah_teknisi"><i>Langkah-langkah yang diambil oleh teknisi</i></td>
+</tr>
+<tr class="history_filler"> <!-- butuh perubahan -->
+</tr>
+<tr>
+    <td colspan="8">
+        <hr noshade>
+    </td>
+</tr>
+<tr>
+    <td colspan="7" class="lingkari">Diisi customer, lingkari kualitas servis:</td>
+    <td class="paraf_cust">Paraf Cust.</td>
+</tr>
+<tr>
+    <td class="baik_buruk">(buruk)</td>
+    <td class="baik_buruk_value">1</td>
+    <td class="baik_buruk_value">2</td>
+    <td class="baik_buruk_value">3</td>
+    <td class="baik_buruk_value">4</td>
+    <td class="baik_buruk_value">5</td>
+    <td class="baik_buruk">(baik)</td>
+    <td class="paraf_space"></td>
+</tr>
+<tr>
+    <td colspan="8">
+        <hr noshade>
+    </td>
+</tr>
+<tr>
+    <td colspan="5">
+        <table>
+            <tr>
+                <td class="history_technician_tiba">TEKNISI:</td>
+                <td class="history_value"></td>
+            </tr>
+        </table>
+    </td>
+    <td colspan="3">
+        <table>
+            <tr>
+                <td class="history_visit_selesai">TGL VISIT:</td>
+                <td class="history_value"></td>
+            </tr>
+        </table>
+    </td>
+</tr>
+<tr>
+    <td colspan="5">
+        <table>
+            <tr>
+                <td class="history_technician_tiba">JAM TIBA:</td>
+                <td class="history_value"></td>
+            </tr>
+        </table>
+    </td>
+    <td colspan="3">
+        <table>
+            <tr>
+                <td class="history_visit_selesai">JAM SELESAI:</td>
+                <td class="history_value"></td>
+            </tr>
+        </table>
+    </td>
+</tr>
+<tr>
+    <td colspan="8">
+        <hr noshade>
+    </td>
+</tr>
+<tr>
+    <td colspan="8"  class="langkah_teknisi"><i>Langkah-langkah yang diambil oleh teknisi</i></td>
+</tr>
+<tr class="history_filler"> <!-- butuh perubahan -->
+</tr>
+<tr>
+    <td colspan="8">
+        <hr noshade>
+    </td>
+</tr>
+<tr>
+    <td colspan="7" class="lingkari">Diisi customer, lingkari kualitas servis:</td>
+    <td class="paraf_cust">Paraf Cust.</td>
+</tr>
+<tr>
+    <td class="baik_buruk">(buruk)</td>
+    <td class="baik_buruk_value">1</td>
+    <td class="baik_buruk_value">2</td>
+    <td class="baik_buruk_value">3</td>
+    <td class="baik_buruk_value">4</td>
+    <td class="baik_buruk_value">5</td>
+    <td class="baik_buruk">(baik)</td>
+    <td class="paraf_space"></td>
+</tr>
+<tr>
+    <td colspan="8">
+        <hr noshade>
+    </td>
+</tr>
+<tr>
+    <td colspan="5">
+        <table>
+            <tr>
+                <td class="history_technician_tiba">TEKNISI:</td>
+                <td class="history_value"></td>
+            </tr>
+        </table>
+    </td>
+    <td colspan="3">
+        <table>
+            <tr>
+                <td class="history_visit_selesai">TGL VISIT:</td>
+                <td class="history_value"></td>
+            </tr>
+        </table>
+    </td>
+</tr>
+<tr>
+    <td colspan="5">
+        <table>
+            <tr>
+                <td class="history_technician_tiba">JAM TIBA:</td>
+                <td class="history_value"></td>
+            </tr>
+        </table>
+    </td>
+    <td colspan="3">
+        <table>
+            <tr>
+                <td class="history_visit_selesai">JAM SELESAI:</td>
+                <td class="history_value"></td>
+            </tr>
+        </table>
+    </td>
+</tr>
+<tr>
+    <td colspan="8">
+        <hr noshade>
+    </td>
+</tr>
+<tr>
+    <td colspan="8"  class="langkah_teknisi"><i>Langkah-langkah yang diambil oleh teknisi</i></td>
+</tr>
+<tr class="history_filler"> <!-- butuh perubahan -->
+</tr>
+<tr>
+    <td colspan="8">
+        <hr noshade>
+    </td>
+</tr>
+<tr>
+    <td colspan="7" class="lingkari">Diisi customer, lingkari kualitas servis:</td>
+    <td class="paraf_cust">Paraf Cust.</td>
+</tr>
+<tr>
+    <td class="baik_buruk">(buruk)</td>
+    <td class="baik_buruk_value">1</td>
+    <td class="baik_buruk_value">2</td>
+    <td class="baik_buruk_value">3</td>
+    <td class="baik_buruk_value">4</td>
+    <td class="baik_buruk_value">5</td>
+    <td class="baik_buruk">(baik)</td>
+    <td class="paraf_space"></td>
+</tr>
+<tr>
+    <td colspan="8">
+        <hr noshade>
+    </td>
+</tr>
+</table>
+</td>
+<td class="space_history_biaya_servis"></td>
+<td class="biaya_servis">
+<table>
+<tr>
+    <td colspan="5">
+        <hr noshade>
+    </td>
+</tr>
+<tr>
+    <td style="height:15px; width:30px; text-align:center;"><b>No.</b></td>
+    <td style="height:15px; width:140px; text-align:left;"><b>Deskripsi</b></td>
+    <td colspan="2" style="height:15px; width:87px; text-align:center;"><b>Jumlah</b></td>
+    <td style="height:15px; width:140px; text-align:right;"><b>Subtotal (${doc.company_id and doc.company_id.currency_id and doc.company_id.currency_id.symbol or ''|entity})</b></td>
+</tr>
+<tr>
+    <td colspan="5">
+        <hr noshade>
+    </td>
+</tr>
+<%line_count = 0%>
+<%total_move=0.0%>
+%for line in front_data_lines:
+    %if line_count < front_max_page_lines:
+        <%line_count += 1%>
+        <%total_move += line[3]%>
+    <tr class="filler_biaya">
+    <td style="height:15px; width:30px; text-align:center;">${line_count}</td>
+    <td style="height:15px; width:140px; text-align:left;">${strip_name(line[0], maxlen=20)}</td>
+    <td style="height:15px; width:57px; text-align:right;padding-right: 2px;">${line[1]}</td>
+    <td style="height:15px; width:30px; text-align:left; padding-left: 2px;">${line[2]}</td>
+    <td style="height:15px; width:140px; text-align:right;">${line[3]}</td>
+    </tr>
+    %else:
+        <%break%>
+    %endif
+%endfor
+%if see_more_item:
+<%filler_height = 420 - line_count*front_max_page_lines%>
+<tr style="height:${filler_height}px"></tr>
+<tr>
+    <td colspan="5" style="height:15px;font-size:10px;text-align:left;">
+    <b>..........</b>
+    </td>
+</tr>
+<tr>
+    <td colspan="5" style="height:15px;font-size:10px;text-align:left;">
+    <b><i>*Lihat lampiran biaya</i></b>
+    </td>
+</tr>
+%else:
+<%filler_height = 450 - line_count*front_max_page_lines%>
+<tr style="height:${filler_height}px"></tr>
+%endif
+<tr>
+    <td colspan="5">
+        <hr noshade>
+    </td>
+</tr>
+<tr>
+    <td colspan="3" class="total">
+    <b>TOTAL</b>
+    </td>
+    <td colspan="2" class="total_amount">
+    %if (line_count + 1) > front_max_page_lines:
+    <span style="font-size:10px;"><b><i>*Lihat lampiran biaya</i></b></span>
+    %else:
+    ${doc.company_id and doc.company_id.currency_id and doc.company_id.currency_id.symbol or ''|entity} ${formatLang(total_value)}
+    %endif
+    </td>
+</tr>
+<tr>
+    <td colspan="5">
+        <hr noshade>
+    </td>
+</tr>
+<tr>
+    <td colspan="5">
+    Syarat dan ketentuan:<br>
+    - Garansi spare part selama 3 minggu dari tgl pemasangan<br>
+    - Garansi servis selama 1 bulan dari tgl servis<br>
+    - Cara pembayaran biaya servis dan spare part adalah CASH
+    </td>
+</tr>
+<tr style="height:20px;"></tr>
+<tr>
+    <td colspan="5">
+        <table>
+             <tr>
+                <td style="width:130px;"></td>
+                <td style="width:266px; text-align:center;">
+                KONFIRMASI PELANGGAN<br>
+                (Tanda tangan &amp; cap perusahaan)
+                </td>
+        </table>
+    </td>
+</tr>
+<tr style="height:80px;"></tr>
+</table>
+</td>
+</tr>
+<tr>
+<td colspan="3" style="height:39px;"></td>
+</tr>
+
+%else:
+<tr>
+<td colspan="3" class="banner">
+<span style="font-size:25px; font-weight:bold;">LAMPIRAN BIAYA SWO</span><br>
+NO. SWO.: ${doc.name or ''|entity}<br>
+TGL SWO.: ${formatDate(doc.date, format='%d %b %Y')}
+</td>
+</tr>
+<tr>
+<td>
+<table class="line_item_header">
+<tr>
+    <td style="width:${line_item_col_1_width}px;" class="line_item_header_col_left"><b>No.</b></td>
+    <td style="width:${line_item_col_2_width}px;" class="line_item_header_col_left"><b>Deskrpsi</b></td>
+    <td style="width:${line_item_col_3_width + line_item_col_4_width}px;" class="line_item_header_col_left"><b>Qty</b></td>
+    <td style="width:${line_item_col_5_width}px;" class="line_item_header_col_left_right"><b>Subtotal (${doc.company_id and doc.company_id.currency_id and doc.company_id.currency_id.symbol or ''|entity})</b></td>
+</tr>
+</table>
+</td>
+</tr>
+<tr>
+<td>
+<table class="pindahan">
+<tr>
+    <td class="pindahan"><b><i>pindahan ${doc.company_id and doc.company_id.currency_id and doc.company_id.currency_id.symbol or ''|entity} ${formatLang(total_move)}</i></b></td>
+</tr>
+</table>
+</td>
+</tr>
+
+<tr>
+<td>
+<table class="line_item_header">
+<%count = 1%>
+%for line in page_data_lines.get(current_page):
+    <%total_move += line[3]%>
+    <%number = (current_page-2)*max_page_lines + count + front_max_page_lines%>
+    %if count == max_page_lines:
+<tr>
+    <td style="border-bottom:1px solid black;width:${line_item_col_1_width}px;" class="line_item_col_left">${number}</td>
+    <td style="border-bottom:1px solid black;width:${line_item_col_2_width}px;text-align:left;" class="line_item_col_left">&nbsp;&nbsp;${line[0]}</td>
+    <td style="border-bottom:1px solid black;width:${line_item_col_3_width}px;text-align:right;" class="line_item_col_left">${line[1]}&nbsp;</td>
+    <td style="border-bottom:1px solid black;width:${line_item_col_4_width}px;text-align:left;" class="line_item_col_no">&nbsp;${line[2]}</td>
+    <td style="border-bottom:1px solid black;width:${line_item_col_5_width}px;text-align:right;" class="line_item_col_left_right">${line[3]}&nbsp;&nbsp;</td>
+</tr>
+    %else:
+<tr>
+    <td style="width:${line_item_col_1_width}px;" class="line_item_col_left">${number}</td>
+    <td style="width:${line_item_col_2_width}px;text-align:left;" class="line_item_col_left">&nbsp;&nbsp;${line[0]}</td>
+    <td style="width:${line_item_col_3_width}px;text-align:right;" class="line_item_col_left">${line[1]}&nbsp;</td>
+    <td style="width:${line_item_col_4_width}px;text-align:left;" class="line_item_col_no">&nbsp;${line[2]}</td>
+    <td style="width:${line_item_col_5_width}px;text-align:right;" class="line_item_col_left_right">${line[3]}&nbsp;&nbsp;</td>
+</tr>
+    %endif
+    <%count += 1%>
+%endfor
+
+<%blank_line = last_max_page_lines - len(page_data_lines.get(current_page))%>
+%if current_page == total_page and blank_line > 0 :
+    %for line in range(blank_line):
+    %if (line + 1) == blank_line:
+<tr>
+    <td style="border-bottom:1px solid black;width:${line_item_col_1_width}px;" class="line_item_col_left"></td>
+    <td style="border-bottom:1px solid black;width:${line_item_col_2_width}px;" class="line_item_col_left"></td>
+    <td style="border-bottom:1px solid black;width:${line_item_col_3_width}px;" class="line_item_col_left"></td>
+    <td style="border-bottom:1px solid black;width:${line_item_col_4_width}px;" class="line_item_col_no"></td>
+    <td style="border-bottom:1px solid black;width:${line_item_col_5_width}px;" class="line_item_col_left_right"></td>
+</tr>
+    %else:
+<tr>
+    <td style="width:${line_item_col_1_width}px;" class="line_item_col_left"></td>
+    <td style="width:${line_item_col_2_width}px;" class="line_item_col_left"></td>
+    <td style="width:${line_item_col_3_width}px;" class="line_item_col_left"></td>
+    <td style="width:${line_item_col_4_width}px;" class="line_item_col_no"></td>
+    <td style="width:${line_item_col_5_width}px;" class="line_item_col_left_right"></td>
+</tr>
+    %endif
+    %endfor
+%endif
+</table>
+</td>
+</tr>
+
+%if current_page < total_page:
+<tr>
+<td>
+<table class="dipindahkan">
+<tr>
+    <td class="dipindahkan"><b><i>dipindahkan ${doc.company_id and doc.company_id.currency_id and doc.company_id.currency_id.symbol or ''|entity} ${formatLang(total_move)}</i></b></td>
+</tr>
+</table>
+</td>
+</tr>
+%endif
+
+%if current_page == total_page:
+<tr>
+<td>
+<table class="footer">
+<tr>
+    <td class="footer_space"></td>
+    <td class="footer_tittle"><b>TOTAL ${doc.company_id and doc.company_id.currency_id and doc.company_id.currency_id.symbol or ''|entity}</b></td>
+    <td class="footer_value">${formatLang(total_value)}</td>
+</tr>
+</table>
+</td>
+</tr>
+%endif
+
+<tr>
+%if current_page == total_page:
+<td class="filler_last"></td>
+%else:
+<td class="filler"></td>
+%endif
+</tr>
+%endif
+<tr>
+<td colspan="3">
+<table class="tail">
+<tr>
+    <td class="tail_audit">
+        Dicetak oleh ${user.name or '-' |entity } pada ${time.strftime('%d %h %Y %r')}
+    </td>
+    <td class="tail_page" >
+        Hal ${current_page} dari ${total_page}
+    </td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+
+%if current_page < total_page:
+<p style="page-break-after:always; margin: 0px;"></p>
+%endif
+%endfor
+%if copy_no < (no_of_copies-1):
+<p style="page-break-after:always; margin: 0px;"></p>
+%endif
+%endfor
+%endif
+%endfor
+
+%if wrong_document_state:
+<p style="page-break-after:always"></p>
+<small>
+<br/><br/><br/>
+<b>Dokumen-dokumen ini tidak dicetak karena statusnya:</b><br/>
+${', '.join(wrong_document_state)}
+</small>
+%endif
+
+</body>
+</html>
+]]></field>
+        </record>
+
+        <function model="via.form.templates" name="activate"
+            eval="[ ref('service_work_order_form_template') ], " />
+    </data>
+</openerp>

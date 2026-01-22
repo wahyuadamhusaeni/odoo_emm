@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- vim:fdl=1:
+-->
+<templates>
+    <t t-extend="Login">
+        <t t-jquery="div.oe_login_logo" t-operation="inner">
+            <img src='/via_web/static/src/img/infinity.png'/>
+        </t>
+        <t t-jquery="div.oe_login_footer" t-operation="inner">
+            <a href="#" class="oe_login_manage_db">Manage Databases</a> |
+            <a href="http://www.infi-nity.com" target="_blank">Supported By <span class="infinity">infinity</span></a>
+        </t>
+    </t>
+
+    <t-debug/>
+
+    <t t-extend="CrashManagerError">
+        <t t-jquery=".oe_error_detail">
+            $(this).parent().prev().children("span").replaceWith('Pralon ERP');
+            $(this).prev().replaceWith('Test <span>Please <a href="http://www.infi-nity.com" target="_blank">contact us</a> for support.</span>');
+        </t>
+    </t>
+
+    <t t-extend="UserMenu">
+        <t t-jquery="ul.oe_dropdown_menu" t-operation="inner">
+            <li><a href="#" data-menu="settings">Preferences</a></li>
+            <li><a href="#" data-menu="infinity">About <span class="infinity">infinity</span></a></li>
+            <li><a href="#" data-menu="about">About OpenERP</a></li>
+            <li><a href="#" data-menu="help">Help</a></li>
+            <li><a href="#" data-menu="logout">Log out</a></li>
+        </t>
+    </t>
+
+    <t t-extend="UserMenu.about">
+        <t t-jquery="img.oe_logo" t-operation="replace">
+            <img class="oe_logo" src="/via_web/static/src/img/infinity.png"/>
+        </t>
+        <t t-jquery="div.oe_bottom" t-operation="inner">
+            <p>
+                Copyright © 2004-TODAY OpenERP SA. All Rights Reserved.<br />
+                OpenERP is a trademark of the <a target="_blank" href="http://openerp.com/" style="text-decoration: underline;">OpenERP SA Company</a>.
+            </p>
+            <p>
+                Licenced under the terms of <a target="_blank" href="http://www.gnu.org/licenses/agpl.html" style="text-decoration: underline;">GNU Affero General Public License</a>
+            </p>
+            <p>
+                For more information visit <a target="_blank" href="http://www.infi-nity.com/" style="text-decoration: underline;">infinity.com</a>
+            </p>
+        </t>
+    </t>
+
+    <t t-extend="WebClient">
+        <t t-jquery="div.oe_footer" t-operation="inner">
+            Supported by <a href="http://www.infi-nity.com" target="_blank"><span class="infinity">infinity</span></a>
+        </t>
+    </t>
+</templates>

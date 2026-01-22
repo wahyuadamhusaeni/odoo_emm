@@ -1,0 +1,21 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"approval_items_user","approval_items_user","model_approval_items","approval_user",1,0,0,0
+"approval_scheme_user","approval_scheme_user","model_approval_scheme","approval_user",1,0,0,0
+"approval_scheme_line_user","approval_scheme_line_user","model_approval_scheme_line","approval_user",1,0,0,0
+"approval_list_user","approval_list_user","model_approval_list","approval_user",1,1,1,0
+"approval_audit_user","approval_audit_user","model_approval_audit","approval_user",1,1,1,0
+"approval_hook_user","approval_hook_user","model_approval_hook","approval_user",1,0,0,0
+
+"approval_items_super_user","approval_items_super_user","model_approval_items","approval_super_user",1,1,1,1
+"approval_scheme_super_user","approval_scheme_super_user","model_approval_scheme","approval_super_user",1,1,1,1
+"approval_scheme_line_super_user","approval_scheme_line_super_user","model_approval_scheme_line","approval_super_user",1,1,1,1
+"approval_list_super_user","approval_list_super_user","model_approval_list","approval_super_user",1,1,1,1
+"approval_audit_super_user","approval_audit_super_user","model_approval_audit","approval_super_user",1,1,1,1
+"approval_hook_super_user","approval_hook_super_user","model_approval_hook","approval_super_user",1,1,1,1
+
+"approval_items_all","approval_items all","model_approval_items","",1,0,0,0
+"approval_scheme_all","approval_scheme all","model_approval_scheme","",1,0,0,0
+"approval_scheme_line_all","approval_scheme_line all","model_approval_scheme_line","",1,0,0,0
+"approval_list_all","approval_list all","model_approval_list","",1,0,0,0
+"approval_audit_all","approval_audit all","model_approval_audit","",1,0,0,0
+"approval_hook_all","approval_hook all","model_approval_hook","",1,0,0,0

@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<openerp>
+<data>
+
+<record id="so_tracking_by_quantity_form" model="ir.ui.view">
+    <field name="name">SO Tracking by Quantity Form</field>
+    <field name="model">sale.tracking.by.quantity</field>
+    <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Sale Order Summary">
+                    <field name="product_id"/>
+                    <field name="uom_id"/>
+                    <field name="so_qty"/>
+                    <field name="delivery_qty"/>
+                    <field name="cancel_qty"/>
+                    <field name="outstand_done"/>
+                    <field name="outstand_done_cancel"/>
+                </tree>
+            </field>
+</record>
+
+</data>
+</openerp>

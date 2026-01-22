@@ -1,0 +1,23 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+
+"service_fee_user","service_fee user","model_service_fee","service_request_user",1,1,1,1
+"service_fee_wizard_user","service_fee_wizard user","model_service_fee_wizard","service_request_user",1,1,1,1
+"service_invoice_user","service_invoice user","model_service_invoice","service_request_user",1,1,1,1
+"service_invoice_line_user","service_invoice_line user","model_service_invoice_line","service_request_user",1,1,1,1
+"service_request_user_user","service_request user","model_service_request","service_request_user",1,1,1,1
+"service_request_skill_set_user","service_request_skill_set user","model_service_request_skill_set","service_request_user",1,1,1,1
+"service_state_user","service_state user","model_service_state","service_request_user",1,1,1,1
+"service_task_wizard_user","service_task_wizard user","model_service_task_wizard","service_request_user",1,1,1,1
+"spare_parts_wizard_user","spare_parts_wizard user","model_spare_parts_wizard","service_request_user",1,1,1,1
+"sr_summary_user","sr_summary user","model_sr_summary","service_request_user",1,1,1,1
+
+"service_fee_all","service_fee all","model_service_fee","",1,0,0,0
+"service_fee_wizard_all","service_fee_wizard all","model_service_fee_wizard","",1,0,0,0
+"service_invoice_all","service_invoice all","model_service_invoice","",1,0,0,0
+"service_invoice_line_all","service_invoice_line all","model_service_invoice_line","",1,0,0,0
+"service_request_all","service_request all","model_service_request","",1,0,0,0
+"service_request_skill_set_all","service_request_skill_set all","model_service_request_skill_set","",1,0,0,0
+"service_state_all","service_state all","model_service_state","",1,0,0,0
+"service_task_wizard_all","service_task_wizard all","model_service_task_wizard","",1,0,0,0
+"spare_parts_wizard_all","spare_parts_wizard all","model_spare_parts_wizard","",1,0,0,0
+"sr_summary_all","sr_summary all","model_sr_summary","",1,0,0,0

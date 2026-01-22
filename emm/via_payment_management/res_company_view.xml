@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!--
+        ==========================================================
+        Company Form Inherit
+        ==========================================================
+        -->
+        <record model="ir.ui.view" id="via_payment_mgmt_res_co_form_view">
+            <field name="name">VIA Payment Management Company View</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="model">res.company</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <page string="Configuration" position="inside">
+                  <newline/>
+                  <group col="4" colspan="4">
+                    <separator string="Payment Management" colspan="4"/>
+                    <field name="payment_holding_account" domain="[('type', 'not in', ('view', 'consolidation', 'closed')), '|', ('company_id', '=', active_id), ('company_id', '=', False)]" colspan="4"/>
+                  </group>
+                  <label for="expense_journals"/>
+                  <field name="expense_journals" domain="[('type', 'not in', ('bank', 'cash')), '|', ('company_id', '=', active_id), ('company_id', '=', False)]" colspan="4"/>
+                </page>
+            </field>
+        </record>
+    </data>
+</openerp>

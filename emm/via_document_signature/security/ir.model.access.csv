@@ -1,0 +1,3 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"document_signature_all","document_signature all","model_document_signature",,1,0,0,0
+"document_signature_manager","document_signature manager","model_document_signature","base.group_system",1,1,1,1

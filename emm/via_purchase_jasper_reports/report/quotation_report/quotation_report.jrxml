@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="quotation_report" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table_cell" vAlign="Middle" fontName="SansSerif" fontSize="10" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<box topPadding="2" leftPadding="3" bottomPadding="2" rightPadding="2">
+			<pen lineWidth="0.0"/>
+			<topPen lineWidth="0.0"/>
+			<leftPen lineWidth="0.0"/>
+			<bottomPen lineWidth="0.5"/>
+			<rightPen lineWidth="0.5"/>
+		</box>
+	</style>
+	<style name="table_header" style="table_cell" isBold="true"/>
+	<style name="table_header_centered" style="table_header" hAlign="Center"/>
+	<style name="table_cell_number" style="table_cell" hAlign="Right" pattern="#,##0.00;(#,##0.00)"/>
+	<style name="table_cell_date" style="table_cell" pattern="dd/MM/yyyy"/>
+	<style name="table_cell_number_nodec" style="table_cell_number" pattern="#,##0;(-#,##0)"/>
+	<style name="table_header_right" style="table_header" hAlign="Right"/>
+	<style name="table_cell_total" style="table_cell_number" isBold="true"/>
+	<style name="table_cell_total_nodec" style="table_cell_total" pattern="#,##0;(-#,##0)"/>
+	<style name="page_information" hAlign="Right" vAlign="Top" fontSize="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<style name="report_title" hAlign="Left" vAlign="Middle" fontSize="11" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<style name="page_information_centered" style="page_information" hAlign="Center"/>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<parameter name="QCF_SELECTED_PRS_SUPPLIERS" class="java.lang.String">
+		<parameterDescription><![CDATA[The expected format is as follows:
+[[PR_ID]: [SUPPLIER_ID][, [SUPPLIER_ID]]*\n]+]]></parameterDescription>
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="OERP_ACTIVE_IDS" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{QCF_SELECTED_PRS_SUPPLIERS}.trim().length() == 0
+? "NULL"
+: $P{QCF_SELECTED_PRS_SUPPLIERS}
+    .replaceAll(":.*\n", ", ")
+    .replaceFirst(", \$", "")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="OERP_USER" class="java.lang.String"/>
+	<parameter name="SHOW_STOPWATCH" class="java.lang.Boolean" isForPrompting="false">
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+ pr.id AS requisition_id,
+ pr.state AS state,
+ com.name AS company_name,
+ pr.name AS name,
+ pr.origin AS origin,
+ pr.description AS notes
+FROM
+ purchase_requisition AS pr
+ LEFT OUTER JOIN res_company AS com
+  ON pr.company_id = com.id
+WHERE
+ pr.id IN ($P!{OERP_ACTIVE_IDS})]]>
+	</queryString>
+	<field name="requisition_id" class="java.lang.Integer"/>
+	<field name="state" class="java.lang.String"/>
+	<field name="company_name" class="java.lang.String"/>
+	<field name="name" class="java.lang.String"/>
+	<field name="origin" class="java.lang.String"/>
+	<field name="notes" class="java.lang.String"/>
+	<group name="requisition" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{requisition_id}]]></groupExpression>
+	</group>
+	<detail>
+		<band height="140">
+			<staticText>
+				<reportElement x="0" y="0" width="802" height="20"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[QCF]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="20" width="802" height="20" isRemoveLineWhenBlank="true"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{company_name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="40" width="58" height="20"/>
+				<textElement/>
+				<text><![CDATA[Purchase #]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="58" y="40" width="744" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{name} + " (" + $F{state}.replace('_', ' ') + ")"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="60" width="802" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["Untuk " + ($F{origin} == null ? "" : $F{origin})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="58" y="80" width="744" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{notes} == null ? "-" : $F{notes}]]></textFieldExpression>
+			</textField>
+			<subreport runToBottom="true">
+				<reportElement positionType="Float" x="0" y="100" width="802" height="40"/>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="OERP_USER">
+					<subreportParameterExpression><![CDATA[$P{OERP_USER}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="SHOW_STOPWATCH">
+					<subreportParameterExpression><![CDATA[$P{SHOW_STOPWATCH}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="REQUISITION_ID">
+					<subreportParameterExpression><![CDATA[$F{requisition_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="SUPPLIER_IDS">
+					<subreportParameterExpression><![CDATA[$P{QCF_SELECTED_PRS_SUPPLIERS}
+    .substring($P{QCF_SELECTED_PRS_SUPPLIERS}.indexOf(
+        $F{requisition_id}.toString()
+    ))
+    .replaceFirst("[^:]+: ", "")
+    .replaceAll("\n.*", "")]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "quotation_subreport.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement x="0" y="80" width="58" height="20"/>
+				<textElement/>
+				<text><![CDATA[Remarks:]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

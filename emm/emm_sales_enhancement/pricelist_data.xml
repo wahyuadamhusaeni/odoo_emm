@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <!-- Pricelists -->
+
+        <record model="product.pricelist" id="retail_pricelist_emm">
+            <field name="name">Retail</field>
+            <field name="type">sale</field>
+            <field name="currency_id" search="[('name','=','IDR')]" model="res.currency"/>
+        </record>
+        <record model="product.pricelist" id="nett_pricelist_emm">
+            <field name="name">Nett</field>
+            <field name="type">sale</field>
+            <field name="currency_id" search="[('name','=','IDR')]" model="res.currency"/>
+        </record>
+        <record model="product.pricelist" id="manager_pricelist_emm">
+            <field name="name">Manager</field>
+            <field name="type">sale</field>
+            <field name="currency_id" search="[('name','=','IDR')]" model="res.currency"/>
+        </record>
+        <record model="product.pricelist" id="reseller_pricelist_emm">
+            <field name="name">Reseller</field>
+            <field name="type">sale</field>
+            <field name="currency_id" search="[('name','=','IDR')]" model="res.currency"/>
+        </record>
+        <record model="product.pricelist" id="agent_pricelist_emm">
+            <field name="name">Agent</field>
+            <field name="type">sale</field>
+            <field name="currency_id" search="[('name','=','IDR')]" model="res.currency"/>
+        </record>
+
+    </data>
+</openerp>

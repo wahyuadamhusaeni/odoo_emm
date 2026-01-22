@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record id="view_via_form_template_search" model="ir.ui.view">
+            <field name="name">Form Template Search View</field>
+            <field name="model">via.form.templates</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Form Template">
+                    <filter string="Active" name='active' domain="[('active','=',True)]" icon="gtk-yes"/>
+                    <filter string="Inactive" name='inactive' domain="[('active','=',False)]" icon="gtk-no"/>
+                    <separator orientation="vertical"/>
+                    <field name="name"/>
+                    <field name="model_id"/>
+                    <field name="engine"/>
+                    <field name="company_id"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_via_form_template_tree" model="ir.ui.view">
+            <field name="name">Form Template Tree View</field>
+            <field name="model">via.form.templates</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Form Template">
+                    <field name="name"/>
+                    <field name="model_id"/>
+                    <field name="engine"/>
+                    <field name="company_id"/>
+                    <field name="active" invisible="1"/>
+                    <button name="activate" string="Activate" type="object" icon="gtk-yes"
+                        attrs="{'invisible': [('active', '=', True)]}"/>
+                    <button name="deactivate" string="Deactivate" type="object" icon="gtk-no"
+                        attrs="{'invisible': ['|', ('active', '=', False), ('active', '=', '')]}"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_via_form_template_form" model="ir.ui.view">
+            <field name="name">Form Template Form View</field>
+            <field name="model">via.form.templates</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Form Template" version="7.0">
+                    <header>
+                        <field name="active" invisible="1"/>
+                        <button name="activate" string="Activate" type="object" class="oe_highlight"
+                            attrs="{'invisible': [('active', '=', True)]}"/>
+                        <button name="deactivate" string="Deactivate" type="object" class="oe_highlight"
+                            attrs="{'invisible': ['|', ('active', '=', False), ('active', '=', '')]}"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only" string="Form Template"/>
+                            <h1>
+                                <field name="name" class="oe_inline" attrs="{'readonly': [('active', '=', True)]}"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="engine" attrs="{'readonly': [('active', '=', True)]}"/>
+                                <field name="model_id" attrs="{'readonly': [('active', '=', True)]}"/>
+                                <field name="company_id" attrs="{'readonly': [('active', '=', True)]}"/>
+                            </group>
+                            <group>
+                                <field name="report_output" attrs="{'readonly': [('active', '=', True)]}"/>
+                                <field name="multi" attrs="{'readonly': [('active', '=', True)]}"/>
+                                <field name="act_report_id" readonly="1" groups="base.group_system"/>
+                                <field name="webkit_header"
+                                    attrs="{'invisible': [('engine', '!=', 'mako')], 'required': [('engine', '=', 'mako')], 'readonly': [('active', '=', True)]}" widget="selection"/>
+                            </group>
+                        </group>
+                        <separator string="Tags" colspan="4"/>
+                        <field name="tags" colspan="4" nolabel="1"/>
+                        <separator string="Form Template" colspan="4" />
+                        <field name="template" colspan="4" nolabel="1" attrs="{'readonly': [('active', '=', True)]}"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <act_window id="act_via_form_template_configuration"
+            name="Form Template"
+            res_model="via.form.templates"
+            view_type="form"
+            view_mode="tree,form"
+            context="{'search_default_active':1}"
+            groups="base.group_system"
+            />
+
+        <menuitem id="menu_via_form"
+            parent="base.menu_custom"
+            name="VIA Form"/>
+
+        <menuitem id="menu_via_form_template"
+            parent="menu_via_form"
+            action="act_via_form_template_configuration"/>
+    </data>
+</openerp>
+
+<!-- separator colspan="4" string="Variables to be used in the Python Code"/>
+<group col="8" colspan="4">
+    <label colspan="8" align="0.0" string="Put the penalty calculation to the variable 'result', eg. result=0.0"/>
+    <group>
+        <separator colspan="2" string="Dates:"/>
+        <label colspan="4" align="0.0" string="today (date): Today"/>
+        <label colspan="4" align="0.0" string="date_invoice (date): Invoice Date"/>
+        <label colspan="4" align="0.0" string="date_due (date): Due Date"/>
+        <newline/>
+        <separator colspan="2" string="Amounts:"/>
+        <label colspan="4" align="0.0" string="amount_untaxed (float): Untaxed"/>
+        <label colspan="4" align="0.0" string="amount_tax (float): Tax"/>
+        <label colspan="4" align="0.0" string="amount_total (float): Total"/>
+        <label colspan="4" align="0.0" string="check_total (float): Total"/>
+        <label colspan="4" align="0.0" string="residual (float): Residual"/>
+        <newline/>
+        <separator colspan="2" string="List of References:"/>
+        <label colspan="4" align="0.0" string="invoice_line (List): Invoice Lines"/>
+        <label colspan="4" align="0.0" string="tax_line (List): Tax Lines"/>
+        <label colspan="4" align="0.0" string="move_lines (List): Entry Lines"/>
+        <label colspan="4" align="0.0" string="payment_ids (List): Payments"/>
+    </group>
+    <group>
+        <separator colspan="2" string="References:"/>
+        <label colspan="4" align="0.0" string="partner_id (ID): Partner"/>
+        <label colspan="4" align="0.0" string="address_contact_id (ID): Contact Address"/>
+        <label colspan="4" align="0.0" string="address_invoice_id (ID): Invoice Address"/>
+        <label colspan="4" align="0.0" string="payment_term (ID): Payment Term"/>
+        <label colspan="4" align="0.0" string="period_id (ID): Accounting Period"/>
+        <label colspan="4" align="0.0" string="account_id (ID): Account"/>
+        <label colspan="4" align="0.0" string="move_id (ID): Journal Entry"/>
+        <label colspan="4" align="0.0" string="currency_id (ID): Currency"/>
+        <label colspan="4" align="0.0" string="journal_id (ID): Journal Type"/>
+        <label colspan="4" align="0.0" string="company_id (ID): Company"/>
+        <label colspan="4" align="0.0" string="partner_bank_id (ID): Bank Account"/>
+        <label colspan="4" align="0.0" string="user_id (ID): Salesman"/>
+        <label colspan="4" align="0.0" string="fiscal_position (ID): Fiscal Position"/>
+    </group>
+    <group>
+        <separator colspan="2" string="Text and Other Informations:"/>
+        <label colspan="4" align="0.0" string="name (text): Description"/>
+        <label colspan="4" align="0.0" string="origin (text): Source document"/>
+        <label colspan="4" align="0.0" string="type (text): Type"/>
+        <label colspan="4" align="0.0" string="(out_invoice, in_invoice, out_refund, in_refund)"/>
+        <label colspan="4" align="0.0" string="number (text): Number"/>
+        <label colspan="4" align="0.0" string="internal_number (text): Internal invoice number"/>
+        <label colspan="4" align="0.0" string="reference (text): Invoice Reference"/>
+        <label colspan="4" align="0.0" string="comment (text): Additional Information"/>
+        <label colspan="4" align="0.0" string="state (text): State"/>
+        <label colspan="4" align="0.0" string="(draft, proforma, proforma2, open, paid, cancel)"/>
+        <label colspan="4" align="0.0" string="reconciled (boolean): Paid/Reconciled"/>
+        <label colspan="4" align="0.0" string="move_name (text): Journal Entry"/>
+    </group>
+</group -->

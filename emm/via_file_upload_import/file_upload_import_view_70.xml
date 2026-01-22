@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="base_fui_field_mapping_tree">
+            <field name="name">File Upload Import Field Mapping Tree Base View</field>
+            <field name="model">file.upload.import.field.mapping</field>
+            <field name="arch" type="xml">
+                <tree string="Field Mapping" editable="bottom">
+                    <field name="model_id" invisible="1"/>
+                    <field name="sequence"/>
+                    <field name="field_id" on_change="onchange_field_id(field_id, date_format, record_match)"/>
+                    <field name="ttype" readonly="1"/>
+                    <field name="date_format" attrs="{'required': [('ttype', 'in', ['date', 'datetime'])], 'readonly': [('ttype', 'not in', ['date', 'datetime'])]}"/>
+                    <field name="record_match" attrs="{'required': [('ttype', 'in', ['many2one'])], 'readonly': [('ttype', 'not in', ['many2one'])]}"/>
+                    <!-- field name="name"/ -->
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="base_fui_run_log_tree">
+            <field name="name">File Upload Import Run Log Tree Base View</field>
+            <field name="model">file.upload.import.log</field>
+            <field name="arch" type="xml">
+                <tree string="Run Logs">
+                    <field name="run_time"/>
+                    <field name="res_id"/>
+                    <field name="working_folder"/>
+                    <field name="file_name"/>
+                    <field name="logfile_data" filename="log_name" context="{'bin_size': True}"/>
+                    <field name="log_name" invisible="1"/>
+                    <field name="processed_file"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="base_fui_run_log_form">
+            <field name="name">File Upload Import Run Log Form Base View</field>
+            <field name="model">file.upload.import.log</field>
+            <field name="arch" type="xml">
+                <form string="Run Logs" version="7.0">
+                    <group>
+                        <group>
+                            <field name="config_id"/>
+                            <field name="model_id"/>
+                            <field name="res_id"/>
+                            <field name="run_time"/>
+                        </group>
+                        <group>
+                            <field name="working_folder"/>
+                            <field name="file_name"/>
+                            <field name="processed_file"/>
+                            <field name="logfile_data" filename="log_name" context="{'bin_size': True}"/>
+                            <field name="log_name" invisible="1"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="base_fui_config_tree">
+            <field name="name">File Upload Import Configuration Tree Base View</field>
+            <field name="model">file.upload.import.config</field>
+            <field name="arch" type="xml">
+                <tree string="File Upload Import Configuration">
+                    <field name="name"/>
+                    <field name="model_id"/>
+                    <field name="effective"/>
+                    <field name="frequency_int"/>
+                    <field name="frequency_period"/>
+                    <field name="last_run"/>
+                    <field name="next_run"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="base_fui_config_form">
+            <field name="name">File Upload Import Configuration Form Base View</field>
+            <field name="model">file.upload.import.config</field>
+            <field name="arch" type="xml">
+                <form string="File Upload Import Configuration" version="7.0">
+                    <header>
+                        <button name="activate" string="Activate" type="object" attrs="{'invisible': [('effective', '=', True)]}" class="oe_highlight"/>
+                        <button name="deactivate" string="Deactivate" type="object" attrs="{'invisible': [('effective', '=', False)]}"/>
+                        <button name="execute" string="Execute" type="object" attrs="{'invisible': [('effective', '=', False)]}" class="oe_highlight"/>
+                    </header>
+                    <sheet string="File Upload Import Configuration">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" class="oe_inline"/>
+                        </h1>
+                        <group>
+                            <group>
+                                <field name="model_id" />
+                                <field name="effective"/>
+                                <label for="frequency_int"/>
+                                <div>
+                                    <field name="frequency_int" attrs="{'invisible': [('frequency_period', 'in', (False, 'adhoc'))], 'required': [('frequency_period', 'not in', (False, 'adhoc'))]}" class="oe_inline"/>
+                                    <field name="frequency_period" class="oe_inline"/>
+                                </div>
+                                <field name="last_run"/>
+                                <field name="next_run" attrs="{'invisible': [('frequency_period', 'in', (False, 'adhoc'))]}"/>
+                            </group>
+                            <group>
+                                <field name="format_type"/>
+                                <field name="parse_method" attrs="{'invisible': [('format_type', '!=', 'method')], 'required': [('format_type', '=', 'method')]}"/>
+                                <field name="import_handling"/>
+                                <field name="import_hook" attrs="{'invisible': [('import_handling', '!=', 'method')], 'required': [('import_handling', '=', 'method')]}"/>
+                                <field name="post_import_hook" attrs="{'invisible': [('import_handling', '!=', 'method')], 'required': [('import_handling', '=', 'method')]}"/>
+                                <field name="failure_handling"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="File &amp; Folders">
+                                <group>
+                                    <field name="working_folder"/>
+                                    <field name="file_name_format"/>
+                                    <field name="processed_name_format"/>
+                                    <field name="log_name_format"/>
+                                </group>
+                                <group colspan="4" col="4" string="The following can be used in name formats:">
+                                    <label colspan="4" string="- Name of the active model's fields placed in {}, e.g. {id}:"/>
+                                    <label colspan="4" string="&#160;&#160;&#160;The field name can also be used in Processed Name and Log Name Format, which will take the value from the name of file being processed."/>
+                                    <label colspan="4" string="&#160;&#160;&#160;The field name can have further formatting directives such as type, alignment, length, precision, etc."/>
+                                    <label colspan="4" string="&#160;&#160;&#160;The syntax described in more detail in https://docs.python.org/2/library/stdtypes.html#string-formatting"/>
+                                    <label colspan="4" string="- {original_file}: contains the full file name of the file being processed, without extension"/>
+                                    <label colspan="4" string="- {original_ext}: contains the extension of the  file being processed, including the period (.) in front"/>
+                                    <label colspan="4" string="- The following representations of date and time parts:"/>
+                                    <group colspan="2">
+                                        <label colspan="2" string="&#160;&#160;&#160;%%a: Abbreviated weekday"/>
+                                        <label colspan="2" string="&#160;&#160;&#160;%%A: Weekday"/>
+                                        <label colspan="2" string="&#160;&#160;&#160;%%w: Weekday as decimal number [0, 6]"/>
+                                        <label colspan="2" string="&#160;&#160;&#160;%%d: Day of month [01,31]"/>
+                                        <label colspan="2" string="&#160;&#160;&#160;%%m: Month as decimal number [01, 12]"/>
+                                        <label colspan="2" string="&#160;&#160;&#160;%%b: Abbreviated month name"/>
+                                        <label colspan="2" string="&#160;&#160;&#160;%%B: Month name"/>
+                                        <label colspan="2" string="&#160;&#160;&#160;%%y: Year without century [00, 99]"/>
+                                        <label colspan="2" string="&#160;&#160;&#160;%%Y: Year with century [0000, 9999]"/>
+                                        <label colspan="2" string="&#160;&#160;&#160;%%j: Day of year as decimal number [001, 366]"/>
+                                        <label colspan="2" string="&#160;&#160;&#160;%%U: Week of year as number [00, 53], 01 starting first Sunday"/>
+                                        <label colspan="2" string="&#160;&#160;&#160;%%W: Week of year as number [00, 53], 01 starting first Monday"/>
+                                    </group>
+                                    <group colspan="2">
+                                        <label colspan="2" string="&#160;&#160;&#160;%%H: 24-hour clock hour [00, 23]"/>
+                                        <label colspan="2" string="&#160;&#160;&#160;%%I: 12-hour clock hour [01, 12]"/>
+                                        <label colspan="2" string="&#160;&#160;&#160;%%M: Minutes as decimal number [00, 59]"/>
+                                        <label colspan="2" string="&#160;&#160;&#160;%%S: Seconds as decimal number [00, 61]"/>
+                                        <label colspan="2" string="&#160;&#160;&#160;%%f: Microsecond [000000,999999], zero padded"/>
+                                        <label colspan="2" string="&#160;&#160;&#160;%%p: Locale equivalent of either AM or PM"/>
+                                        <label colspan="2" string="&#160;&#160;&#160;%%z: UTC offset in the form of +HHMM or -HHMM"/>
+                                        <label colspan="2" string="&#160;&#160;&#160;%%Z: Timezone name"/>
+                                        <label colspan="2" string="&#160;&#160;&#160;&#160;refer to http://en.wikipedia.org/wiki/List_of_tz_database_time_zones"/>
+                                        <label colspan="2" string="&#160;&#160;&#160;%%x: Locale date representation"/>
+                                        <label colspan="2" string="&#160;&#160;&#160;%%X: Locale time representation"/>
+                                        <label colspan="2" string="&#160;&#160;&#160;%%c: Locale date time representation"/>
+                                        <label colspan="2" string="&#160;&#160;&#160;%%%%: %% character"/>
+                                    </group>
+                                    <label colspan="4" string="- Any other literals will be represented as is"/>
+                                </group>
+                            </page>
+                            <page string="Field Mapping" attrs="{'invisible': [('format_type', '!=', 'csv')], 'required': [('format_type', '=', 'csv')]}">
+                                <group col="6">
+                                    <group>
+                                        <field name="csv_skip"/>
+                                    </group>
+                                    <group>
+                                        <field name="csv_delim"/>
+                                    </group>
+                                    <group>
+                                        <field name="csv_quote"/>
+                                    </group>
+                                </group>
+                                <label for="field_mapping"/>
+                                <field name="field_mapping" context="{'default_model_id': model_id}"/>
+                            </page>
+                            <page string="Python Code" attrs="{'invisible': [('import_handling', '!=', 'code')], 'required': [('import_handling', '=', 'code')]}">
+                                <label for="python_code"/>
+                                <field name="python_code"/>
+                                <label for="post_python_code"/>
+                                <field name="post_python_code"/>
+                            </page>
+                            <page string="Run Logs">
+                                <field name="run_logs"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_fui_config">
+            <field name="name">File Upload Import Configuration</field>
+            <field name="res_model">file.upload.import.config</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                File Upload &amp; Import Configuration allow user to configure
+                the processing of a file Ad-Hoc or Periodically.
+              </p>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_fui_config_tree_view1">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="action_fui_config"/>
+        </record>
+
+        <record model="ir.actions.act_window.view"  id="action_fui_config_tree_view2">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="base_fui_config_form"/>
+            <field name="act_window_id" ref="action_fui_config"/>
+        </record>
+
+        <menuitem
+            id="menu_fui_config" name="File Upload &amp; Import"
+            parent="base.menu_custom" />
+
+        <menuitem
+            id="menu_action_fui_config" action="action_fui_config"
+            parent="menu_fui_config"/>
+    </data>
+</openerp>

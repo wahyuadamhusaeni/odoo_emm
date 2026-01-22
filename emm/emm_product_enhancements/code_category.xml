@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Price List Category -->
+        <record id="pricelist_category" model="code.category">
+            <field name="name">Price List Category</field>
+            <field name="pinned">True</field>
+        </record>
+    </data>
+</openerp>
+
+

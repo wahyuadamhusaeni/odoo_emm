@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+    <!-- Service Summary Tree View -->
+    <record id="view_service_summary_tree" model="ir.ui.view">
+        <field eval="1" name="priority"/>
+        <field name="name">sr.summary.tree</field>
+        <field name="model">sr.summary</field>
+        <field name="arch" type="xml">
+            <tree string="Service Request Summary" create="false">
+                <field name="product"/>
+                <field name="origin"/>
+                <field name="requested"/>
+                <field name="request_to_be_followed_up"/>
+                <field name="reserved_on_pickup_area"/>
+                <field name="technician_responsibility"/>
+                <field name="consumed_by_costumer"/>
+                <field name="returned_to_warehouse"/>
+            </tree>
+        </field>
+    </record>
+
+</data>
+</openerp>

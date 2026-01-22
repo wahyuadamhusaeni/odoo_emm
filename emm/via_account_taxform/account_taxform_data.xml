@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <!-- Category for account.tax -->
+        <record id="tax_category" model="code.category">
+            <field name="name">Tax Category</field>
+            <field name="pinned" eval="True"/>
+        </record>
+
+        <!-- Tax categories -->
+        <record id="tax_category_vat" model="code.decode">
+            <field name="sequence" eval="1"/>
+            <field name="code">vat</field>
+            <field name="value">PPn</field>
+            <field name="category" ref="via_account_taxform.tax_category"/>
+            <field name="pinned" eval="True"/>
+        </record>
+
+        <record id="tax_category_ppnbm" model="code.decode">
+            <field name="sequence" eval="2"/>
+            <field name="code">ppnbm</field>
+            <field name="value">PPnBM</field>
+            <field name="category" ref="via_account_taxform.tax_category"/>
+            <field name="pinned" eval="True"/>
+        </record>
+
+        <!-- Partner Parameter for taxform.taxform -->
+        <record id="partner_parameter_taxform" model="code.decode">
+            <field name="sequence" eval="1"/>
+            <field name="code">npwp</field>
+            <field name="value">NPWP</field>
+            <field name="category" ref="via_partner_enhancements.p_parameter_category"/>
+            <field name="pinned" eval="True"/>
+        </record>
+
+        <!-- Document type for for taxform.taxform -->
+        <record id="doc_type_taxform" model="code.decode">
+            <field name="sequence" eval="1"/>
+            <field name="code">npwp</field>
+            <field name="value">Tanda Tangan NPWP</field>
+            <field name="category" ref="via_document_signature.doc_signature_type_category"/>
+            <field name="pinned" eval="True"/>
+        </record>
+
+        <!-- Sequences for taxform.taxform -->
+        <record id="seq_type_taxform" model="ir.sequence.type">
+            <field name="name">Taxform Sequence</field>
+            <field name="code">account.taxform</field>
+        </record>
+    </data>
+</openerp>

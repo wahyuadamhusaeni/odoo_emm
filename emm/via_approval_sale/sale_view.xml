@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<openerp>
+<data>
+
+<record id="sale_order_form_approval" model="ir.ui.view">
+    <field name="name">Sale Order Form Approval</field>
+    <field name="model">sale.order</field>
+    <field name="inherit_id" ref="sale.view_order_form"/>
+    <field name="arch" type="xml">
+        <button name="cancel" position="replace">
+            <button name="cancel" states="draft,sent" string="Cancel Quotation" groups="base.group_user" type="object"/>
+        </button>
+        <button name="invoice_corrected" position="replace">
+            <button name="invoice_corrected" states="invoice_except" string="Ignore Exception" groups="base.group_user" type="object"/>
+        </button>
+        <button name="invoice_recreate" position="replace">
+            <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice" groups="base.group_user" type="object"/>
+        </button>
+        <button string="Create Invoice" position="replace">
+            <button name="view_sale_advance_payment_inv" string="Create Invoice" type="object" states="manual" class="oe_highlight" groups="base.group_user"/>
+        </button>
+        <field name="partner_id" position="before">
+            <field name="auto_approval_func" invisible="1"/>
+            <field name="auto_approval" invisible="1"/>
+        </field>
+        <page string="Other Information" position="after"/>
+            <notebook>
+                <page string="Approval" groups="base.group_user">
+                    <form string="Approval List">
+                        <separator colspan="4" string="Approval List"/>
+                        <group col="4" colspan="4">
+                            <field name="approval_list" nolabel="1">
+                                <tree string="Approval List" editable="bottom">
+                                    <field name="approval_items_id" on_change="approval_items_id_change(approval_items_id)" domain="[('model','=','sale.order')]"/>
+                                    <field name="description"/>
+                                    <field name="approver" invisible="1"/>
+                                    <field name="user" invisible="1"/>
+                                    <field name="approver_user_show" attrs="{'readonly': [('approver_user','!=',False)]}" class="oe_highlight" on_change="approval_user_show_change(approver_user_show)" domain="[('id','in',user[0][2])]"/>
+                                    <field name="approver_user" invisible="1" on_change="approval_user_change(approver_user)"/>
+                                    <field name="visibility" invisible="1"/>
+                                    <field name="state"/>
+                                    <field name="user_filter"/>
+                                    <button name="approve" icon="gtk-apply" string="Approve" type="object" attrs="{'invisible': ['|',('visibility','=',False),('state','in',['na','approved','reject','ignore'])]}"/>
+                                    <button name="reject" icon="gtk-cancel" string="Reject" type="object" attrs="{'invisible': ['|',('visibility','=',False),('state','in',['na','approved','reject','ignore'])]}"/>
+                                    <button name="ignore" icon="gtk-close" string="Ignore" type="object" groups="via_approval.approval_super_user"/>
+                                    <button name="view" icon="gtk-find" string="View" type="object"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </form>
+                </page>
+            </notebook>
+    </field>
+</record>
+
+<record id="sale_stock_form_approval" model="ir.ui.view">
+    <field name="name">Sale Stock Form Approval</field>
+    <field name="model">sale.order</field>
+    <field name="inherit_id" ref="sale_stock.view_order_form_inherit"/>
+    <field name="arch" type="xml">
+        <button name="ship_corrected" position="replace">
+            <button name="ship_corrected" states="shipping_except" string="Ignore Exception" type="object"/>
+        </button>
+    </field>
+</record>
+
+</data>
+</openerp>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_stock_picking_prodlot_assign" model="ir.ui.view">
+            <field name="name">Assign Serial Number Wizard Form View</field>
+            <field name="model">stock.picking.prodlot.assign</field>
+            <field name="arch" type="xml">
+                <form string="Serial Number" version="7.0">
+                    <separator string='Create serial number(s)?'/>
+                    <group>
+                        <label string='Clik "Create" button to create serial number(s)'/>
+                    </group>
+                    <footer>
+                        <button type="object" name="split_lot" string="Create" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" special="cancel" class="oe_link"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_prodlot_assign" model="ir.actions.act_window">
+            <field name="name">Select Production Lots</field>
+            <field name="res_model">stock.picking.prodlot.assign</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <record id="view_picking_out_form" model="ir.ui.view">
+            <field name="name">Stock Picking Out EMM Stock Enhanced Form View</field>
+            <field name="model">stock.picking.out</field>
+            <field name="inherit_id" ref="product_serial.view_picking_out_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@string='Spread Production Lots']" position="replace">
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_picking_form" model="ir.ui.view">
+            <field name="name">Stock Picking EMM Stock Enhanced Form View</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="product_serial.view_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@string='Spread Production Lots']" position="replace">
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_picking_in_form" model="ir.ui.view">
+            <field name="name">Stock Picking In EMM Stock Enhanced Form View</field>
+            <field name="model">stock.picking.in</field>
+            <field name="inherit_id" ref="product_serial.view_picking_in_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@string='Spread Production Lots']" position="replace">
+                </xpath>
+                <xpath expr="//field[@name='origin']/.." position="after">
+                    <group name="prodlot_wizard">
+                        <button type="action" name="%(action_prodlot_assign)d" string="Assign Serial Number" states="draft,confirmed,assigned" attrs="{'invisible': [('type', 'not in', ['in'])]}"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

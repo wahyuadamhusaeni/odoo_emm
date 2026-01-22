@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!--
+        ==========================================================
+        Purchase Order Form Inherit
+        ==========================================================
+        -->
+
+        <record id="purchase_order_via_type_form" model="ir.ui.view">
+            <field name="name">purchase.order.via.type.form</field>
+            <field name="model">purchase.order</field>
+            <field name="priority">10</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/sheet/notebook/page[@string='Incoming Shipments &amp; Invoices']/group/group/field[@name='shipped']" position="after">
+                    <field name="order_type" domain="[('company_id', '=', company_id)]"/>
+                    <field name="order_number"/>
+                </xpath>
+                <xpath expr="/form/sheet/div[@class='oe_title']" position="before">
+                    <div class="oe_right oe_button_box" name="buttons">
+                        <button name="%(via_prorate_discount_action)d" string="Prorate Discount" states="draft,wait" type="action" icon="gtk-execute"/>
+                    </div>
+                </xpath>
+                <xpath expr="/form/sheet/notebook/page[@string='Purchase Order']/field[@name='order_line']/tree/field[@name='name']" position="after">
+                    <field name="notes"/>
+                </xpath>
+                <notebook>
+                    <page string="References" position="inside">
+                        <field colspan="4" mode="tree" name="purchase_info" nolabel="1">
+                            <tree string="" editable="bottom">
+                                <field name="parameter_id"/>
+                                <field name="value"/>
+                            </tree>
+                     </field>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+
+        <record id="purchase_order_line_form_via_enh" model="ir.ui.view">
+            <field name="name">purchase.order.line.form.via.enh</field>
+            <field name="model">purchase.order.line</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="purchase.purchase_order_line_form"/>
+            <field name="arch" type="xml">
+                <field name="product_id" position="attributes">
+                    <attribute name="on_change">onchange_product_id(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id,parent.date_order,parent.fiscal_position,date_planned,name,price_unit,context)</attribute>
+                </field>
+                <field name="product_qty" position="attributes">
+                    <attribute name="on_change">onchange_product_id(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id,parent.date_order,parent.fiscal_position,date_planned,name,price_unit,context)</attribute>
+                </field>
+                <field name="product_id" position="before">
+                    <field name="id" invisible = "1"/>
+                </field>
+                <field name="price_unit" position="after">
+                    <field name="notes"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</openerp>

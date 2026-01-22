@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="res_partner_simple_form" model="ir.ui.view">
+            <field name="name">VIA Account Taxform: Partner Simple Form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_simple_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form" position="inside">
+                    <field name="partner_info" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='is_company']" position="attributes">
+                    <attribute name="on_change">onchange_partner_is_company(is_company, partner_info)</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="res_partner_base_form" model="ir.ui.view">
+            <field name="name">VIA Account Taxform: Partner Base Form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="via_partner_enhancements.view_partner_params_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='is_company']" position="attributes">
+                    <attribute name="on_change">onchange_partner_is_company(is_company, partner_info)</attribute>
+                </xpath>
+                <xpath expr="//field[@name='type']" position="attributes">
+                    <attribute name="on_change">onchange_partner_type(type, partner_info)</attribute>
+                </xpath>
+                <xpath expr="//field[@name='child_ids']//form//field[@name='type']" position="attributes">
+                    <attribute name="on_change">onchange_partner_type(type, partner_info)</attribute>
+                </xpath>
+                <xpath expr="//field[@name='child_ids']//form//field[@name='type']" position="after">
+                    <field name="partner_info" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

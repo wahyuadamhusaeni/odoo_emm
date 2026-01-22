@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_stock_move_tree_editable_create_sn" model="ir.ui.view">
+            <field name="name">view_stock_move_tree_editable_create_sn</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="product_serial.view_stock_move_tree_editable"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='new_prodlot_code']" position="replace">
+                </xpath>
+            </field>
+        </record>
+        <record id="view_move_tree_reception_picking_without_button" model="ir.ui.view">
+            <field name="name">stock.move.tree2.without.button</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_tree_reception_picking"/>
+            <field name="priority" eval="6"/>
+            <field name="arch" type="xml">
+                    <button name="%(stock.move_scrap)d" position="replace"/>
+                    <button name="%(stock.track_line)d" position="replace"/>
+                    <button name="setlast_tracking" position="replace"/>
+                    <button name="%(stock.split_into)d" position="replace"/>
+                    <button name="%(stock.action_partial_move_server)d" position="replace"/>
+                    <button name="action_done" position="replace"/>
+            </field>
+        </record>
+        <record id="view_move_tree_without_button" model="ir.ui.view">
+            <field name="name">stock.move.tree.without.button</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_tree"/>
+            <field eval="8" name="priority"/>
+            <field name="arch" type="xml">
+                    <button name="%(stock.move_scrap)d" position="replace"/>
+                    <button name="%(stock.track_line)d" position="replace"/>
+                    <button name="setlast_tracking" position="replace"/>
+                    <button name="%(stock.split_into)d" position="replace"/>
+                    <button name="action_done" position="replace"/>
+            </field>
+        </record>
+    </data>
+</openerp>

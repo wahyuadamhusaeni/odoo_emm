@@ -1,0 +1,204 @@
+============================================================================================================================
+ Version Change Log (via_lot_valuation)
+============================================================================================================================
+
+1.01  --> September 21,2012 : Anil
+    * created module for inifinity
+    * Added costprice field in produt_lot
+    * Updated costing method field
+    * Overridden _create_account_move_line method to update the amount based on the price in production lot.
+
+1.02  --> September 22,2012 : Naitik
+    * Added Revaluate stock accounting movement.
+
+1.03  --> September 24,2012 : Anup
+    * Added production lot field in the invoice
+    * Added a domain to have the lot relate to the product selected in the invoice line
+    * Improved the invoice line view where production lot is added
+
+1.04  --> September 24,2012 : Naitik
+    * Overridden create and write method to retain the UoM related to the product.
+    * Made changes in the revaluation mechanism.
+    * Added access rights and groups.
+
+1.05  --> September 26,2012 : Anup
+    * Fixed the typo and Optimized the code for valuation of amount based on the production lot
+    * Added workflow on the Revaluation.
+    * Improved and Optimized the code and removed unnecessary code in Revaluation.
+    * Added ChangeLog file
+    * Added Description in the code.
+
+1.06  --> September 27,2012 : Anup
+    * Added the on_change method to update the product cost price from the latest supplier invoice.
+    * Also sets the Tracking Lots if the Cost Method is FIFO, LIFO or Lot Based.
+    * Disabled the standard_price if the Cost Method is FIFO, LIFO or Lot Based.
+    * Updated the description in the module's descriptor file.
+
+1.07  --> September 28,2012 : Naitik
+    * Overridden _prepare_invoice_line method to pass the product lot number in invoice line.
+    * Overridden product_id_change method to visible or invisible product lot field base on select product's costing method.
+    * Added a Cost Revaluation Wizard.
+    * Added a access rights to Cost Revaluation form.
+
+1.08  --> September 28,2012 : Anil
+    * Overridden _create_pickings_and_procurements for creating stock moves in delivery order when sale order is confirm based on cost_method.
+    * added help in cost_method field of product_template model.
+
+1.09  --> October 3,2012 : Anil
+    * Added Licence & to all py files and updated auther & website name in openerp file
+    * Created new objects product.transformation & product.consume for Product Transformation and created views for that objects
+
+1.10  --> October 4,2012 : Naitik
+    * Added field prodlot_id and price in stock_move.
+    * Overridden _prepare_move_line for define a purchase order lint price as default lot's price when product lot is create.
+
+1.11  --> October 11,2012 : Anup
+    * Improved workflow of lot valuation
+    * Added Scheduler to complete all the valuation that are scheduled.
+    * Added a method to check all the necessary configuration for completing the valuation.
+    * Displayed valuation accounts in location always.
+    * Added Valuation Journal to be configured in the company
+    * Added Old Cost Price field in the product
+    * Cost Price made readonly and setting the tracking lots options when cost method is fifo,lifo and lot based
+
+1.12  --> October 12,2012 : Anup
+    * Improved the feature to make the lot invisible in invoice line if product's cost method is not fifo, lifo or lot based
+    * Fixed the code for valuation for cost price and also improved the access rights
+    * When Lot Based product is selected Lot is a mandatory field in incoming/outgoing moves.
+    * Existing Cost Price Taken from Lot or Product based on the Cost Method
+
+1.13  --> October 12,2012 : Naitik
+    * Override onchange_lot_id method to write purchase order line price into product lot's cost price.
+    * Override split method to write purchase order line price into product lot's cost price.
+
+1.14 --> October 12 2012 : Anup
+    * When you validate a supplier invoice the product's cost price is updated with the supplier invoice's unit price
+
+1.15  --> October 12,2012 : Naitik
+    * Add update button in product lot.
+    * Add wizard which create revaluation
+
+1.16  --> October 12 2012 : Anup
+    * Added search view for valuation
+
+1.17  --> October 13 2012 : Anup
+    * Improved the module structure and refactored the code
+
+1.18  --> October 15 2012 : Anup
+    * Fixed the issue with cost price taken from the latest supplier invoice, Added Icons wherever necessary on menus and filter buttons,Refactored the code
+    * Fixed the cost revaluation wizard closing issue, refactored the code
+    * Improved the scheduler method using the workflow trigger also added state in the tree view of valuation
+    * Refactored the code, added documentation in the py file and updated the changelog
+
+ 1.19  --> October 17 2012 : Anil
+    * created onchange_cost_price method which updates the cost_price_per_unit with related product cost price in Product Lot.
+
+ 1.20  --> October 18 2012 : Anup
+    * Fixed the erros coming in sale and when changing the cost method with new product, also moved the menu under accounting for valuation
+
+ 1.21  --> October 19 2012 : Anup
+    * Improved the valuation creation from invoice now taking both the prices.
+    * Product Category accounts are also before product accounts are checked.
+    * The Diff is now calculated based on quantities of the valuation and not on a single unit.
+    * Aligned the tooltip on the cost_method field
+    * Allowed to validate the valuation from invoice without considering the lot quantities.
+    * Made the lot price readonly
+
+1.22  --> October 20 2012 : Anup
+    * Improved the wizard to create the valuation in the production lot's update button to have the existing and valuation cost price in the valuation.
+    * The quantity in the valuation is the total quantity of the lot, the accounts moves are being generated per stock move.
+
+1.23  --> October 25 2012 : Anup
+    * Improved the condition for validating the product and product category account
+    * Inherited create and write method to get the default cost price per unit field from product's cost price when creating or updating a lot
+    * Improved the view of shipments,lots, moves and fixed the wrong reference of the create method
+    * Fixed the issue with negative difference when creating account moves from valuation creation
+    * Valuation only processes the moves which are in done state
+    * Added missing reference of product object
+
+1.24  --> October 26,2012 : Anup
+    * If Cost method is standard the valuation does the same as the Update button on the product screen
+
+
+1.25  --> October 29,2012 : Anil
+
+	* Modified the _create_pickings_and_procurements method , stock move was not created as per requirement related
+	  costing method, make it work.
+
+1.26  --> October 31,2012 : Kalpana
+    * Overwritten _create_product_valuation_moves(), to change in account_move_line accounts.
+
+1.27  --> November 1,2012 : Anup
+    * Fixed the lot amount passed in the accounting moves, multiplied by the move quantity
+
+1.28  --> November 02, 2012 : Kalpana
+    * Removed _create_product_valuation_moves()
+
+1.29  --> November 03,2012 : Naitik
+    * call a method _get_accounting_data_for_valuation() which get the account of supplier-internal, internal-customer,
+      internal-production, production-internal and external-external as per client requirement.
+    * Write the invoice line price in valuation cost price.
+
+1.30 --> November 03,2012 : Kalpana
+    * Overwritten _create_product_valuation_moves(), to create account_move_line.
+
+1.31 --> November 06,2012 : Anup
+    * Improved the check_accounts method
+
+1.32 --> November 09, 2012 : Kalpana
+    * Fixed onchange_cost_method().
+
+1.33 --> November 10, 2012 : Naitik
+    * Write the product lot cost price in existing cost price in valuation.
+    * Send the stock move state in Done state.
+
+1.34 --> November 10, 2012 : Naitik
+    * Write the move qty in valuation qty if picking type is in and move destination location type is not internal.
+
+1.35 --> December 8, 2012 : Anup
+    * Fixed the function to calculate the quantity of lot
+
+1.36 --> December 13, 2012 : Anup
+    * Added decimal precision to calculate pricing in the same decimal precision for production lot.
+
+1.37 --> May 16, 2013 : Vikasa Infinity Anugrah, PT
+    * Prevent product type service from being used in product transformation
+    * Add link/mapping between Stock Moves and its Account Moves
+    * Add link/mapping between Product Transformation and its Stock Moves.
+    * BUG: _get_cost_method returns only value of first id.
+    * BUG: Incorrect calculation of stock move line quantity in Delivery Order
+    * BUG: Various variable initiation bugs
+
+1.38 --> Jun 18, 2013 : Vikasa Infinity Anugrah, PT
+    * BUG: Product standard price is to be recalculated only for lot-based costing methods when invoices are confirmed.
+
+1.39 --> Jun 28, 2013 : Vikasa Infinity Anugrah, PT
+    * BUG: Prices must be converted against currency difference when updating Product's Standard
+    Price and Production Lot's Cost Price Per Unit
+    * BUG: Production Lot's Cost Price Per Unit need to be updated when Stock Move is updated
+    * BUG: Making Production Lot fetch consistent for Lot Based FIFO and LIFO methods
+    * BUG: UOM must be considered when updating Product's Standard Price and and Production Lot'
+    Cost Price Per Unit
+
+1.40 --> Jul 1, 2013 : Vikasa Infinity Anugrah, PT
+    * BUG: UOM must be considered when updating Product's Standard Price and and Production Lot'
+    Cost Price Per Unit
+
+1.41 --> May 20, 2014 : Vikasa Infinity Anugrah, PT
+    * FIX [Ticket #306]: Incorporating changes due to the merging of res.partner and res.partner.address in 7.0
+    * FIX: Change the label for stock.production.lot to Serial Number to match the term used in 7.0
+    * FIX [Ticket #353]: Propagation of stock.production.lot from account.invoice / account.invoice.line to stock.move / stock.move.line
+
+1.42 --> Jul 08, 2014 : Vikasa Infinity Anugrah, PT
+    * FIX [Ticket #520]: Fix propagation of stock.production.lot information from stock.move to account.move
+
+1.43 --> Jul 24, 2014 : Vikasa Infinity Anugrah, PT
+    * FIX [Ticket #536]: Adds product_id domain to stock.production.lot fields
+
+1.44 --> Aug 6, 2014 : Vikasa Infinity Anugrah, PT
+    * FIX: Remove _refund_cleanup_lines inheritance in account.invoice as the parent has properly handles many2one fields
+    * ADD: Remove the valuation_journal_id field and make use of res.company's default_journal instead.
+    * FIX: Position of Cost Price Per Unit in stock.production.lot form view
+
+1.44.1 --> Mar 31, 2015 : Vikasa Infinity Anugrah, PT
+    * FIX: Enhance _create_account_move_line to better handle move lines with 0.0 value.

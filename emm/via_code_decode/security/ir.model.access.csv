@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+code_category_all,code_category all,model_code_category,,1,1,1,0
+code_decode_all,code_decode all,model_code_decode,,1,1,1,0

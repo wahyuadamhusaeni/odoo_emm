@@ -1,0 +1,19 @@
+<openerp>
+    <data>
+<!--DS20121228 Inherit and enable field sale order line id on stock move form
+to allow stock manager change the link between stock move and sale order line
+-->
+        <record id="view_stock_move_form_via_sale" model="ir.ui.view">
+            <field name="name">stock.move.via.form4</field>
+            <field name="model">stock.move</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="sale_stock.stock_move_sale" />
+            <field name="arch" type="xml">
+                    <field name="sale_line_id" position="attributes">
+                        <attribute name="readonly">0</attribute>
+                        <attribute name="groups">stock.group_stock_manager</attribute>
+                    </field>
+            </field>
+        </record>
+    </data>
+</openerp>

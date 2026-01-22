@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <!--  Search view of the Lot Valuation -->
+        <record model="ir.ui.view" id="revaluation_search_view">
+            <field name="name">revaluation.search</field>
+            <field name="model">lot.valuation</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Revaluation/Valuation">
+                    <filter string="FIFO" domain="[('product_id.cost_method','=','fifo')]" help="The Valuation for products having cost method FIFO" icon="STOCK_SORT_ASCENDING"/>
+                    <filter string="LIFO" domain="[('product_id.cost_method','=','lifo')]" help="The Valuation for products having cost method LIFO" icon="STOCK_SORT_DESCENDING"/>
+                    <filter string="Lot Based" domain="[('product_id.cost_method','=','lot_based')]" help="The Valuation for products having cost method Lot Based" icon="terp-stock_symbol-selection"/>
+                    <separator orientation="vertical"/>
+                    <field name="product_id"/>
+                    <field name="lot_id"/>
+                    <field name="date"/>
+                    <newline/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Product" domain="[]" help="Group by Products" context="{'group_by':'product_id'}" icon="terp-product"/>
+                        <filter string="Lot" domain="[]" help="Group by Lots" context="{'group_by':'lot_id'}" icon="terp-stock_symbol-selection"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!--  Tree view of the Lot Valuation.Revaluation -->
+        <record model="ir.ui.view" id="revaluation_tree_view">
+            <field name="name">revaluation.tree</field>
+            <field name="model">lot.valuation</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Revaluation/Valuation">
+                    <field name="product_id"/>
+                    <field name="lot_id"/>
+                    <field name="date"/>
+                    <field name="qty"/>
+                    <field name="product_uom_id"/>
+                    <field name="existing_cost_price"/>
+                    <field name="valuation_cost_price"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <!--  Form view of the Lot Valuation/Revaluation -->
+        <record model="ir.ui.view" id="revaluation_form_view">
+            <field name="name">revaluation.form</field>
+            <field name="model">lot.valuation</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Revaluation/Valuation" version="7.0">
+                    <header>
+                        <button name="action_draft_cancel" states="draft" string="Cancel" icon="gtk-cancel" groups="account.group_account_invoice,account.group_account_manager" type="workflow"/>
+                        <button name="action_schedule_cancel" states="scheduled" string="Cancel" icon="gtk-cancel" groups="account.group_account_manager" type="workflow"/>
+                        <button name="schedule" states="draft" string="Schedule" icon="gtk-apply" type="workflow" groups="account.group_account_invoice,account.group_account_manager"/>
+                        <button name="action_cancel_draft" states="cancel" string="Set To Draft" type="workflow" icon="gtk-convert" groups="account.group_account_invoice,account.group_account_manager"/>
+                        <button name="done" states="scheduled" string="Done" icon="gtk-ok" type="workflow" groups="account.group_account_manager"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,scheduled,done"/>
+                    </header>
+                    <sheet>
+                        <group colspan="4" col="4">
+                            <field name="product_id" on_change="onchange_product_id(product_id)" attrs="{'readonly': [('state','in',('scheduled', 'cancel', 'done'))]}"/>
+                            <field name="lot_id"  attrs="{'readonly': [('state','in',('scheduled', 'cancel', 'done'))]}" on_change="onchange_lot_id(lot_id)" domain="[('product_id','=',product_id)]"/>
+                            <field name="date" attrs="{'readonly': [('state','in',('scheduled', 'cancel', 'done'))]}"/>
+                        </group>
+                        <separator colspan="4" string="Information"/>
+                        <group colspan="4" col="4">
+                            <field name="qty"/>
+                            <field name="product_uom_id"/>
+                        </group>
+                        <separator colspan="2" string="Existing"/>
+                        <separator colspan="2" string="Valuation"/>
+                        <newline/>
+                        <field name="existing_cost_price"/>
+                        <field name="valuation_cost_price" attrs="{'readonly': [('state','in',('scheduled', 'cancel', 'done'))]}"/>
+                        <notebook colspan="4">
+                            <page string="Warning">
+                                <separator string="Warning" colspan="4"/>
+                                <field name="warning" colspan="4" readonly="1" nolabel="1"/>
+                            </page>
+                            <page string="JournalEntries">
+                                <separator string="Valuation Journal Entries" colspan="4"/>
+                                <field name="account_move_ids" colspan="4" nolabel="1"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_revaluattion_form" model="ir.actions.act_window">
+            <field name="name">Revaluation/Valuation</field>
+            <field name="res_model">lot.valuation</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Revaluation/Valuation" id="menu_valuation"  parent="account.menu_finance"/>
+        <menuitem action="action_revaluattion_form" id="menu_action_valuation" parent="menu_valuation" sequence="1" groups="account.group_account_invoice,account.group_account_user,account.group_account_manager"/>
+    </data>
+</openerp>

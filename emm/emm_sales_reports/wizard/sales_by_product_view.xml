@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<openerp>
+  <data>
+    <record id="action_emm_sales_sbp"
+            model="ir.actions.act_window">
+        <field name="name">Sales by Product</field>
+        <field name="res_model">via.jasper.report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="via_jasper_report_utils.via_jasper_report_main_form_view"/>
+        <field name="context">{'via_jasper_report_utils.rpt_name': 'Sales by Product'}</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_emm_sales_sbp_new"
+              name="Sales by Product"
+              parent="base.next_id_64"
+              action="action_emm_sales_sbp"/>
+  </data>
+</openerp>

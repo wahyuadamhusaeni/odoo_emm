@@ -1,0 +1,156 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!-- Spare Parts Request Form View -->
+
+        <record id="view_spare_parts_request_form" model="ir.ui.view">
+            <field name="name">view.spare.parts.request.form</field>
+            <field name="model">spare.parts.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Spare Parts Request" version="7.0">
+                    <group col="4" colspan="4">
+                        <field name="location_from_request" required="True" domain="[('usage_type','=','spareparts')]"/>
+                        <field name="location_to_request" required="True" domain="[('usage_type','=','pickup')]"/>
+                    </group>
+                    <group col="4" colspan="4">
+                        <field name="product_id"/>
+                        <button name="stock_by_location" string="Check Stock Location" type="object" context="{'product_id': product_id}"/>
+                    </group>
+                    <field name="stock_move_id" nolabel="1" colspan="4" widget="one2many_list" context="{'via_service': True}">
+                        <tree string="Stock Move" editable="bottom">
+                            <field name="product_id" on_change="onchange_product_id(product_id, parent.location_from_request, parent.location_to_request)"/>
+                            <field name="name" invisible="1"/>
+                            <field name="product_qty" on_change="onchange_product_qty(product_qty, product_id)"/>
+                            <field name="product_uom" readonly="True"/>
+                            <field name="price_unit" readonly="True"/>
+                            <field name="total_price" readonly="True"/>
+                            <field name="location_id" invisible="1"/>
+                            <field name="location_dest_id" invisible="1"/>
+                            <field name="state" invisible="1"/>
+                        </tree>
+                    </field>
+                    <button name="create_request" string="Create" type="object" context="{'stock_move_id': stock_move_id}"/>
+                    <button string="Cancel" special="cancel"/>
+                </form>
+            </field>
+        </record>
+
+        <!-- Spare Parts Pickup Form View -->
+
+        <record id="view_spare_parts_pickup_form" model="ir.ui.view">
+            <field name="name">view.spare.parts.pickup.form</field>
+            <field name="model">spare.parts.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Spare Parts Pickup" version="7.0">
+                    <group col="4" colspan="4">
+                        <field name="location_from_pickup" required="True" domain="[('usage_type','=','pickup')]"/>
+                        <field name="user_pickup" required="True"/>
+                        <field name="location_to_pickup" required="True" domain="[('usage_type','=','transit')]"/>
+                    </group>
+                    <button name="refresh_pickup" string="List Ready Spare Parts" type="object" context="{'location_from_pickup': location_from_pickup}"/>
+                    <field name="stock_move_id" nolabel="1" colspan="4" widget="one2many_list">
+                        <tree string="Stock Move" editable="bottom" create="false">
+                            <field name="product_id"/>
+                            <field name="name" invisible="1"/>
+                            <field name="prodlot_id" required="True"/>
+                            <field name="product_qty" readonly="False"/>
+                            <field name="product_uom" readonly="True"/>
+                            <field name="location_id" invisible="1"/>
+                            <field name="location_dest_id" invisible="0" readonly="True" string="Location From"/>
+                            <field name="state" invisible="1"/>
+                        </tree>
+                    </field>
+                    <button name="create_pickup" string="Create" type="object" context="{'stock_move_id': stock_move_id, 'location_from_pickup': location_from_pickup, 'location_to_pickup': location_to_pickup}"/>
+                    <button name="create_pickup_print" string="Create and Print" type="object" context="{'stock_move_id': stock_move_id, 'location_from_pickup': location_from_pickup, 'location_to_pickup': location_to_pickup}"/>
+                    <button string="Cancel" special="cancel"/>
+                </form>
+            </field>
+        </record>
+
+        <!-- Spare Parts Consume Form View -->
+
+        <record id="view_spare_parts_consume_form" model="ir.ui.view">
+            <field name="name">view.spare.parts.consume.form</field>
+            <field name="model">spare.parts.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Spare Parts Consume" version="7.0">
+                    <group col="4" colspan="4">
+                        <field name="location_from_consume" required="True" domain="[('usage_type','=','transit')]" invisible="1"/>
+                        <field name="location_to_consume" required="True" domain="[('usage','=','customer')]" invisible="1"/>
+                    </group>
+                    <button name="refresh_consume" string="Refresh" type="object" context="{'location_from_consume': location_from_consume}"/>
+                    <field name="stock_move_id" nolabel="1" colspan="4" widget="one2many_list">
+                        <tree string="Stock Move" editable="bottom" create="false">
+                            <field name="product_id"/>
+                            <field name="prodlot_id" readonly="True"/>
+                            <field name="name" invisible="1"/>
+                            <field name="product_qty" readonly="False"/>
+                            <field name="product_uom" readonly="True"/>
+                            <field name="location_id" invisible="1"/>
+                            <field name="location_dest_id" invisible="0" string="Location From"/>
+                            <field name="state" invisible="1"/>
+                        </tree>
+                    </field>
+                    <button name="create_consume" string="Create" type="object" context="{'stock_move_id': stock_move_id, 'location_from_consume': location_from_consume, 'location_to_consume': location_to_consume}"/>
+                    <button string="Cancel" special="cancel"/>
+                </form>
+            </field>
+        </record>
+
+        <!-- Spare Parts Return Form View -->
+
+        <record id="view_spare_parts_return_form" model="ir.ui.view">
+            <field name="name">view.spare.parts.return.form</field>
+            <field name="model">spare.parts.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Spare Parts Return" version="7.0">
+                    <group col="4" colspan="4">
+                        <!-- <field name="location_from" required="True" domain="[('usage_type','in',['pickup', 'transit'])]"/> -->
+                        <field name="user_pickup" required="True" string="User Return"/>
+                        <field name="location_to" required="True" domain="[('usage_type','=','spareparts')]"/>
+                    </group>
+                    <button name="refresh_return" string="Refresh" type="object"/>
+                    <field name="stock_move_id" nolabel="1" colspan="4" widget="one2many_list">
+                        <tree string="Stock Move" editable="bottom" create="false">
+                            <field name="product_id" readonly="True"/>
+                            <field name="prodlot_id" readonly="True"/>
+                            <field name="product_qty" readonly="True"/>
+                            <field name="product_uom" readonly="True"/>
+                            <field name="location_id" invisible="1"/>
+                            <field name="location_dest_id" invisible="0" string="Location From" readonly="True"/>
+                            <field name="state" invisible="1"/>
+                        </tree>
+                    </field>
+                    <button name="create_return" string="Create" type="object" context="{'stock_move_id': stock_move_id, 'location_to': location_to}"/>
+                    <button string="Cancel" special="cancel"/>
+                </form>
+            </field>
+        </record>
+
+        <!-- Stock Location Form View -->
+
+        <record id="view_stock_location_form" model="ir.ui.view">
+            <field name="name">view.stock.location.form</field>
+            <field name="model">spare.parts.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="product_id" invisible="True"/>
+                <field name="stock_location" nolabel="1" colspan="4" context="{'product_id': product_id}">
+                    <tree string="Stock Location" editable="bottom" create="false" edit="false" colors="blue:usage=='view';darkred:usage=='internal'">
+                        <field name="complete_name" readonly="True"/>
+                        <field name="usage" readonly="True"/>
+                        <field name="stock_real" invisible="'product_id' not in context"/>
+                        <field name="stock_virtual" invisible="'product_id' not in context"/>
+                    </tree>
+                </field>
+                <button name="back_to_request" string="Back" type="object"/>
+            </field>
+        </record>
+
+    </data>
+</openerp>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+    <!-- Account Tree -->
+    <record id="action_via_reporting_tree_account" model="ir.actions.act_window">
+      <field name="name">Account Tree</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">via.reporting.tree</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form</field>
+      <field name="domain">[('tree_node_type','=','account')]</field>
+      <field name="context">{'via_reporting_tree.tree_node_specialization_name': 'account'}</field>
+    </record>
+    <menuitem id="menu_via_reporting_tree_account"
+	      action="action_via_reporting_tree_account"
+	      parent="menu_via_reporting_tree_root"
+	      sequence="20"/>
+    <!-- END: Account Tree -->
+
+    <!-- Account Tree Node -->
+    <record id="form_view_via_reporting_tree_node_account" model="ir.ui.view">
+      <field name="name">VIA Reporting Tree Node Account (Form View)</field>
+      <field name="model">via.reporting.tree.node</field>
+      <field name="type">form</field>
+      <field name="inherit_id" ref="form_view_via_reporting_tree_node"/>
+      <field name="arch" type="xml">
+	<xpath expr="//group[position() = 1]/field[last()]" position="after">
+	  <field name="node_tag_not_applicable" invisible="1"/>
+	  <newline/>
+	  <field name="node_tag" attrs="{'invisible': [('node_tag_not_applicable','=',True)]}"/>
+	</xpath>
+        <page string="Objects" position="inside">
+	  <field colspan="4" nolabel="1" name="account_tree_node_ids"
+		 context="{'via_reporting_tree.tree_node_company_id': company_id, 'via_reporting_tree.tree_type_name': tree_type_name}"
+		 attrs="{'invisible': [('tree_node_type','!=','account')]}"/>
+	</page>
+      </field>
+    </record>
+
+    <record id="tree_view_via_reporting_tree_account_node" model="ir.ui.view">
+      <field name="name">VIA Account Tree Node (Tree View)</field>
+      <field name="model">via.account.tree.node</field>
+      <field name="type">tree</field>
+      <field name="arch" type="xml">
+        <tree string="Account Tree Nodes" editable="top">
+          <field name="account_id" domain="[('company_id','=',company_id)]"/>
+          <field name="multiplier"/>
+          <field name="tag_not_applicable" invisible="1"/>
+          <field name="tag" attrs="{'readonly': [('tag_not_applicable','=',True)], 'required': [('tag_not_applicable','=',False)]}"/>
+          <field name="company_id" invisible="1"/>
+        </tree>
+      </field>
+    </record>
+    <record id="form_view_via_reporting_tree_account_node" model="ir.ui.view">
+      <field name="name">VIA Account Tree Node (Form View)</field>
+      <field name="model">via.account.tree.node</field>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+        <form string="Account Tree Node">
+	  <group colspan="4" col="6">
+            <field name="account_id" domain="[('company_id','=',company_id)]"/>
+            <field name="multiplier"/>
+            <field name="tag_not_applicable" invisible="1"/>
+            <field name="tag" attrs="{'readonly': [('tag_not_applicable','=',True)], 'required': [('tag_not_applicable','=',False)]}"/>
+            <field name="company_id" invisible="1"/>
+	  </group>
+        </form>
+      </field>
+    </record>
+    <record id="action_via_reporting_tree_account_node" model="ir.actions.act_window">
+      <field name="name">Account Tree Node</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">via.reporting.tree.node</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree,form</field>
+      <field name="domain">[('tree_node_type','=','account')]</field>
+      <field name="context">{'via_reporting_tree.tree_node_specialization_name': 'account'}</field>
+    </record>
+    <menuitem id="menu_via_reporting_tree_account_node"
+             action="action_via_reporting_tree_account_node"
+             parent="menu_via_reporting_tree_root"
+             sequence="30"/>
+    <!-- END: Account Tree Node -->
+  </data>
+</openerp>

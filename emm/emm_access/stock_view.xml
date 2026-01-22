@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_stock_move_via_stock_emm" model="ir.ui.view">
+            <field name="name">stock.move.form5</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="via_stock_enhancements.view_stock_move_via_stock" />
+            <field name="arch" type="xml">
+                <separator string="Journal Entries" position="attributes">
+                    <attribute name="groups">account.group_account_invoice,account.group_account_user,account.group_account_manager</attribute>
+                </separator>
+                <field name="account_move_id" position="attributes">
+                    <attribute name="groups">account.group_account_invoice,account.group_account_user,account.group_account_manager</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record id="stock_picking_out_inherit_sale_emm" model="ir.ui.view">
+            <field name="name">Outgoing picking Inherited.emm</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="sale_stock.stock_picking_out_inherit_sale"/>
+            <field name="arch" type="xml">
+                <field name="sale_id" position="attributes">
+                    <attribute name="groups">base.group_sale_manager,base.group_sale_salesman,base.group_sale_salesman_all_leads,account.group_account_invoice,account.group_account_user,account.group_account_manager</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record id="stock_picking_inherit_sale_emm" model="ir.ui.view">
+            <field name="name">Outgoing picking Inherited.emm</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="sale_stock.stock_picking_inherit_sale"/>
+            <field name="arch" type="xml">
+                <field name="sale_id" position="attributes">
+                    <attribute name="groups">base.group_sale_manager,base.group_sale_salesman,base.group_sale_salesman_all_leads,account.group_account_invoice,account.group_account_user,account.group_account_manager</attribute>
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>

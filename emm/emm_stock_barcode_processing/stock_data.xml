@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <record model="file.upload.import.config" id="file_upload_import_stock_move_config">
+            <field name="name">Stock Move File Upload</field>
+            <field name="model_id" ref="stock.model_stock_move"/>
+            <field name="working_folder">/tmp</field>
+            <field name="file_name_format"><![CDATA[SP{id:d}_{name:s}_%Y%m%d.csv]]></field>
+            <field name="log_name_format"><![CDATA[{original_file}_%Y%m%d.log]]></field>
+            <field name="processed_name_format"><![CDATA[{original_file}_%Y%m%d_processed{original_ext}]]></field>
+            <field name="format_type">csv</field>
+            <field name="csv_skip" eval="1"/>
+            <field name="import_hook">_file_import_hook</field>
+            <field name="post_import_hook">_post_import_hook</field>
+        </record>
+
+        <record model="file.upload.import.field.mapping" id="file_upload_import_stock_move_config_mapping">
+            <field name="config_id" ref="file_upload_import_stock_move_config"/>
+            <field name="sequence" eval="1"/>
+            <field name="field_id" ref="stock.field_stock_move_prodlot_id"/>
+            <field name="record_match">name</field>
+        </record>
+
+        <record model="file.upload.import.config" id="file_upload_import_stock_inventory_config">
+            <field name="name">Stock Inventory File Upload</field>
+            <field name="model_id" ref="stock.model_stock_inventory_line"/>
+            <field name="working_folder">/tmp</field>
+            <field name="file_name_format"><![CDATA[SI{id:d}_{name:s}_%Y%m%d.csv]]></field>
+            <field name="log_name_format"><![CDATA[{original_file}_%Y%m%d.log]]></field>
+            <field name="processed_name_format"><![CDATA[{original_file}_%Y%m%d_processed{original_ext}]]></field>
+            <field name="format_type">csv</field>
+            <field name="csv_skip" eval="1"/>
+            <field name="import_hook">_file_import_hook</field>
+            <field name="post_import_hook">_post_import_hook</field>
+        </record>
+
+        <record model="file.upload.import.field.mapping" id="file_upload_import_stock_inventory_config_mapping">
+            <field name="config_id" ref="file_upload_import_stock_inventory_config"/>
+            <field name="sequence" eval="1"/>
+            <field name="field_id" ref="stock.field_stock_inventory_line_prod_lot_id"/>
+            <field name="record_match">name</field>
+        </record>
+    </data>
+</openerp>

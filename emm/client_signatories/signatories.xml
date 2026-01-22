@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+    	<record id="doc_signature_director" model="code.decode">
+            <field name="sequence" eval="1"/>
+            <field name="code">director</field>
+            <field name="value">Director</field>
+            <field name="category" ref="via_document_signature.doc_signature_type_category"/>
+            <field name="pinned" eval="True"/>
+        </record>
+    	<record id="doc_signature_sales_manager" model="code.decode">
+            <field name="sequence" eval="1"/>
+            <field name="code">sales_manager</field>
+            <field name="value">Sales Manager</field>
+            <field name="category" ref="via_document_signature.doc_signature_type_category"/>
+            <field name="pinned" eval="True"/>
+        </record>
+        <record id="doc_signature_warehouse_manager" model="code.decode">
+            <field name="sequence" eval="1"/>
+            <field name="code">warehouse_manager</field>
+            <field name="value">Warehouse Manager</field>
+            <field name="category" ref="via_document_signature.doc_signature_type_category"/>
+            <field name="pinned" eval="True"/>
+        </record>
+        <record id="doc_signature_warehouse_user" model="code.decode">
+            <field name="sequence" eval="1"/>
+            <field name="code">warehouse_user</field>
+            <field name="value">Warehouse User</field>
+            <field name="category" ref="via_document_signature.doc_signature_type_category"/>
+            <field name="pinned" eval="True"/>
+        </record>
+        <record id="doc_signature_sales_admin" model="code.decode">
+            <field name="sequence" eval="1"/>
+            <field name="code">sales_admin</field>
+            <field name="value">Sales Admin</field>
+            <field name="category" ref="via_document_signature.doc_signature_type_category"/>
+            <field name="pinned" eval="True"/>
+        </record>
+        <record id="doc_signature_faktur" model="code.decode">
+            <field name="sequence" eval="1"/>
+            <field name="code">faktur</field>
+            <field name="value">Accounting</field>
+            <field name="category" ref="via_document_signature.doc_signature_type_category"/>
+            <field name="pinned" eval="True"/>
+        </record>
+        <record id="doc_signature_salesman" model="code.decode">
+            <field name="sequence" eval="1"/>
+            <field name="code">salesman</field>
+            <field name="value">Salesman</field>
+            <field name="category" ref="via_document_signature.doc_signature_type_category"/>
+            <field name="pinned" eval="True"/>
+        </record>
+    </data>
+</openerp>

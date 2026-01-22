@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <!-- ############################################################################# -->
+        <!--                               Approval Items                                  -->
+        <!-- ############################################################################# -->
+
+        <!-- ############################### Delivery Order ################################# -->
+
+        <record model="approval.items" id="delivery_order_menambahkan_kuantitas">
+            <field name="name">DOS - Menambahkan Kuantitas DO</field>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="approval_type">standard</field>
+            <field name="rule">so_line_qty = {}
+
+uom_obj = self.pool.get('product.uom')
+picking_obj = self.pool.get('stock.picking')
+prod_obj = self.pool.get('product.product')
+
+for so_line in obj.sale_id.order_line:
+  prod_id = so_line.product_id.id
+  prod_uom_standard = so_line.product_id.uom_id.id
+  prod_uom = so_line.product_uom.id
+  prod_qty = 0
+
+  if prod_uom != prod_uom_standard:
+    prod_uom_factor = uom_obj.browse(cr, uid, prod_uom, context=context).factor
+    prod_uom_factor_standard = uom_obj.browse(cr, uid, prod_uom_standard, context=context).factor
+    prod_qty = so_line.product_uom_qty / prod_uom_factor * prod_uom_factor_standard
+  else:
+    prod_qty = so_line.product_uom_qty
+
+  limit_delivery = prod_obj.browse(cr, uid, prod_id, context=context).limit_delivery
+  limit_percentage = prod_obj.browse(cr, uid, prod_id, context=context).limit_percentage
+  limit_qty = prod_obj.browse(cr, uid, prod_id, context=context).limit_qty
+  prod_limit = 0
+  max_prod_qty = 0
+  if limit_delivery == 'percentage':
+    prod_limit = prod_qty * limit_percentage / 100
+  elif limit_delivery == 'fix_qty':
+    if not so_line_qty.get(prod_id, False):
+      prod_limit = limit_qty
+
+  max_prod_qty = prod_qty + prod_limit
+
+  if not so_line_qty.get(prod_id, False):
+    so_line_qty.update({prod_id: max_prod_qty})
+  else:
+    total_max_prod_qty = so_line_qty.get(prod_id) + max_prod_qty
+    so_line_qty.update({prod_id: total_max_prod_qty})
+
+do_ids = picking_obj.search(cr, uid, [('sale_id','=',obj.sale_id.id),('id','!=',obj.id)], context=context)
+do_objs = picking_obj.browse(cr, uid, do_ids, context=context)
+
+for do_obj in do_objs:
+  for move_lines in do_obj.move_lines:
+    prod_id = move_lines.product_id.id
+    prod_uom_standard = move_lines.product_id.uom_id.id
+    prod_uom = move_lines.product_uom.id
+    prod_qty = 0
+    do_qty = 0
+
+    if prod_uom != prod_uom_standard:
+      prod_uom_factor = uom_obj.browse(cr, uid, prod_uom, context=context).factor
+      prod_uom_factor_standard = uom_obj.browse(cr, uid, prod_uom_standard, context=context).factor
+      prod_qty = move_lines.product_qty / prod_uom_factor * prod_uom_factor_standard
+    else:
+      prod_qty = move_lines.product_qty
+
+    if so_line_qty.get(prod_id, False):
+      if move_lines.picking_id.type == 'out' and move_lines.picking_id.state != 'cancel':
+        total_prod_qty = so_line_qty.get(prod_id) - prod_qty
+        so_line_qty.update({prod_id: total_prod_qty})
+      elif move_lines.picking_id.type == 'in' and move_lines.picking_id.state != 'cancel':
+        total_prod_qty = so_line_qty.get(prod_id) + prod_qty
+        so_line_qty.update({prod_id: total_prod_qty})
+
+do_line_qty = {}
+
+for move_lines in obj.move_lines:
+  prod_id = move_lines.product_id.id
+  prod_uom_standard = move_lines.product_id.uom_id.id
+  prod_uom = move_lines.product_uom.id
+  prod_qty = 0
+
+  if prod_uom != prod_uom_standard:
+    prod_uom_factor = uom_obj.browse(cr, uid, prod_uom, context=context).factor
+    prod_uom_factor_standard = uom_obj.browse(cr, uid, prod_uom_standard, context=context).factor
+    prod_qty = move_lines.product_qty / prod_uom_factor * prod_uom_factor_standard
+  else:
+    prod_qty = move_lines.product_qty
+
+  if not do_line_qty.get(prod_id, False):
+    do_line_qty.update({prod_id: prod_qty})
+  else:
+    total_prod_qty = do_line_qty.get(prod_id) + prod_qty
+    do_line_qty.update({prod_id: total_prod_qty})
+
+a = False
+
+for key in do_line_qty.keys():
+  if so_line_qty.get(key):
+    so_qty = so_line_qty.get(key)
+    do_qty = do_line_qty.get(key)
+    if do_qty > so_qty:
+      a = True
+
+result = a</field>
+            <field name="approver" search="[('name','in',['Manager']),('category_id','in',['Sales','Warehouse'])]" model="res.groups"/>
+            <field name="description">Persetujuan saat menambahkan kuantitas produk pada dokumen Delivery Order. Grup yang memberikan persetujuan adalah Sales Manager / Warehouse Manager.</field>
+            <field name="hash_code">a = ""
+for move_lines in obj.move_lines:
+    a += str(move_lines.product_qty)
+result = a</field>
+            <field name="hook" search="[('method_name','in',['action_process','split_process']),('model','=','stock.picking'),('name','in',['Deliver (DO)','Split (DO)'])]" model="approval.hook"/>
+        </record>
+
+        <record model="approval.items" id="delivery_order_menambahkan_produk">
+            <field name="name">DOS - Menambahkan Produk Pada DO</field>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="approval_type">standard</field>
+            <field name="rule">so_product = []
+picking_obj = self.pool.get('stock.picking')
+
+for so_line in obj.sale_id.order_line:
+  prod_id = so_line.product_id.id
+
+  if prod_id not in so_product:
+    so_product.append(prod_id)
+
+do_ids = picking_obj.search(cr, uid, [('sale_id','=',obj.sale_id.id)], context=context)
+do_objs = picking_obj.browse(cr, uid, do_ids, context=context)
+
+do_product = []
+
+for move_lines in obj.move_lines:
+  prod_id = move_lines.product_id.id
+
+  if prod_id not in do_product:
+    do_product.append(prod_id)
+
+a = False
+
+for product in do_product:
+  if product not in so_product:
+    a = True
+
+result = a</field>
+            <field name="approver" search="[('name','in',['Manager']),('category_id','in',['Sales','Warehouse'])]" model="res.groups"/>
+            <field name="description">Persetujuan saat menambahkan produk baru pada dkumen Delivery Order. Grup yang memberikan persetujuan adalah Sales Manager / Warehouse Manager.</field>
+            <field name="hash_code">a = ""
+for move_lines in obj.move_lines:
+    a += str(move_lines.product_id.id)
+result = a</field>
+            <field name="hook" search="[('method_name','=','action_process'),('model','=','stock.picking'),('name','=','Deliver (DO)')]" model="approval.hook"/>
+        </record>
+
+        <!-- ############################################################################# -->
+        <!--                               Approval Scheme                                 -->
+        <!-- ############################################################################# -->
+
+        <!-- ############################### Delivery Order ################################# -->
+
+        <record model="approval.scheme" id="scheme_approval_delivery_order_so">
+            <field name="name">Scheme Approval Delivery Order (SO)</field>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="filter">a = False
+if obj.type == 'out' and obj.sale_id and not obj.purchase_id:
+  a = True
+result = a
+            </field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_delivery_order_menambahkan_kuantitas">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Delivery Order (SO)')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','DOS - Menambahkan Kuantitas DO')]" model="approval.items"/>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="rule">so_line_qty = {}
+
+uom_obj = self.pool.get('product.uom')
+picking_obj = self.pool.get('stock.picking')
+prod_obj = self.pool.get('product.product')
+
+for so_line in obj.sale_id.order_line:
+  prod_id = so_line.product_id.id
+  prod_uom_standard = so_line.product_id.uom_id.id
+  prod_uom = so_line.product_uom.id
+  prod_qty = 0
+
+  if prod_uom != prod_uom_standard:
+    prod_uom_factor = uom_obj.browse(cr, uid, prod_uom, context=context).factor
+    prod_uom_factor_standard = uom_obj.browse(cr, uid, prod_uom_standard, context=context).factor
+    prod_qty = so_line.product_uom_qty / prod_uom_factor * prod_uom_factor_standard
+  else:
+    prod_qty = so_line.product_uom_qty
+
+  limit_delivery = prod_obj.browse(cr, uid, prod_id, context=context).limit_delivery
+  limit_percentage = prod_obj.browse(cr, uid, prod_id, context=context).limit_percentage
+  limit_qty = prod_obj.browse(cr, uid, prod_id, context=context).limit_qty
+  prod_limit = 0
+  max_prod_qty = 0
+  if limit_delivery == 'percentage':
+    prod_limit = prod_qty * limit_percentage / 100
+  elif limit_delivery == 'fix_qty':
+    if not so_line_qty.get(prod_id, False):
+      prod_limit = limit_qty
+
+  max_prod_qty = prod_qty + prod_limit
+
+  if not so_line_qty.get(prod_id, False):
+    so_line_qty.update({prod_id: max_prod_qty})
+  else:
+    total_max_prod_qty = so_line_qty.get(prod_id) + max_prod_qty
+    so_line_qty.update({prod_id: total_max_prod_qty})
+
+do_ids = picking_obj.search(cr, uid, [('sale_id','=',obj.sale_id.id),('id','!=',obj.id)], context=context)
+do_objs = picking_obj.browse(cr, uid, do_ids, context=context)
+
+for do_obj in do_objs:
+  for move_lines in do_obj.move_lines:
+    prod_id = move_lines.product_id.id
+    prod_uom_standard = move_lines.product_id.uom_id.id
+    prod_uom = move_lines.product_uom.id
+    prod_qty = 0
+    do_qty = 0
+
+    if prod_uom != prod_uom_standard:
+      prod_uom_factor = uom_obj.browse(cr, uid, prod_uom, context=context).factor
+      prod_uom_factor_standard = uom_obj.browse(cr, uid, prod_uom_standard, context=context).factor
+      prod_qty = move_lines.product_qty / prod_uom_factor * prod_uom_factor_standard
+    else:
+      prod_qty = move_lines.product_qty
+
+    if so_line_qty.get(prod_id, False):
+      if move_lines.picking_id.type == 'out' and move_lines.picking_id.state != 'cancel':
+        total_prod_qty = so_line_qty.get(prod_id) - prod_qty
+        so_line_qty.update({prod_id: total_prod_qty})
+      elif move_lines.picking_id.type == 'in' and move_lines.picking_id.state != 'cancel':
+        total_prod_qty = so_line_qty.get(prod_id) + prod_qty
+        so_line_qty.update({prod_id: total_prod_qty})
+
+do_line_qty = {}
+
+for move_lines in obj.move_lines:
+  prod_id = move_lines.product_id.id
+  prod_uom_standard = move_lines.product_id.uom_id.id
+  prod_uom = move_lines.product_uom.id
+  prod_qty = 0
+
+  if prod_uom != prod_uom_standard:
+    prod_uom_factor = uom_obj.browse(cr, uid, prod_uom, context=context).factor
+    prod_uom_factor_standard = uom_obj.browse(cr, uid, prod_uom_standard, context=context).factor
+    prod_qty = move_lines.product_qty / prod_uom_factor * prod_uom_factor_standard
+  else:
+    prod_qty = move_lines.product_qty
+
+  if not do_line_qty.get(prod_id, False):
+    do_line_qty.update({prod_id: prod_qty})
+  else:
+    total_prod_qty = do_line_qty.get(prod_id) + prod_qty
+    do_line_qty.update({prod_id: total_prod_qty})
+
+a = False
+
+for key in do_line_qty.keys():
+  if so_line_qty.get(key):
+    so_qty = so_line_qty.get(key)
+    do_qty = do_line_qty.get(key)
+    if do_qty > so_qty:
+      a = True
+
+result = a</field>
+            <field name="approver" search="[('name','in',['Manager']),('category_id','in',['Sales','Warehouse'])]" model="res.groups"/>
+            <field name="description">Persetujuan saat menambahkan kuantitas produk pada dokumen Delivery Order. Grup yang memberikan persetujuan adalah Sales Manager / Warehouse Manager.</field>
+            <field name="hash_code">a = ""
+for move_lines in obj.move_lines:
+    a += str(move_lines.product_qty)
+result = a
+            </field>
+            <field name="hook" search="[('method_name','in',['action_process','split_process']),('model','=','stock.picking'),('name','in',['Deliver (DO)','Split (DO)'])]" model="approval.hook"/>
+            <field name="approval_type">standard</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_delivery_order_menambahkan_produk">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Delivery Order (SO)')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','DOS - Menambahkan Produk Pada DO')]" model="approval.items"/>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="rule">so_product = []
+picking_obj = self.pool.get('stock.picking')
+
+for so_line in obj.sale_id.order_line:
+  prod_id = so_line.product_id.id
+
+  if prod_id not in so_product:
+    so_product.append(prod_id)
+
+do_ids = picking_obj.search(cr, uid, [('sale_id','=',obj.sale_id.id)], context=context)
+do_objs = picking_obj.browse(cr, uid, do_ids, context=context)
+
+do_product = []
+
+for move_lines in obj.move_lines:
+  prod_id = move_lines.product_id.id
+
+  if prod_id not in do_product:
+    do_product.append(prod_id)
+
+a = False
+
+for product in do_product:
+  if product not in so_product:
+    a = True
+
+result = a</field>
+            <field name="approver" search="[('name','in',['Manager']),('category_id','in',['Sales','Warehouse'])]" model="res.groups"/>
+            <field name="description">Persetujuan saat menambahkan produk baru pada dkumen Delivery Order. Grup yang memberikan persetujuan adalah Sales Manager / Warehouse Manager.</field>
+            <field name="hash_code">a = ""
+for move_lines in obj.move_lines:
+    a += str(move_lines.product_id.id)
+result = a</field>
+            <field name="hook" search="[('method_name','=','action_process'),('model','=','stock.picking'),('name','=','Deliver (DO)')]" model="approval.hook"/>
+            <field name="approval_type">standard</field>
+        </record>
+
+    </data>
+</openerp>

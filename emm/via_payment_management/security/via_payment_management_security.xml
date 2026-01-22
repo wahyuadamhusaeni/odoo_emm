@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="group_via_payment_user" model="res.groups" context="{'noadmin':True}">
+            <field name="name">Bank Statement User</field>
+        </record>
+
+        <record id="group_via_payment_manager" model="res.groups" context="{'noadmin':True}">
+            <field name="name">Bank Statement Manager</field>
+        </record>
+
+        <record id="group_via_assignment_user" model="res.groups" context="{'noadmin':True}">
+            <field name="name">Expense Voucher User</field>
+        </record>
+
+        <record id="group_via_assignment_manager" model="res.groups" context="{'noadmin':True}">
+            <field name="name">Expense Voucher Manager</field>
+        </record>
+
+        <record id="group_via_assign_payment" model="res.groups" context="{'noadmin':True}">
+            <field name="name">Payment Assignment Officer</field>
+        </record>
+
+        <record id="via_bank_statement_line_write_managers" model="ir.rule">
+            <field name="name">Bank Statement Line Write Rule - Managers</field>
+            <field model="ir.model" name="model_id" ref="model_via_bank_statement_line"/>
+            <field eval="[(6, 0, [ref('via_payment_management.group_via_payment_manager')])]" name="groups"/>
+            <field eval="False" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
+            <field name="domain_force">[('state', '!=', False)]</field>
+        </record>
+
+        <record id="via_bank_statement_line_write_users" model="ir.rule">
+            <field name="name">Bank Statement Line Write Rule - Users</field>
+            <field model="ir.model" name="model_id" ref="model_via_bank_statement_line"/>
+            <field eval="[(6, 0, [ref('via_payment_management.group_via_payment_user')])]" name="groups"/>
+            <field eval="False" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
+            <field name="domain_force">[('state', 'not in', ['submit'])]</field>
+        </record>
+
+        <record id="via_expense_voucher_write_managers" model="ir.rule">
+            <field name="name">Expense Voucher Write Rule - Managers</field>
+            <field model="ir.model" name="model_id" ref="model_via_expense_voucher"/>
+            <field eval="[(6, 0, [ref('via_payment_management.group_via_assignment_manager')])]" name="groups"/>
+            <field eval="False" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
+            <field name="domain_force">[('state', '!=', False)]</field>
+        </record>
+
+        <record id="via_expense_voucher_write_users" model="ir.rule">
+            <field name="name">Expense Voucher Write Rule - Users</field>
+            <field model="ir.model" name="model_id" ref="model_via_expense_voucher"/>
+            <field eval="[(6, 0, [ref('via_payment_management.group_via_assignment_user')])]" name="groups"/>
+            <field eval="False" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
+            <field name="domain_force">[('state', 'not in', ['submit'])]</field>
+        </record>
+
+        <record id="via_expense_voucher_line_write_managers" model="ir.rule">
+            <field name="name">Expense Voucher Line Write Rule - Managers</field>
+            <field model="ir.model" name="model_id" ref="model_via_expense_voucher_line"/>
+            <field eval="[(6, 0, [ref('via_payment_management.group_via_assignment_manager')])]" name="groups"/>
+            <field eval="False" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
+            <field name="domain_force">[('exp_voucher_id.state', '!=', False)]</field>
+        </record>
+
+        <record id="via_expense_voucher_line_users" model="ir.rule">
+            <field name="name">Expense Voucher Line Write Rule - Users</field>
+            <field model="ir.model" name="model_id" ref="model_via_expense_voucher_line"/>
+            <field eval="[(6, 0, [ref('via_payment_management.group_via_assignment_user')])]" name="groups"/>
+            <field eval="False" name="perm_read"/>
+            <field eval="True" name="perm_write"/>
+            <field eval="False" name="perm_create"/>
+            <field eval="False" name="perm_unlink"/>
+            <field name="domain_force">[('exp_voucher_id.state', 'not in', ['submit'])]</field>
+        </record>
+    </data>
+</openerp>

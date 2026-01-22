@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Product Limit Category -->
+
+        <record id="product_limit_category" model="code.category">
+            <field name="name">Product Limit Category</field>
+            <field name="pinned">True</field>
+        </record>
+
+        <!-- Product Limit -->
+
+        <record id="product_limit_percentage" model="code.decode">
+            <field name="sequence" eval="1"/>
+            <field name="code">percentage</field>
+            <field name="value">Percentage</field>
+            <field name="category" ref="product_limit_category"/>
+            <field name="pinned" eval="True"/>
+        </record>
+
+        <record id="product_limit_fix_qty" model="code.decode">
+            <field name="sequence" eval="2"/>
+            <field name="code">fix_qty</field>
+            <field name="value">Fix Quantity</field>
+            <field name="category" ref="product_limit_category"/>
+            <field name="pinned" eval="True"/>
+        </record>
+
+    </data>
+</openerp>

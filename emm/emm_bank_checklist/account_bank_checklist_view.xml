@@ -1,0 +1,117 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data>
+        <!--TREE view-->
+      	<record id="view_bank_checklist_tree" model="ir.ui.view">
+                <field name="name">bank.checklist.tree</field>
+                <field name="model">bank.checklist</field>
+                <field name="arch" type="xml">
+                    <tree string="Statement">
+                        <field name="name"/>
+                        <field name="journal_id"/>
+                        <field name="fully_checked"/>
+                        <field name="state"/>
+                    </tree>
+                </field>
+            </record>
+      	<!--SEARCH view-->
+            <record id="view_bank_checklist_search" model="ir.ui.view">
+                <field name="name">bank.checklist.search</field>
+                <field name="model">bank.checklist</field>
+                <field name="arch" type="xml">
+                    <search string="Search Bank Checklist">
+                        <field name="name" string="Bank Checklist"/>
+                        <filter string="Draft" domain="[('state','=','draft')]" icon="terp-document-new"/>
+                        <filter string="Done" domain="[('state','=','done')]" icon="terp-camera_test"/>
+                        <field name="journal_id" domain="[('type', '=', 'bank')]" />
+                        <group expand="0" string="Group By...">
+                            <filter string="Journal" context="{'group_by': 'journal_id'}" icon="terp-folder-orange"/>
+                            <filter string="Status" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
+                        </group>
+                    </search>
+                </field>
+            </record>
+            <!-- FROM view-->
+            <record id="view_bank_checklist_form" model="ir.ui.view">
+                <field name="name">bank.checklist.form</field>
+                <field name="model">bank.checklist</field>
+                <field name="priority">1</field>
+                <field name="arch" type="xml">
+                    <form string="Bank Checklist" version="7.0">
+                    <header>
+                        <button name="action_confirm_bank" states="draft" string="Confirm" type="object" class="oe_highlight"/>
+                        <button name="button_cancel" states="confirm" string="Cancel Statement" type="button"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_right oe_button_box" name="import_buttons">
+                           <!-- Put here related buttons -->
+                        </div>
+                        <label for="name"/>
+                        <h1><field name="name"/></h1>
+                        <group>
+                            <group>
+                                <field name="journal_id" domain="[('type', '=', 'bank')]" widget="selection"/>
+                                <field name="date"/>
+                                <field name="fully_checked"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Transactions" name="parent_ids">
+                                <field name="parent_ids">
+                                    <tree editable="bottom" string="Checklist lines">
+                                        <field name="name"/>
+                                        <field name="ref"/>
+                                        <field name="partner_id"/>
+                                        <field name="debit"/>
+                                        <field name="credit"/>
+                                        <field name="move_id" domain="[('journal_id', '=', parent.journal_id)]"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    </form>
+                </field>
+            </record>
+
+      	<record id="action_bank_checklist_tree" model="ir.actions.act_window">
+                <field name="name">Bank Checklist</field>
+                <field name="res_model">bank.checklist</field>
+                <field name="view_type">form</field>
+                <field name="view_mode">tree,form,graph</field>
+                <field name="search_view_id" ref="view_bank_checklist_search"/>
+                <field name="help" type="html">
+                  <p class="oe_view_nocontent_create">
+                    Click to register a bank checklist.
+                  </p><p>
+                    A bank checklist is a list of all financial transactions
+                    occurring over a given period of time on a bank account. You
+                    should receive this periodicaly from your bank.
+                  </p><p>
+                    You can reconcile the checklist line directly with
+                    the related Joural Entries.
+                  </p>
+                </field>
+            </record>
+            <record model="ir.actions.act_window.view" id="action_bank_checklist_tree_bank">
+                <field name="sequence" eval="1"/>
+                <field name="view_mode">tree</field>
+                <field name="view_id" ref="view_bank_checklist_tree"/>
+                <field name="act_window_id" ref="action_bank_checklist_tree"/>
+            </record>
+            <record model="ir.actions.act_window.view" id="action_bank_checklist_form_bank">
+                <field name="sequence" eval="1"/>
+                <field name="view_mode">form</field>
+                <field name="view_id" ref="view_bank_checklist_form"/>
+                <field name="act_window_id" ref="action_bank_checklist_tree"/>
+            </record>
+
+        <menuitem string="Bank Checklists"
+            action="action_bank_checklist_tree"
+            id="menu_bank_checklist_tree"
+            parent="account.menu_finance_bank_and_cash"
+            sequence="8"/>
+        <delete model="ir.ui.menu" id="account.menu_bank_statement_tree" />
+    </data>
+</openerp>

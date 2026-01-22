@@ -1,0 +1,5 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"account_taxform_all","account_taxform all","model_account_taxform",,1,1,1,0
+"account_taxform_line_all","account_taxform_line all","model_account_taxform_line",,1,1,1,0
+"account_taxform_taxes_all","account_taxform_taxes all","model_account_taxform_taxes",,1,1,1,0
+"account_taxform_reusable_sequences_all","account_taxform_reusable_sequences all","model_account_taxform_reusable_sequences",,1,1,1,0

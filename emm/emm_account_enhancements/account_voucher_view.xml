@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <delete model="ir.ui.menu" id="account_voucher.menu_action_purchase_receipt" />
+        <delete model="ir.ui.menu" id="account_voucher.menu_action_sale_receipt" />
+    </data>
+</openerp>

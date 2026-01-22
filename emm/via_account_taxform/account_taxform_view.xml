@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Tax Form -->
+        <record id="view_taxform_tree" model="ir.ui.view">
+            <field name="name">Tax Form</field>
+            <field name="model">account.taxform</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Tax Form">
+                    <field name="complete_number"/>
+                    <field name="invoice_id"/>
+                    <field name="invoice_date"/>
+                    <field name="company_id"/>
+                    <field name="partner_id"/>
+                    <field name="amount_base"/>
+                    <field name="amount_tax"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_taxform_form" model="ir.ui.view">
+            <field name="name">Tax Form</field>
+            <field name="model">account.taxform</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Tax Form" version="7.0">
+                <header>
+                    <button name="report_taxform" string="3 Page" type="object" icon="gtk-print" />
+                    <button name="report_taxform_one_page" string="Single Page" type="object" icon="gtk-print" />
+                    <button name="report_taxform_preprinted" string="Pre-Printed" type="object" icon="gtk-print" />
+                    <button name="action_cancel_taxform" string="Cancel" type="object" states="printed,draft"/>
+                    <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,printed" statusbar_colors='{"printed":"blue"}'/>
+                </header>
+                <sheet string="Tax Form">
+                    <label for="taxform_id" class="oe_edit_only" string="Transaction Code"/>
+                    <h1>
+                        <field name="trx_code" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/>.<field name="taxform_id" class="oe_inline"/>
+                        <button name="action_select_existing_sequence" string="Select Taxform Number"
+                            type="object" states="draft" class="oe_link"/>
+                    </h1>
+                    <div class="oe_right oe_button_box" name="buttons">
+                        <button name="action_refresh" string="Refresh" type="object"/>
+                    </div>
+                    <group colspan="4" col="4">
+                        <group colspan="2" col="2">
+                            <field name="company_id" />
+                            <field name="company_address_id" />
+                            <field name="company_npwp" />
+                            <field name="signature"/>
+                        </group>
+                        <group colspan="2" col="2">
+                            <field name="invoice_id" />
+                            <field name="partner_id" />
+                            <field name="partner_address_id" />
+                            <field name="partner_npwp" />
+                            <field name="trx_type"/>
+                        </group>
+                    </group>
+                    <field name="taxform_line" nolabel="1" colspan="8" domain="[('price_subtotal','&gt;',0.0)]"/>
+                    <group colspan="4" col="4">
+                        <group colspan="2" col="2">
+                            <separator string="PPnBM" />
+                            <field colspan="4" mode="tree" name="taxform_ppnbm" nolabel="1">
+                                <tree string="PPnBM" editable="bottom">
+                                    <field name="tax_id" required="1" on_change="onchange_tax_amount(tax_id,tax_base)"/>
+                                    <field name="tariff" readonly="1"/>
+                                    <field name="tax_base" on_change="onchange_tax_amount(tax_id,tax_base)"/>
+                                    <field name="amount_tax" readonly="1"/>
+                                    <field name="tax_cat" invisible="1"/>
+                                </tree>
+                            </field>
+                        </group>
+                        <group colspan="2" col="2">
+                            <!-- field name="amount_full" /-->
+                            <field name="amount_base" />
+                            <field name="amount_discount" />
+                            <!-- field name="amount_untaxed" / -->
+                            <field name="amount_advance_payment" />
+                            <field name="amount_base_disc" string="Tax Base"/>
+                            <field name="amount_tax" />
+                        </group>
+                    </group>
+                </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="taxform_search_wiz" model="ir.ui.view">
+            <field name="name">Taxform Search Wiz</field>
+            <field name="model">account.taxform</field>
+            <field name="priority">20</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Taxform Search String">
+                    <field name="taxform_id"/>
+                    <field name="invoice_id" widget="selection"/>
+                    <field name="company_id" widget="selection"/>
+                    <field name="partner_id" widget="selection"/>
+                    <field name="state"/>
+                    <field name="due_date_from" filter_domain="[('invoice_date','&gt;=',self)]"/>
+                    <field name="due_date_to" filter_domain="[('invoice_date','&lt;=',self)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_taxform" model="ir.actions.act_window">
+            <field name="name">Taxform</field>
+            <field name="res_model">account.taxform</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_taxform" name="Tax Form"
+            parent="account.menu_finance_receivables" action="action_taxform"/>
+    </data>
+</openerp>

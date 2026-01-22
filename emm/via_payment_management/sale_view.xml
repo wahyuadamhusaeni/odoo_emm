@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!--
+        ==========================================================
+        Sale Order Line Form Inherit
+        ==========================================================
+        -->
+        <record id="sale_order_via_payment_management_form_view" model="ir.ui.view">
+            <field name="name">sale.order.via.payment.management.form</field>
+            <field name="model">sale.order</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <newline/>
+                    <label colspan="3" string=""/>
+                    <field name="open_invoices" invisible="1"/>
+                    <div class="oe_right oe_button_box">
+                        <button name="action_assign_payment" string="Assign Payment"
+                        type="object" icon="terp-dolar" attrs="{'invisible': ['!', ('open_invoices','&gt;',0)]}" states="done,progress,manual,shipping_except,invoice_except" groups="via_payment_management.group_via_assign_payment"/>
+                    </div>
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_form_template_file_download_wiz_1">
+            <field name="name">Template File Download for Stock Module</field>
+            <field name="model">file.download.template.wiz</field>
+            <field name="arch" type="xml">
+                <form string="File Upload and Import for Stock Moves" version="7.0">
+                    <field name="config_id" widget="selection" required="1" readonly="1"/>
+                    <footer>
+                        <button name="execute" string="Process" type="object" class="oe_highlight"/>
+                        or
+                        <button special="cancel" string="Cancel" class="oe_link"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_form_template_file_download_wiz_2">
+            <field name="name">Template File Download for Stock Module Result</field>
+            <field name="model">file.download.template.wiz</field>
+            <field name="arch" type="xml">
+                <form string="File Upload and Import for Stock Moves" version="7.0">
+                    <field name="templates" widget="many2many_binary"/>
+                    <footer>
+                        <button name="close" string="Close" type="object" class="oe_highlight"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_template_download_stock_picking_wiz" model="ir.actions.act_window">
+            <field name="name">Template File Download</field>
+            <field name="res_model">file.download.template.wiz</field>
+            <field name="src_model">stock.picking</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="view_form_template_file_download_wiz_1"/>
+            <field name="context" eval="{'config_xmlid': 'file_upload_import_stock_move_config'}"/>
+        </record>
+
+        <record model="ir.values" id="value_template_download_stock_picking_wiz">
+            <field name="model_id" ref="stock.model_stock_picking" />
+            <field name="name">Template File Download</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_template_download_stock_picking_wiz'))" />
+            <field name="key">action</field>
+            <field name="model">stock.picking</field>
+        </record>
+
+        <record id="action_template_download_stock_picking_in_wiz" model="ir.actions.act_window">
+            <field name="name">Template File Download</field>
+            <field name="res_model">file.download.template.wiz</field>
+            <field name="src_model">stock.picking.in</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="view_form_template_file_download_wiz_1"/>
+            <field name="context" eval="{'config_xmlid': 'file_upload_import_stock_move_config'}"/>
+        </record>
+
+        <record model="ir.values" id="value_template_download_stock_picking_in_wiz">
+            <field name="model_id" ref="stock.model_stock_picking_in" />
+            <field name="name">Template File Download</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_template_download_stock_picking_in_wiz'))" />
+            <field name="key">action</field>
+            <field name="model">stock.picking.in</field>
+        </record>
+
+        <record id="action_template_download_stock_picking_out_wiz" model="ir.actions.act_window">
+            <field name="name">Template File Download</field>
+            <field name="res_model">file.download.template.wiz</field>
+            <field name="src_model">stock.picking.out</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="view_form_template_file_download_wiz_1"/>
+            <field name="context" eval="{'config_xmlid': 'file_upload_import_stock_move_config'}"/>
+        </record>
+
+        <record model="ir.values" id="value_template_download_stock_picking_out_wiz">
+            <field name="model_id" ref="stock.model_stock_picking_out" />
+            <field name="name">Template File Download</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_template_download_stock_picking_out_wiz'))" />
+            <field name="key">action</field>
+            <field name="model">stock.picking.out</field>
+        </record>
+
+        <record id="action_template_download_stock_inventory_wiz" model="ir.actions.act_window">
+            <field name="name">Template File Download</field>
+            <field name="res_model">file.download.template.wiz</field>
+            <field name="src_model">stock.inventory</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="view_form_template_file_download_wiz_1"/>
+            <field name="context" eval="{'config_xmlid': 'file_upload_import_stock_inventory_config'}"/>
+        </record>
+
+        <record model="ir.values" id="value_template_download_stock_inventory_wiz">
+            <field name="model_id" ref="stock.model_stock_inventory" />
+            <field name="name">Template File Download</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.act_window,' + str(ref('action_template_download_stock_inventory_wiz'))" />
+            <field name="key">action</field>
+            <field name="model">stock.inventory</field>
+        </record>
+    </data>
+</openerp>

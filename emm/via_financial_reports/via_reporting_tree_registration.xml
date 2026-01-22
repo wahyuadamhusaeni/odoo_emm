@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+    <record id="financial_report_ledger_tree_type"
+	    model="via.reporting.tree.type">
+      <field name="name">Financial Report</field>
+      <field name="tree_node_type">account</field>
+    </record>
+    <record id="cash_flow_realization_tree_type"
+	    model="via.reporting.tree.type">
+      <field name="name">Cash Flow</field>
+      <field name="tree_node_type">account</field>
+    </record>
+  </data>
+</openerp>

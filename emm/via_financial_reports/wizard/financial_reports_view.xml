@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+    <record id="via_financial_reports_view" model="ir.ui.view">
+      <field name="name">VIA Financial Reports</field>
+      <field name="model">via.financial.reports</field>
+      <field name="type">form</field>
+      <field name="inherit_id"/>
+      <field name="arch" type="xml">
+        <form string="Report Options" version="7.0" col="4">
+          <field name="name" invisible="True" colspan="2"/>
+          <group col="4" colspan="2">
+            <field name="chart_account_id" widget="selection" on_change="onchange_chart_id(chart_account_id, filter)"/>
+            <field name="target_move"/>
+            <field name="fiscalyear_id"
+              on_change="onchange_fiscalyear_id(fiscalyear_id, filter)"
+              domain="[('company_id','=',company_id)]"/>
+            <field name="company_id" invisible="True"/>
+            <field name="display_account"/>
+            <field name="use_indentation"/>
+            <field name="display_move" invisible="context.get('via_jasper_report_utils.rpt_name', False) not in ('Trial Balance', 'General Ledger', 'General Ledger/Trial Balance')"/>
+            <field name="no_wrap" invisible="context.get('via_jasper_report_utils.rpt_name', False) not in ('General Ledger', 'General Ledger/Trial Balance')"/>
+            <field name="leaf_company_chart_account" invisible="True"/>
+            <field name="display_checksum" attrs="{'readonly': ['|',('display_account','!=','bal_all'),('leaf_company_chart_account','=',False)]}"
+              invisible="context.get('via_jasper_report_utils.rpt_name', False) == 'General Ledger/Trial Balance'"/>
+            <field name="display_drcr" invisible="context.get('via_jasper_report_utils.rpt_name', False) in ('Trial Balance', 'General Ledger', 'General Ledger/Trial Balance')"/>
+            <field name="bs_as_of"
+              invisible="context.get('via_jasper_report_utils.rpt_name', False) in ('VIA Combined Profit/Loss', 'Profit/Loss')"
+              required="context.get('via_jasper_report_utils.rpt_name', False) not in ('VIA Combined Profit/Loss', 'Profit/Loss')"/>
+            <field name="rpt_output"/>
+            <field name="display_format" attrs="{'readonly': [('rpt_output','in',('xls','csv'))]}"/>
+          </group>
+          <notebook tabpos="up" colspan="4">
+            <page string="Filters" name="Time">
+              <group col="4" colspan="4">
+                <field name="filter" on_change="onchange_filter(filter, fiscalyear_id)" colspan="4" string="By"/>
+                <field name="date_from" attrs="{'invisible': [('filter', '!=', 'filter_date')], 'required':[('filter', '=', 'filter_date')]}"/>
+                <field name="date_to" attrs="{'invisible': [('filter', '!=', 'filter_date')], 'required':[('filter', '=', 'filter_date')]}"/>
+                <field name="period_from" domain="[('fiscalyear_id', '=', fiscalyear_id)]" attrs="{'invisible': [('filter', '!=', 'filter_period')], 'required':[('filter', '=', 'filter_period')]}"/>
+                <field name="period_to" domain="[('fiscalyear_id', '=', fiscalyear_id)]" attrs="{'invisible': [('filter', '!=', 'filter_period')], 'required':[('filter', '=', 'filter_period')]}"/>
+              </group>
+            </page>
+            <page string="Journals" name="journal_ids">
+              <group col="4" colspan="4">
+                <field name="journal_ids" colspan="4" nolabel="1"/>
+              </group>
+            </page>
+            <page string="Accounts" attrs="{'invisible': [('name','not in',('Trial Balance', 'General Ledger', 'General Ledger/Trial Balance'))]}">
+              <group col="4" colspan="4">
+                <field name="account_ids" colspan="4" nolabel="1"/>
+              </group>
+            </page>
+          </notebook>
+          <footer>
+            <button type="object" class="oe_highlight" string="Print" name="print_report"/>
+            or
+            <button string="Cancel" class="oe_link" special="cancel"/>
+          </footer>
+        </form>
+      </field>
+    </record>
+
+    <record id="via_financial_reports_reporting_tree_view" model="ir.ui.view">
+      <field name="name">VIA Financial Reports</field>
+      <field name="model">via.financial.reports</field>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+      	<form string="Report Options">
+      	  <label nolabel="1" string=""/>
+      	  <newline/>
+      	  <field name="chart_account_id" widget="selection" on_change="onchange_chart_id(chart_account_id, filter, cmp1_filter)" required="0" invisible="1"/>
+      	  <field name="name" invisible="True" colspan="4"/>
+      	  <field name="tree_type_name" invisible="True" colspan="4"/>
+      	  <field name="company_id" widget="selection" on_change="onchange_company_id(company_id, filter, cmp1_filter)"/>
+      	  <field name="tree_id" required="1"/>
+      	  <field name="fiscalyear_id"
+      		 on_change="onchange_fiscalyear_id(fiscalyear_id, filter)"
+      		 domain="[('company_id','=',company_id)]"/>
+      	  <field name="target_move"/>
+      	  <field name="use_indentation"/>
+      	  <field name="display_move" invisible="context.get('via_jasper_report_utils.rpt_name', False) not in ('Trial Balance', 'General Ledger', 'General Ledger/Trial Balance')" attrs="{'readonly': [('cmp1_enabled','=',True)]}"/>
+      	  <field name="no_wrap" invisible="context.get('via_jasper_report_utils.rpt_name', False) not in ('General Ledger', 'Balance Sheet', 'Profit/Loss', 'General Ledger/Trial Balance')"/>
+      	  <field name="display_drcr" invisible="context.get('via_jasper_report_utils.rpt_name', False) in ('Trial Balance', 'General Ledger')"/>
+      	  <field name="bs_as_of"
+      		 invisible="context.get('via_jasper_report_utils.rpt_name', False) in ('VIA Combined Profit/Loss', 'Profit/Loss')"
+      		 required="context.get('via_jasper_report_utils.rpt_name', False) not in ('VIA Combined Profit/Loss', 'Profit/Loss')"/>
+      	  <newline/>
+      	  <field name="rpt_output"/>
+      	  <field name="display_format" attrs="{'readonly': [('rpt_output','in',('xls','csv'))]}"/>
+      	  <field name="label"/>
+      	  <field name="cmp1_enabled" on_change="onchange_cmp1_enabled(context)"/>
+      	  <!-- <field name="display_type" attrs="{'invisible': [('rpt_output','in',('xls','csv'))]}"/> -->
+      	  <newline/>
+      	  <notebook tabpos="up" colspan="4">
+      	    <page string="Filters" name="Time">
+      	      <field name="filter" on_change="onchange_filter(filter, fiscalyear_id)" colspan="4"/>
+      	      <separator string="Dates" colspan="4"/>
+      	      <field name="date_from" attrs="{'readonly':[('filter', '!=', 'filter_date')], 'required':[('filter', '=', 'filter_date')]}" colspan="4"/>
+      	      <field name="date_to" attrs="{'readonly':[('filter', '!=', 'filter_date')], 'required':[('filter', '=', 'filter_date')]}" colspan="4"/>
+      	      <separator string="Periods" colspan="4"/>
+      	      <field name="period_from" domain="[('fiscalyear_id', '=', fiscalyear_id)]" attrs="{'readonly':[('filter','!=','filter_period')], 'required':[('filter', '=', 'filter_period')]}" colspan="4"/>
+      	      <field name="period_to" domain="[('fiscalyear_id', '=', fiscalyear_id)]" attrs="{'readonly':[('filter','!=','filter_period')], 'required':[('filter', '=', 'filter_period')]}" colspan="4"/>
+      	    </page>
+      	    <page string="Journals" name="journal_ids">
+      	      <field name="journal_ids" colspan="4" nolabel="1"/>
+      	    </page>
+      	    <page string="Accounts" attrs="{'invisible': [('name','not in',['General Ledger', 'General Ledger/Trial Balance'])]}">
+      	      <field name="account_ids" colspan="4" nolabel="1"/>
+      	    </page>
+      	    <page string="Comparison" name="cmp1" attrs="{'invisible': [('cmp1_enabled','=',False)]}">
+      	      <field name="cmp1_label"/>
+      	      <field name="cmp1_fiscalyear_id" on_change="onchange_cmp1_fiscalyear_id(cmp1_fiscalyear_id, cmp1_filter)" attrs="{'required': [('cmp1_enabled','=',True)]}" domain="[('company_id','=',company_id)]"/>
+      	      <field name="cmp1_filter" on_change="onchange_cmp1_filter(cmp1_filter, cmp1_fiscalyear_id)" colspan="4" attrs="{'required': [('cmp1_enabled','=',True)]}"/>
+      	      <separator string="Dates" colspan="4"/>
+      	      <field name="cmp1_date_from" attrs="{'readonly':[('cmp1_filter', '!=', 'filter_date')], 'required':[('cmp1_filter', '=', 'filter_date'), ('cmp1_enabled', '=', True)]}" colspan="4"/>
+      	      <field name="cmp1_date_to" attrs="{'readonly':[('cmp1_filter', '!=', 'filter_date')], 'required':[('cmp1_filter', '=', 'filter_date'), ('cmp1_enabled', '=', True)]}" colspan="4"/>
+      	      <separator string="Periods" colspan="4"/>
+      	      <field name="cmp1_period_from" domain="[('fiscalyear_id', '=', cmp1_fiscalyear_id)]" attrs="{'readonly':[('cmp1_filter','!=','filter_period')], 'required':[('cmp1_filter', '=', 'filter_period'), ('cmp1_enabled', '=', True)]}" colspan="4"/>
+      	      <field name="cmp1_period_to" domain="[('fiscalyear_id', '=', cmp1_fiscalyear_id)]" attrs="{'readonly':[('cmp1_filter','!=','filter_period')], 'required':[('cmp1_filter', '=', 'filter_period'), ('cmp1_enabled', '=', True)]}" colspan="4"/>
+      	    </page>
+      	  </notebook>
+      	  <separator colspan="4"/>
+      	  <group col="4" colspan="4">
+      	    <button icon="gtk-cancel" special="cancel" string="Cancel" colspan="2"/>
+      	    <button icon="gtk-print" name="print_report" string="Print" type="object" colspan="2" default_focus="1" />
+      	  </group>
+      	</form>
+      </field>
+    </record>
+
+    <record id="action_via_combined_balance_sheet" model="ir.actions.act_window">
+      <field name="name">Balance Sheet</field>
+      <field name="res_model">via.financial.reports</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">form</field>
+      <field name="view_id" ref="via_financial_reports_view"/>
+      <field name="context">{'via_jasper_report_utils.rpt_name': 'VIA Combined Balance Sheet'}</field>
+      <field name="target">new</field>
+    </record>
+
+    <record id="action_via_balance_sheet_reporting_tree" model="ir.actions.act_window">
+      <field name="name">Balance Sheet</field>
+      <field name="res_model">via.financial.reports</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">form</field>
+      <field name="view_id" ref="via_financial_reports_reporting_tree_view"/>
+      <field name="context">{'via_jasper_report_utils.rpt_name': 'Balance Sheet', 'via_reporting_tree.tree_type_name': 'Balance Sheet'}</field>
+      <field name="target">new</field>
+    </record>
+
+    <record id="action_via_combined_profit_loss" model="ir.actions.act_window">
+      <field name="name">Profit/Loss</field>
+      <field name="res_model">via.financial.reports</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">form</field>
+      <field name="view_id" ref="via_financial_reports_view"/>
+      <field name="context">{'via_jasper_report_utils.rpt_name': 'VIA Combined Profit/Loss'}</field>
+      <field name="target">new</field>
+    </record>
+
+    <record id="action_via_profit_loss_reporting_tree" model="ir.actions.act_window">
+      <field name="name">Profit/Loss</field>
+      <field name="res_model">via.financial.reports</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">form</field>
+      <field name="view_id" ref="via_financial_reports_reporting_tree_view"/>
+      <field name="context">{'via_jasper_report_utils.rpt_name': 'Profit/Loss', 'via_reporting_tree.tree_type_name': 'Profit Loss'}</field>
+      <field name="target">new</field>
+    </record>
+
+    <record id="action_via_combined_general_ledger" model="ir.actions.act_window">
+      <field name="name">Trial Balance</field>
+      <field name="res_model">via.financial.reports</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">form</field>
+      <field name="view_id" ref="via_financial_reports_view"/>
+      <field name="context">{'via_jasper_report_utils.rpt_name': 'Trial Balance'}</field>
+      <field name="target">new</field>
+    </record>
+
+    <record id="action_via_combined_general_ledger_new" model="ir.actions.act_window">
+      <field name="name">General Ledger</field>
+      <field name="res_model">via.financial.reports</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">form</field>
+      <field name="view_id" ref="via_financial_reports_view"/>
+      <field name="context">{'via_jasper_report_utils.rpt_name': 'General Ledger'}</field>
+      <field name="target">new</field>
+    </record>
+
+    <record id="action_via_combined_general_ledger_reporting_tree" model="ir.actions.act_window">
+      <field name="name">General Ledger/Trial Balance</field>
+      <field name="res_model">via.financial.reports</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">form</field>
+      <field name="view_id" ref="via_financial_reports_reporting_tree_view"/>
+      <field name="context">{'via_jasper_report_utils.rpt_name': 'General Ledger/Trial Balance', 'via_reporting_tree.tree_type_name': 'General Ledger'}</field>
+      <field name="target">new</field>
+    </record>
+
+    <menuitem icon="STOCK_PRINT"
+              name="VIA Financial Reports"
+              groups="account.group_account_user,account.group_account_manager,via_financial_reports.group_via_financial_reports_advance"
+              id="menu_via_financial_reports"
+              parent="account.menu_finance_reporting"/>
+
+    <menuitem icon="STOCK_PRINT"
+              name="Advance Reports"
+              groups="via_financial_reports.group_via_financial_reports_advance"
+              id="menu_via_financial_reports_advance"
+              parent="menu_via_financial_reports"
+              sequence="10"/>
+
+    <menuitem id="menu_via_financial_cf"
+              name="Cash Flow"
+              parent="menu_via_financial_reports_advance"
+              groups="via_financial_reports.group_via_financial_reports_advance"
+              sequence="20"/>
+
+    <menuitem id="menu_via_financial_gl"
+              name="Trial Balance With Moves"
+              parent="menu_via_financial_reports_advance"
+              groups="via_financial_reports.group_via_financial_reports_advance"
+              sequence="30"/>
+
+    <menuitem id="menu_via_financial_tb"
+              name="Trial Balance No Moves"
+              parent="menu_via_financial_reports_advance"
+              groups="via_financial_reports.group_via_financial_reports_advance"
+              sequence="40"/>
+
+    <menuitem icon="STOCK_PRINT"
+              name="Basic Reports"
+              groups="account.group_account_user,account.group_account_manager"
+              id="menu_via_financial_reports_basic"
+              parent="menu_via_financial_reports"
+              sequence="20"/>
+
+    <menuitem icon="STOCK_PRINT"
+              name="Balance Sheet"
+              action="action_via_combined_balance_sheet"
+              groups="account.group_account_user,account.group_account_manager"
+              id="menu_via_balance_sheet_basic"
+              parent="menu_via_financial_reports_basic"
+              sequence="10"/>
+
+    <menuitem icon="STOCK_PRINT"
+              name="Profit/Loss"
+              action="action_via_combined_profit_loss"
+              groups="account.group_account_user,account.group_account_manager"
+              id="menu_via_profit_loss_basic"
+              parent="menu_via_financial_reports_basic"
+              sequence="20"/>
+
+    <menuitem icon="STOCK_PRINT"
+              name="General Ledger"
+              action="action_via_combined_general_ledger_new"
+              groups="account.group_account_user,account.group_account_manager"
+              id="menu_via_general_ledger_basic"
+              parent="menu_via_financial_reports_basic"
+              sequence="30"/>
+
+    <menuitem icon="STOCK_PRINT"
+              name="Trial Balance"
+              action="action_via_combined_general_ledger"
+              groups="account.group_account_user,account.group_account_manager"
+              id="menu_via_trial_balance_basic"
+              parent="menu_via_financial_reports_basic"
+              sequence="40"/>
+  </data>
+</openerp>

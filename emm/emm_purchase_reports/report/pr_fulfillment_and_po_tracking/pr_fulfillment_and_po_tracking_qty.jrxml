@@ -1,0 +1,1362 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pr_fulfillment_and_po_tracking_qty" language="groovy" pageWidth="1190" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="1150" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isSummaryWithPageHeaderAndFooter="true">
+	<property name="ireport.zoom" value="2.4200000000000044"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="0" isBlankWhenNull="true"/>
+	<style name="1" style="0" fontSize="11" isBold="true">
+		<box bottomPadding="20"/>
+	</style>
+	<style name="2" style="0" hAlign="Left" vAlign="Top" fontSize="8">
+		<box leftPadding="1" rightPadding="1"/>
+	</style>
+	<style name="2.1" style="2" isBold="true">
+		<box>
+			<topPen lineWidth="0.2"/>
+		</box>
+	</style>
+	<style name="2.1.1" style="2.1" hAlign="Right"/>
+	<style name="2.1.1.1" style="2.1.1">
+		<box>
+			<rightPen lineWidth="0.2"/>
+		</box>
+	</style>
+	<style name="2.1.2" style="2.1">
+		<box>
+			<leftPen lineWidth="0.2"/>
+		</box>
+	</style>
+	<style name="2.2" style="2" hAlign="Right"/>
+	<style name="2.2.1" style="2.2">
+		<box>
+			<leftPen lineWidth="0.2"/>
+		</box>
+	</style>
+	<style name="2.2.2" style="2.2">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{pr_ou_qty} < 0]]></conditionExpression>
+			<style forecolor="#FF0000"/>
+		</conditionalStyle>
+	</style>
+	<style name="2.2.3" style="2.2">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{po_ou_qty} < 0]]></conditionExpression>
+			<style forecolor="#FF0000"/>
+		</conditionalStyle>
+	</style>
+	<style name="2.2.4" style="2.2">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{pr_to_po_avg} < 0]]></conditionExpression>
+			<style forecolor="#FF0000"/>
+		</conditionalStyle>
+	</style>
+	<style name="2.2.5" style="2.2">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{pr_to_is_avg} < 0]]></conditionExpression>
+			<style forecolor="#FF0000"/>
+		</conditionalStyle>
+	</style>
+	<style name="2.2.6" style="2.2">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{po_to_is_avg} < 0]]></conditionExpression>
+			<style forecolor="#FF0000"/>
+		</conditionalStyle>
+	</style>
+	<style name="2.3" style="2">
+		<box>
+			<topPen lineWidth="0.2"/>
+			<leftPen lineWidth="0.2"/>
+		</box>
+	</style>
+	<style name="2.3.1" style="2.3">
+		<box>
+			<leftPen lineWidth="0.0"/>
+		</box>
+	</style>
+	<style name="2.4" style="2">
+		<box>
+			<leftPen lineWidth="0.2"/>
+		</box>
+	</style>
+	<style name="3" style="0" hAlign="Left" vAlign="Top" fontSize="8" isBold="true">
+		<box topPadding="10" leftPadding="1" bottomPadding="5" rightPadding="1"/>
+	</style>
+	<style name="4" style="0" hAlign="Left" vAlign="Top" fontSize="8">
+		<box leftPadding="1" rightPadding="1">
+			<rightPen lineWidth="0.2"/>
+		</box>
+	</style>
+	<style name="4.1" style="4" isBold="true">
+		<box>
+			<topPen lineWidth="0.2"/>
+			<bottomPen lineWidth="0.2"/>
+		</box>
+	</style>
+	<style name="4.1.1" style="4.1" hAlign="Right"/>
+	<style name="4.2" style="4" hAlign="Right"/>
+	<style name="4.2.1" style="4.2">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{pr_to_po_avg} < 0]]></conditionExpression>
+			<style forecolor="#FF0000"/>
+		</conditionalStyle>
+	</style>
+	<style name="4.2.2" style="4.2">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{pr_to_is_avg} < 0]]></conditionExpression>
+			<style forecolor="#FF0000"/>
+		</conditionalStyle>
+	</style>
+	<style name="4.2.3" style="4.2">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{po_to_is} < 0]]></conditionExpression>
+			<style forecolor="#FF0000"/>
+		</conditionalStyle>
+	</style>
+	<style name="99" style="0" vAlign="Bottom" fontSize="6"/>
+	<subDataset name="po_summary">
+		<parameter name="DECIMAL_FORMATTER_DEFAULT" class="java.lang.Object" isForPrompting="false"/>
+		<parameter name="DECIMAL_FORMATTER_1" class="java.lang.Object" isForPrompting="false"/>
+		<parameter name="VCD" class="java.lang.Object">
+			<defaultValueExpression><![CDATA[$P{VCD}]]></defaultValueExpression>
+		</parameter>
+		<field name="nth_row" class="java.math.BigDecimal"/>
+		<field name="po_supplier" class="java.lang.String"/>
+		<field name="po_no" class="java.lang.String"/>
+		<field name="po_to_is" class="java.math.BigDecimal"/>
+		<field name="gjsc_avg_count" class="java.math.BigDecimal"/>
+	</subDataset>
+	<subDataset name="pr_summary">
+		<parameter name="DECIMAL_FORMATTER_DEFAULT" class="java.lang.Object" isForPrompting="false"/>
+		<parameter name="DECIMAL_FORMATTER_1" class="java.lang.Object" isForPrompting="false"/>
+		<parameter name="VCD" class="java.lang.Object">
+			<defaultValueExpression><![CDATA[$P{VCD}]]></defaultValueExpression>
+		</parameter>
+		<field name="nth_row" class="java.math.BigDecimal"/>
+		<field name="pr_dept" class="java.lang.String"/>
+		<field name="pr_no" class="java.lang.String"/>
+		<field name="pr_to_po_avg" class="java.math.BigDecimal"/>
+		<field name="pr_to_is_avg" class="java.math.BigDecimal"/>
+	</subDataset>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="STOPWATCH" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[(new java.net.URLClassLoader(
+    ([new java.net.URL("file://" + $P{SUBREPORT_DIR})]
+    ).toArray(new java.net.URL[0]), getClass().getClassLoader()
+)).loadClass("Stopwatch").newInstance().start()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="VCD" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[(new java.net.URLClassLoader(
+    ([new java.net.URL("file://" + $P{SUBREPORT_DIR})]
+    ).toArray(new java.net.URL[0]), getClass().getClassLoader()
+)).loadClass("ValueChangeDetector").newInstance()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SHOW_STOPWATCH" class="java.lang.Boolean"/>
+	<parameter name="OERP_USER" class="java.lang.String"/>
+	<parameter name="COMPANY_NAME" class="java.lang.String"/>
+	<parameter name="COMPANY_IDS" class="java.lang.String"/>
+	<parameter name="DATE_FORMAT_STRING_DEFAULT" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["d MMM yyyy"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DATE_FORMATTER_DEFAULT" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.text.SimpleDateFormat($P{DATE_FORMAT_STRING_DEFAULT})]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DATE_FORMAT_STRING_TIME_DEFAULT" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{DATE_FORMAT_STRING_DEFAULT} + " HH:mm:ss"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DATE_FORMATTER_TIME_DEFAULT" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.text.SimpleDateFormat($P{DATE_FORMAT_STRING_TIME_DEFAULT})]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DECIMAL_FORMAT_STRING_DEFAULT" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["#,##0.00;-#,##0.00"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DECIMAL_ROUNDING_MODE_DEFAULT" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["HALF_UP"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DECIMAL_FORMATTER_DEFAULT" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.text.DecimalFormat($P{DECIMAL_FORMAT_STRING_DEFAULT})]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DECIMAL_FORMAT_STRING_1" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["#,##0.0;-#,##0.0"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DECIMAL_ROUNDING_MODE_1" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["HALF_UP"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DECIMAL_FORMATTER_1" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.text.DecimalFormat($P{DECIMAL_FORMAT_STRING_1})]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DECIMAL_FORMAT_STRING_0" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["#,##0;-#,##0"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DECIMAL_ROUNDING_MODE_0" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["HALF_UP"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DECIMAL_FORMATTER_0" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.text.DecimalFormat($P{DECIMAL_FORMAT_STRING_0})]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TODAY" class="java.util.Date" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.util.Date()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SELECTED_FILTER_SELECTION" class="java.lang.String"/>
+	<parameter name="DEPT_IDS" class="java.lang.String"/>
+	<parameter name="DEPT_IDS_INCLUDE_NULL" class="java.lang.Boolean"/>
+	<parameter name="FROM_DATE_2_YR" class="java.lang.Integer"/>
+	<parameter name="FROM_DATE_2_MO" class="java.lang.Integer"/>
+	<parameter name="FROM_DATE_2_DY" class="java.lang.Integer"/>
+	<parameter name="TO_DATE_2_YR" class="java.lang.Integer"/>
+	<parameter name="TO_DATE_2_MO" class="java.lang.Integer"/>
+	<parameter name="TO_DATE_2_DY" class="java.lang.Integer"/>
+	<parameter name="FROM_DATE_2" class="java.util.Date" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.util.Date($P{FROM_DATE_2_YR} - 1900 , $P{FROM_DATE_2_MO} - 1, $P{FROM_DATE_2_DY})]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TO_DATE_2" class="java.util.Date" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.util.Date($P{TO_DATE_2_YR} - 1900 , $P{TO_DATE_2_MO} - 1, $P{TO_DATE_2_DY})]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PR_WHERE_CLAUSE" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{SELECTED_FILTER_SELECTION} == "pr"
+? String.format(
+    " AND pr.date_start BETWEEN '%d-%d-%d' AND '%d-%d-%d'"
+    + " AND ((%s AND pr.department_id IS NULL) OR pr.department_id IN (%s))",
+        $P{FROM_DATE_2_YR}, $P{FROM_DATE_2_MO}, $P{FROM_DATE_2_DY},
+        $P{TO_DATE_2_YR}, $P{TO_DATE_2_MO}, $P{TO_DATE_2_DY},
+        $P{DEPT_IDS_INCLUDE_NULL},
+        $P{DEPT_IDS})
+: ""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PO_WHERE_CLAUSE" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{SELECTED_FILTER_SELECTION} == "po"
+? String.format(
+    " AND po.date_approve BETWEEN '%d-%d-%d' AND '%d-%d-%d'",
+    $P{FROM_DATE_2_YR}, $P{FROM_DATE_2_MO}, $P{FROM_DATE_2_DY},
+    $P{TO_DATE_2_YR}, $P{TO_DATE_2_MO}, $P{TO_DATE_2_DY})
+: ""]]></defaultValueExpression>
+	</parameter>
+	<parameter name="dataset-pr_summary" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[(new java.net.URLClassLoader(
+    ([new java.net.URL("file://" + $P{SUBREPORT_DIR})]
+    ).toArray(new java.net.URL[0]), getClass().getClassLoader()
+))
+.loadClass("PrSummary")
+.getConstructor()
+.newInstance()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="dataset-po_summary" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[(new java.net.URLClassLoader(
+    ([new java.net.URL("file://" + $P{SUBREPORT_DIR})]
+    ).toArray(new java.net.URL[0]), getClass().getClassLoader()
+))
+.loadClass("PoSummary")
+.getConstructor()
+.newInstance()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SETTERS" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{DECIMAL_FORMATTER_DEFAULT}.setRoundingMode(java.math.RoundingMode.valueOf($P{DECIMAL_ROUNDING_MODE_DEFAULT})) == null
+&& $P{DECIMAL_FORMATTER_1}.setRoundingMode(java.math.RoundingMode.valueOf($P{DECIMAL_ROUNDING_MODE_1})) == null
+&& $P{DECIMAL_FORMATTER_0}.setRoundingMode(java.math.RoundingMode.valueOf($P{DECIMAL_ROUNDING_MODE_0})) == null
+/* Further setter can be added by this pattern: && $P{DECIMAL_FORMATTER_DEFAULT}.setXXX() == null */
+? null
+: null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PRINTED_PAGE_FOOTER" class="java.util.Collection" isForPrompting="false">
+		<defaultValueExpression><![CDATA[[]]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+ CASE WHEN dataset.department = 'Non-department' THEN 1 ELSE 0 END AS pr_dept_order,
+ dataset.department AS pr_dept,
+ dataset.pr_no AS pr_no,
+ dataset.pr_date::DATE AS pr_date,
+ dataset.pr_po_elapse_avg AS pr_to_po_avg,
+ dataset.pr_is_elapse_avg AS pr_to_is_avg,
+ dataset.prl_product AS pr_prod,
+ dataset.pr_qty AS pr_qty,
+ dataset.po_by_pr_qty AS pr_po_qty,
+ dataset.pr_po_ou AS pr_ou,
+ dataset.pr_po_ou_qty AS pr_ou_qty,
+ dataset.po_no AS po_no,
+ dataset.po_date::DATE AS po_date,
+ dataset.po_is_elapse_avg AS po_to_is_avg,
+ dataset.supplier_name AS po_supplier,
+ dataset.pol_product AS po_prod,
+ dataset.po_qty AS po_qty,
+ dataset.is_by_po_qty AS po_is_qty,
+ dataset.po_is_ou AS po_ou,
+ dataset.po_is_ou_qty AS po_ou_qty,
+ dataset.pr_po_elapse AS pr_to_po,
+ dataset.is_no AS is_no,
+ dataset.is_date::DATE AS is_date,
+ dataset.is_qty AS is_qty,
+ dataset.pr_is_elapse AS pr_to_is,
+ dataset.is_po_elapse AS po_to_is
+FROM (
+SELECT
+    -- Purchase Requisition Table Information
+    pr_table.department_id AS department_id,
+    pr_table.department AS department,
+    pr_table.pr_id AS pr_id,
+    pr_table.pr_no AS pr_no,
+    pr_table.pr_date AS pr_date,
+    po_by_pr_qty.prl_product AS prl_product,
+    po_by_pr_qty.pr_po_elapse_avg AS pr_po_elapse_avg,
+    is_by_pr_qty.pr_is_elapse_avg AS pr_is_elapse_avg,
+    po_by_pr_qty.pr_qty AS pr_qty,
+    po_by_pr_qty.po_by_pr_qty AS po_by_pr_qty,
+    CASE WHEN po_by_pr_qty.po_by_pr_qty > po_by_pr_qty.pr_qty THEN 'O' WHEN po_by_pr_qty.po_by_pr_qty < po_by_pr_qty.pr_qty THEN 'U' ELSE '' END AS pr_po_ou,
+    po_by_pr_qty.po_by_pr_qty - po_by_pr_qty.pr_qty AS pr_po_ou_qty,
+
+    -- Purchase Order Table Information
+    po_table.po_id AS po_id,
+    po_table.po_no AS po_no,
+    po_table.po_date AS po_date,
+    po_table.supplier_name AS supplier_name,
+    is_by_po_qty.po_is_elapse_avg AS po_is_elapse_avg,
+    is_by_po_qty.pol_product AS pol_product,
+    is_by_po_qty.po_qty AS po_qty,
+    is_by_po_qty.is_by_po_qty AS is_by_po_qty,
+    CASE WHEN is_by_po_qty.is_by_po_qty > is_by_po_qty.po_qty THEN 'O' WHEN is_by_po_qty.is_by_po_qty < is_by_po_qty.po_qty THEN 'U' ELSE '' END AS po_is_ou,
+    is_by_po_qty.is_by_po_qty - is_by_po_qty.po_qty AS po_is_ou_qty,
+    to_char(COALESCE(po_table.po_date, now()) - pr_table.pr_date, 'DD') AS pr_po_elapse,
+
+    -- Incoming Shipment Table Information
+    is_table.is_id AS is_id,
+    is_table.is_no AS is_no,
+    is_table.is_date AS is_date,
+    is_table.is_qty AS is_qty,
+    to_char(COALESCE(is_table.is_date, now()) - pr_table.pr_date, 'DD') AS pr_is_elapse,
+    to_char(COALESCE(is_table.is_date, now()) - po_table.po_date, 'DD') AS is_po_elapse
+FROM
+( -- Purchase Requisition With Related Purchase Order
+    SELECT
+        pr_id,
+        prl_prd_id,
+        prl_product,
+        pol_notes,
+        pr_qty,
+        SUM(po_qty) AS po_by_pr_qty,
+        to_char(AVG(COALESCE(po_date, now()) - COALESCE(pr_date, now())), 'DD') AS pr_po_elapse_avg
+    FROM
+    (-- Purchase Requisition Table
+        SELECT
+            pr.id AS pr_id,
+            prl.product_id AS prl_prd_id,
+            COALESCE(prd.default_code, '') || ' – ' || COALESCE(prl.notes, '') AS prl_product,
+            prl.notes AS prl_notes,
+            date_trunc('day', pr.date_start) AS pr_date,
+            SUM(prl.product_qty * (CASE
+                WHEN pr_uom_cat.id = prod_uom_cat.id
+                    THEN (pr_uom.factor * (CASE
+                        WHEN prod_uom.id IS NULL
+                            THEN 1
+                        ELSE prod_uom.factor
+                    END))
+                ELSE 1
+                END)) AS pr_qty
+        FROM purchase_requisition pr
+            JOIN purchase_requisition_line prl ON prl.requisition_id = pr.id
+            LEFT JOIN product_product prd ON prd.id = prl.product_id
+            LEFT JOIN product_template prd_tmpl ON prd_tmpl.id = prd.product_tmpl_id
+            LEFT JOIN product_uom prod_uom ON prod_uom.id = prd_tmpl.uom_id
+            LEFT JOIN product_uom_categ prod_uom_cat ON prod_uom_cat.id = prod_uom.category_id
+            LEFT JOIN product_uom pr_uom ON pr_uom.id = prl.product_uom_id
+            LEFT JOIN product_uom_categ pr_uom_cat ON pr_uom_cat.id = pr_uom.category_id
+        WHERE (pr.state IN ('in_progress', 'done'))
+            AND pr.company_id IN ($P!{COMPANY_IDS})
+            -- PR RELATED FILTERS: pr.date_start, pr.department_id
+            $P!{PR_WHERE_CLAUSE}
+        GROUP BY pr.id, prl.product_id, prd.default_code, prl.notes, pr.date_start
+    ) pr_by_prod
+    LEFT JOIN
+    (-- Purchase Order Table for Purchase Requsition Calculation
+        SELECT
+            po.id AS po_id,
+            po.requisition_id AS po_req_id,
+            pol.product_id AS pol_prd_id,
+            pol.notes AS pol_notes,
+            date_trunc('day', po.date_approve) AS po_date,
+            SUM(pol.product_qty * (CASE
+                WHEN po_uom_cat.id = prod_uom_cat.id
+                    THEN (po_uom.factor * (CASE
+                        WHEN prod_uom.id IS NULL
+                            THEN 1
+                        ELSE prod_uom.factor
+                        END))
+                ELSE 1
+                END)) AS po_qty
+        FROM purchase_order po
+            JOIN purchase_order_line pol ON pol.order_id = po.id
+            LEFT JOIN product_product prd ON prd.id = pol.product_id
+            LEFT JOIN product_template prd_tmpl ON prd_tmpl.id = prd.product_tmpl_id
+            LEFT JOIN product_uom prod_uom ON prod_uom.id = prd_tmpl.uom_id
+            LEFT JOIN product_uom_categ prod_uom_cat ON prod_uom_cat.id = prod_uom.category_id
+            LEFT JOIN product_uom po_uom ON po_uom.id = pol.product_uom
+            LEFT JOIN product_uom_categ po_uom_cat ON po_uom_cat.id = po_uom.category_id
+        WHERE (po.state IN ('approved', 'done'))
+            AND po.company_id IN ($P!{COMPANY_IDS})
+            -- PO RELATED FILTERS: po.date_approve
+            $P!{PO_WHERE_CLAUSE}
+        GROUP BY po.id, po.requisition_id, pol.product_id, pol.notes, po.date_approve
+    ) po_by_prod
+    ON ((po_by_prod.po_req_id, po_by_prod.pol_prd_id,
+        -- pol.notes can never be NULL because at the minimum it has: ' - '
+        SUBSTRING(po_by_prod.pol_notes FOR char_length(TRIM(BOTH ' ' FROM COALESCE(pr_by_prod.prl_notes, ''))))) =
+        (pr_by_prod.pr_id, pr_by_prod.prl_prd_id, TRIM(BOTH ' ' FROM COALESCE(pr_by_prod.prl_notes, ''))))
+    GROUP BY pr_id, prl_prd_id, prl_product, pol_notes, pr_qty
+) po_by_pr_qty
+LEFT JOIN
+(-- Purchase Requisition With Related Incoming Shipment
+    SELECT
+        pr_id,
+        prl_prd_id,
+        pol_notes,
+        pr_qty,
+        SUM(is_qty) AS is_by_pr_qty,
+        to_char(AVG(COALESCE(is_date, now()) - pr_date), 'DD') AS pr_is_elapse_avg
+    FROM
+    (-- Purchase Requisition Table
+        SELECT
+            pr.id AS pr_id,
+            prl.product_id AS prl_prd_id,
+            prl.notes AS prl_notes,
+            date_trunc('day', pr.date_start) AS pr_date,
+            SUM(prl.product_qty * (CASE
+                WHEN pr_uom_cat.id = prod_uom_cat.id
+                    THEN (pr_uom.factor * (CASE
+                        WHEN prod_uom.id IS NULL
+                            THEN 1
+                        ELSE prod_uom.factor
+                    END))
+                ELSE 1
+                END)) AS pr_qty
+        FROM purchase_requisition pr
+            JOIN purchase_requisition_line prl ON prl.requisition_id = pr.id
+            LEFT JOIN product_product prd ON prd.id = prl.product_id
+            LEFT JOIN product_template prd_tmpl ON prd_tmpl.id = prd.product_tmpl_id
+            LEFT JOIN product_uom prod_uom ON prod_uom.id = prd_tmpl.uom_id
+            LEFT JOIN product_uom_categ prod_uom_cat ON prod_uom_cat.id = prod_uom.category_id
+            LEFT JOIN product_uom pr_uom ON pr_uom.id = prl.product_uom_id
+            LEFT JOIN product_uom_categ pr_uom_cat ON pr_uom_cat.id = pr_uom.category_id
+        WHERE (pr.state IN ('in_progress', 'done'))
+            AND pr.company_id IN ($P!{COMPANY_IDS})
+            -- PR RELATED FILTERS: pr.date_start, pr.department_id
+            $P!{PR_WHERE_CLAUSE}
+        GROUP BY pr.id, prl.product_id, prl.notes, pr.date_start
+    ) pr_by_prod
+    LEFT JOIN
+    (-- Incoming Shipment Table for Purchase Requsition Calculation
+        SELECT
+            po.id AS po_id,
+            po.requisition_id AS po_req_id,
+            pol.product_id AS pol_prd_id,
+            pol.notes AS pol_notes,
+            date_trunc('day', sp.date_done) AS is_date,
+            SUM(sm.product_qty * (CASE
+                WHEN is_uom_cat.id = prod_uom_cat.id
+                    THEN (is_uom.factor * (CASE
+                        WHEN prod_uom.id IS NULL
+                            THEN 1
+                        ELSE prod_uom.factor
+                        END))
+                ELSE 1
+                END) * (CASE WHEN sp.type = 'out' THEN -1 ELSE 1 END)) AS is_qty
+        FROM purchase_order po
+            JOIN purchase_order_line pol ON pol.order_id = po.id
+            LEFT JOIN product_product prd ON prd.id = pol.product_id
+            LEFT JOIN product_template prd_tmpl ON prd_tmpl.id = prd.product_tmpl_id
+            LEFT JOIN product_uom prod_uom ON prod_uom.id = prd_tmpl.uom_id
+            LEFT JOIN product_uom_categ prod_uom_cat ON prod_uom_cat.id = prod_uom.category_id
+            LEFT JOIN stock_move sm ON (pol.id = sm.purchase_line_id AND sm.state IN ('done') AND sm.company_id IN ($P!{COMPANY_IDS}))
+            LEFT JOIN stock_picking sp ON (sp.id = sm.picking_id AND sp.state IN ('done') AND sp.company_id IN ($P!{COMPANY_IDS}))
+            LEFT JOIN product_uom is_uom ON is_uom.id = sm.product_uom
+            LEFT JOIN product_uom_categ is_uom_cat ON is_uom_cat.id = is_uom.category_id
+        WHERE (po.state IN ('approved', 'done'))
+            AND po.company_id IN ($P!{COMPANY_IDS})
+        GROUP BY po.id, po.requisition_id, pol.product_id, pol.notes, sp.date_done
+    ) is_by_prod
+    ON ((is_by_prod.po_req_id, is_by_prod.pol_prd_id,
+        -- pol.notes can never be NULL because at the minimum it has: ' - '
+        SUBSTRING(is_by_prod.pol_notes FOR char_length(TRIM(BOTH ' ' FROM COALESCE(pr_by_prod.prl_notes, ''))))) =
+        (pr_by_prod.pr_id, pr_by_prod.prl_prd_id, TRIM(BOTH ' ' FROM COALESCE(pr_by_prod.prl_notes, ''))))
+    GROUP BY pr_id, prl_prd_id, pol_notes, pr_qty
+) is_by_pr_qty
+ON ((po_by_pr_qty.pr_id, po_by_pr_qty.prl_prd_id, TRIM(BOTH ' ' FROM COALESCE(po_by_pr_qty.pol_notes, '')))) =
+      (is_by_pr_qty.pr_id, is_by_pr_qty.prl_prd_id, TRIM(BOTH ' ' FROM COALESCE(is_by_pr_qty.pol_notes, '')))
+FULL JOIN
+(-- Purchase Order With Related Incoming Shipment
+    SELECT
+        po_by_prod.po_id,
+        po_by_prod.po_req_id,
+        po_by_prod.pol_prd_id,
+        po_by_prod.pol_product,
+        po_by_prod.pol_notes,
+        po_by_prod.po_date,
+        po_qty,
+        SUM(is_qty) AS is_by_po_qty,
+        to_char(AVG(COALESCE(is_date, now()) - COALESCE(po_date, now())), 'DD') AS po_is_elapse_avg
+    FROM
+    (-- Purchase Order Table
+        SELECT
+            po.id AS po_id,
+            po.requisition_id AS po_req_id,
+            pol.product_id AS pol_prd_id,
+            COALESCE(pol.name, '') AS pol_product,
+            pol.notes AS pol_notes,
+            date_trunc('day', po.date_approve) AS po_date,
+            SUM(pol.product_qty * (CASE
+                WHEN po_uom_cat.id = prod_uom_cat.id
+                    THEN (po_uom.factor * (CASE
+                        WHEN prod_uom.id IS NULL
+                            THEN 1
+                        ELSE prod_uom.factor
+                        END))
+                ELSE 1
+                END)) AS po_qty
+        FROM purchase_order po
+            JOIN purchase_order_line pol ON pol.order_id = po.id
+            LEFT JOIN purchase_requisition pr ON pr.id = po.requisition_id
+            LEFT JOIN product_product prd ON prd.id = pol.product_id
+            LEFT JOIN product_template prd_tmpl ON prd_tmpl.id = prd.product_tmpl_id
+            LEFT JOIN product_uom prod_uom ON prod_uom.id = prd_tmpl.uom_id
+            LEFT JOIN product_uom_categ prod_uom_cat ON prod_uom_cat.id = prod_uom.category_id
+            LEFT JOIN product_uom po_uom ON po_uom.id = pol.product_uom
+            LEFT JOIN product_uom_categ po_uom_cat ON po_uom_cat.id = po_uom.category_id
+        WHERE (po.state IN ('approved', 'done'))
+            AND (pr.state IN ('in_progress', 'done') OR pr.state IS NULL)
+            AND po.company_id IN ($P!{COMPANY_IDS})
+            AND (pr.company_id IS NULL OR pr.company_id IN ($P!{COMPANY_IDS}))
+            -- PR RELATED FILTERS: pr.date_start, pr.department_id
+            $P!{PR_WHERE_CLAUSE}
+            -- PO RELATED FILTERS: po.date_approve
+            $P!{PO_WHERE_CLAUSE}
+        GROUP BY po.id, prd.default_code, po.requisition_id, pol.product_id, pol.name, pol.notes, po.date_approve
+    ) po_by_prod
+    LEFT JOIN
+    (-- Incoming Shipment Table for Purchase Order Calculation
+        SELECT
+            po.id AS po_id,
+            po.requisition_id AS po_req_id,
+            pol.product_id AS pol_prd_id,
+            pol.notes AS pol_notes,
+            date_trunc('day', sp.date_done) AS is_date,
+            SUM(sm.product_qty * (CASE
+                WHEN is_uom_cat.id = prod_uom_cat.id
+                    THEN (is_uom.factor * (CASE
+                        WHEN prod_uom.id IS NULL
+                            THEN 1
+                        ELSE prod_uom.factor
+                        END))
+                ELSE 1
+                END) * (CASE WHEN sp.type = 'out' THEN -1 ELSE 1 END)) AS is_qty
+        FROM purchase_order po
+            JOIN purchase_order_line pol ON pol.order_id = po.id
+            LEFT JOIN product_product prd ON prd.id = pol.product_id
+            LEFT JOIN product_template prd_tmpl ON prd_tmpl.id = prd.product_tmpl_id
+            LEFT JOIN product_uom prod_uom ON prod_uom.id = prd_tmpl.uom_id
+            LEFT JOIN product_uom_categ prod_uom_cat ON prod_uom_cat.id = prod_uom.category_id
+            LEFT JOIN stock_move sm ON (pol.id = sm.purchase_line_id AND sm.state IN ('done') AND sm.company_id IN ($P!{COMPANY_IDS}))
+            LEFT JOIN stock_picking sp ON (sp.id = sm.picking_id AND sp.state IN ('done') AND sp.company_id IN ($P!{COMPANY_IDS}))
+            LEFT JOIN product_uom is_uom ON is_uom.id = sm.product_uom
+            LEFT JOIN product_uom_categ is_uom_cat ON is_uom_cat.id = is_uom.category_id
+        WHERE (po.state IN ('approved', 'done'))
+            AND po.company_id IN ($P!{COMPANY_IDS})
+        GROUP BY po.id, po.requisition_id, pol.product_id, pol.notes, sp.date_done
+    ) is_by_prod
+-- The COALESCE(pr_id, -1) is because if the value is NULL, it is not treated as equal
+    ON ((po_by_prod.po_id, COALESCE(po_by_prod.po_req_id, -1), po_by_prod.pol_prd_id, TRIM(BOTH ' ' FROM COALESCE(po_by_prod.pol_notes, '')))) =
+        (is_by_prod.po_id, COALESCE(is_by_prod.po_req_id, -1), is_by_prod.pol_prd_id, TRIM(BOTH ' ' FROM COALESCE(is_by_prod.pol_notes, '')))
+    GROUP BY po_by_prod.po_req_id, po_by_prod.pol_product, po_by_prod.po_date, po_by_prod.pol_prd_id, po_by_prod.pol_notes, po_by_prod.po_id, po_qty
+) is_by_po_qty
+ON ((is_by_po_qty.po_req_id, is_by_po_qty.pol_prd_id, TRIM(BOTH ' ' FROM COALESCE(is_by_po_qty.pol_notes, ''))) =
+    (po_by_pr_qty.pr_id, po_by_pr_qty.prl_prd_id, TRIM(BOTH ' ' FROM COALESCE(po_by_pr_qty.pol_notes, ''))))
+FULL JOIN
+(-- Purchase Requisition Table
+    SELECT
+        pr.id AS pr_id,
+        pr.name AS pr_no,
+        date_trunc('day', pr.date_start) AS pr_date,
+        COALESCE (pr.department_id, 2000000000) AS department_id,
+        COALESCE (dept.name, 'Non-department') AS department
+    FROM purchase_requisition pr
+        LEFT JOIN hr_department dept ON dept.id = pr.department_id
+    WHERE (pr.state IN ('in_progress', 'done'))
+        AND pr.company_id IN ($P!{COMPANY_IDS})
+        -- PR RELATED FILTERS: pr.date_start, pr.department_id
+        $P!{PR_WHERE_CLAUSE}
+) pr_table
+ON pr_table.pr_id = po_by_pr_qty.pr_id
+FULL JOIN
+(-- Purchase Order Table
+    SELECT
+        po.id AS po_id,
+        po.order_number AS po_no,
+        date_trunc('day', po.date_approve) AS po_date,
+        supplier.name AS supplier_name
+    FROM purchase_order po
+        LEFT JOIN res_partner supplier ON supplier.id = po.partner_id
+        LEFT JOIN purchase_requisition pr ON pr.id = po.requisition_id
+    WHERE (po.state IN ('approved', 'done'))
+        AND (pr.state IN ('in_progress', 'done') OR pr.state IS NULL)
+        AND (pr.company_id IS NULL OR pr.company_id IN ($P!{COMPANY_IDS}))
+        AND po.company_id IN ($P!{COMPANY_IDS})
+        -- PR RELATED FILTERS: pr.date_start, pr.department_id
+        $P!{PR_WHERE_CLAUSE}
+        -- PO RELATED FILTERS: po.date_approve
+        $P!{PO_WHERE_CLAUSE}
+) po_table
+ON po_table.po_id = is_by_po_qty.po_id
+LEFT JOIN
+(-- Incoming Shipment Table
+    SELECT
+        sp.id AS is_id,
+        po.id AS po_id,
+        po.requisition_id AS po_req_id,
+        pol.product_id AS pol_prd_id,
+        pol.notes AS pol_notes,
+        sp.name AS is_no,
+        date_trunc('day', sp.date_done) AS is_date,
+        SUM(sm.product_qty * (CASE
+            WHEN is_uom_cat.id = prod_uom_cat.id
+                THEN (is_uom.factor * (CASE
+                    WHEN prod_uom.id IS NULL
+                        THEN 1
+                    ELSE prod_uom.factor
+                    END))
+            ELSE 1
+            END) * (CASE WHEN sp.type = 'out' THEN -1 ELSE 1 END)) AS is_qty
+    FROM purchase_order po
+        JOIN purchase_order_line pol ON pol.order_id = po.id
+        LEFT JOIN product_product prd ON prd.id = pol.product_id
+        LEFT JOIN product_template prd_tmpl ON prd_tmpl.id = prd.product_tmpl_id
+        LEFT JOIN product_uom prod_uom ON prod_uom.id = prd_tmpl.uom_id
+        LEFT JOIN product_uom_categ prod_uom_cat ON prod_uom_cat.id = prod_uom.category_id
+        LEFT JOIN stock_move sm ON (pol.id = sm.purchase_line_id AND sm.state IN ('done') AND sm.company_id IN ($P!{COMPANY_IDS}))
+        LEFT JOIN stock_picking sp ON (sp.id = sm.picking_id AND sp.state IN ('done') AND sp.company_id IN ($P!{COMPANY_IDS}))
+        LEFT JOIN product_uom is_uom ON is_uom.id = sm.product_uom
+        LEFT JOIN product_uom_categ is_uom_cat ON is_uom_cat.id = is_uom.category_id
+    WHERE (po.state IN ('approved', 'done'))
+        AND po.company_id IN ($P!{COMPANY_IDS})
+    GROUP BY sp.id, po.id, po.requisition_id, pol.product_id, pol.notes, sp.name, sp.date_done
+) is_table
+-- The COALESCE(pr_id, -1) is because if the value is NULL, it is not treated as equal
+ON ((is_by_po_qty.po_id, COALESCE(is_by_po_qty.po_req_id, -1), is_by_po_qty.pol_prd_id, TRIM(BOTH ' ' FROM COALESCE(is_by_po_qty.pol_notes, '')))) =
+    (is_table.po_id, COALESCE(is_table.po_req_id, -1), is_table.pol_prd_id, TRIM(BOTH ' ' FROM COALESCE(is_table.pol_notes, '')))
+) dataset
+ORDER BY
+ pr_dept_order,
+ pr_dept,
+ pr_no,
+ pr_date,
+ pr_prod,
+ po_no,
+ po_date,
+ po_prod,
+ is_no,
+ is_date]]>
+	</queryString>
+	<field name="pr_dept" class="java.lang.String"/>
+	<field name="pr_no" class="java.lang.String"/>
+	<field name="pr_date" class="java.util.Date"/>
+	<field name="pr_to_po_avg" class="java.math.BigDecimal"/>
+	<field name="pr_to_is_avg" class="java.math.BigDecimal"/>
+	<field name="pr_prod" class="java.lang.String"/>
+	<field name="pr_qty" class="java.math.BigDecimal"/>
+	<field name="pr_po_qty" class="java.math.BigDecimal"/>
+	<field name="pr_ou" class="java.lang.String"/>
+	<field name="pr_ou_qty" class="java.math.BigDecimal"/>
+	<field name="po_no" class="java.lang.String"/>
+	<field name="po_date" class="java.util.Date"/>
+	<field name="po_to_is_avg" class="java.math.BigDecimal"/>
+	<field name="po_supplier" class="java.lang.String"/>
+	<field name="po_prod" class="java.lang.String"/>
+	<field name="po_qty" class="java.math.BigDecimal"/>
+	<field name="po_is_qty" class="java.math.BigDecimal"/>
+	<field name="po_ou" class="java.lang.String"/>
+	<field name="po_ou_qty" class="java.math.BigDecimal"/>
+	<field name="pr_to_po" class="java.math.BigDecimal"/>
+	<field name="is_no" class="java.lang.String"/>
+	<field name="is_date" class="java.util.Date"/>
+	<field name="is_qty" class="java.math.BigDecimal"/>
+	<field name="pr_to_is" class="java.math.BigDecimal"/>
+	<field name="po_to_is" class="java.math.BigDecimal"/>
+	<variable name="distinct_count-pr_dept-pr_count" class="java.lang.Integer" resetType="Group" resetGroup="pr_dept" calculation="DistinctCount">
+		<variableExpression><![CDATA[$F{pr_no}]]></variableExpression>
+	</variable>
+	<variable name="dataset-po_summary" class="java.lang.Object">
+		<variableExpression><![CDATA[$P{VCD}.detectChange("dataset-po_summary", $V{REPORT_COUNT})
+? $P{dataset-po_summary}.addRecord(
+    $F{po_supplier},
+    $F{po_no},
+    $F{po_to_is}
+)
+: $P{dataset-po_summary}]]></variableExpression>
+	</variable>
+	<variable name="dataset-pr_summary" class="java.lang.Object">
+		<variableExpression><![CDATA[$P{VCD}.detectChange("dataset-pr_summary", [$F{pr_dept}, $F{pr_no}])
+? $P{dataset-pr_summary}.addRecord(
+    $F{pr_dept},
+    $F{pr_no},
+    $F{pr_to_po_avg},
+    $F{pr_to_is_avg}
+)
+: $P{dataset-pr_summary}]]></variableExpression>
+	</variable>
+	<group name="pr_dept" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{pr_dept}]]></groupExpression>
+		<groupHeader>
+			<band height="1" splitType="Prevent">
+				<staticText>
+					<reportElement style="2.3.1" stretchType="RelativeToTallestObject" x="0" y="0" width="58" height="1"/>
+					<textElement/>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="2.3" stretchType="RelativeToTallestObject" x="58" y="0" width="402" height="1"/>
+					<textElement/>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="2.3" stretchType="RelativeToTallestObject" x="460" y="0" width="467" height="1"/>
+					<textElement/>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="2.3" stretchType="RelativeToTallestObject" x="927" y="0" width="222" height="1"/>
+					<textElement/>
+					<text><![CDATA[]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="pr_no" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{pr_no}]]></groupExpression>
+	</group>
+	<pageHeader>
+		<band height="20" splitType="Prevent">
+			<textField isStretchWithOverflow="true">
+				<reportElement style="1" stretchType="RelativeToTallestObject" x="0" y="0" width="1150" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["Company Name: " + $P{COMPANY_NAME} + "\n"
++ "Report Name: " + "Purchase Requisition Fullfillment & Purchase Order Tracking" + "\n"
++ "Periode" + ": " + $P{DATE_FORMATTER_DEFAULT}.format($P{FROM_DATE_2}) + " \u2013 " + $P{DATE_FORMATTER_DEFAULT}.format($P{TO_DATE_2})]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="10" splitType="Prevent">
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1.2" stretchType="RelativeToTallestObject" x="0" y="0" width="58" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["Department"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1.2" stretchType="RelativeToTallestObject" x="58" y="0" width="13" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[""]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1" stretchType="RelativeToTallestObject" x="71" y="0" width="78" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["PR No."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1" stretchType="RelativeToTallestObject" x="149" y="0" width="55" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["PR Date"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1.1" stretchType="RelativeToTallestObject" x="204" y="0" width="31" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["PR-PO Avg. (days)"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1.1" stretchType="RelativeToTallestObject" x="235" y="0" width="31" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["PR-IS Avg. (days)"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1" stretchType="RelativeToTallestObject" x="266" y="0" width="100" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["Product"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1.1" stretchType="RelativeToTallestObject" x="366" y="0" width="28" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["PR Qty"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1.1" stretchType="RelativeToTallestObject" x="394" y="0" width="28" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["PO Qty"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1.1" stretchType="RelativeToTallestObject" x="422" y="0" width="10" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["O/U"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1.1" stretchType="RelativeToTallestObject" x="432" y="0" width="28" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["O/U Qty"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1.2" stretchType="RelativeToTallestObject" x="460" y="0" width="78" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["PO No."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1" stretchType="RelativeToTallestObject" x="538" y="0" width="55" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["PO Date"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1.1" stretchType="RelativeToTallestObject" x="593" y="0" width="31" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["IS Avg. (days)"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1" stretchType="RelativeToTallestObject" x="624" y="0" width="78" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["Supplier"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1" stretchType="RelativeToTallestObject" x="702" y="0" width="100" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["Product"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1.1" stretchType="RelativeToTallestObject" x="802" y="0" width="28" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["PO Qty"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1.1" stretchType="RelativeToTallestObject" x="830" y="0" width="28" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["IS Qty"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1.1" stretchType="RelativeToTallestObject" x="858" y="0" width="10" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["O/U"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1.1" stretchType="RelativeToTallestObject" x="868" y="0" width="28" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["O/U Qty"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1.1" stretchType="RelativeToTallestObject" x="896" y="0" width="31" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["PR-PO (days)"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1.2" stretchType="RelativeToTallestObject" x="927" y="0" width="75" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["IS No."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1" stretchType="RelativeToTallestObject" x="1002" y="0" width="55" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["IS Date"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1.1" stretchType="RelativeToTallestObject" x="1057" y="0" width="28" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["IS Qty"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1.1" stretchType="RelativeToTallestObject" x="1085" y="0" width="32" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["PR-IS (days)"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.1.1.1" stretchType="RelativeToTallestObject" x="1117" y="0" width="32" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["PO-IS (days)"]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="10" splitType="Prevent">
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2" stretchType="RelativeToTallestObject" x="0" y="0" width="58" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{VCD}.detectChange("department", [$F{pr_dept}])
+? ($F{pr_dept})
+: null]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.2.1" stretchType="RelativeToTallestObject" x="58" y="0" width="13" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{VCD}.detectChange("penomoran", [$F{pr_no}])
+? ($V{distinct_count-pr_dept-pr_count} == 0 ? null : $V{distinct_count-pr_dept-pr_count})
+: null]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2" stretchType="RelativeToTallestObject" x="71" y="0" width="78" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{VCD}.detectChange("pr_no", [$F{pr_no}])
+? ($F{pr_no})
+: null]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2" stretchType="RelativeToTallestObject" x="149" y="0" width="55" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{VCD}.detectChange("pr_date", [$F{pr_no}])
+?($F{pr_date} == null ? null : $P{DATE_FORMATTER_DEFAULT}.format($F{pr_date}))
+: null]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="2.2.4" stretchType="RelativeToTallestObject" x="204" y="0" width="31" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{VCD}.detectChange("pr_po_avg_days", [$F{pr_no}])
+? ($F{pr_to_po_avg} == null ? null : $P{DECIMAL_FORMATTER_1}.format($F{pr_to_po_avg}))
+: null]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="2.2.5" stretchType="RelativeToTallestObject" x="235" y="0" width="31" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{VCD}.detectChange("pr_is_avg_days",[$F{pr_no}])
+? ($F{pr_to_is_avg} == null ? null : $P{DECIMAL_FORMATTER_1}.format($F{pr_to_is_avg}))
+: null]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2" stretchType="RelativeToTallestObject" x="266" y="0" width="100" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{VCD}.detectChange("pr_product",[$F{pr_no},$F{pr_prod}])
+? ($F{pr_prod})
+: null]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.2" stretchType="RelativeToTallestObject" x="366" y="0" width="28" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{VCD}.detectChange("pr_qty",[$F{pr_no},$F{pr_prod}])
+? ($F{pr_qty} == null ? null : $P{DECIMAL_FORMATTER_DEFAULT}.format($F{pr_qty}))
+: null]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.2" stretchType="RelativeToTallestObject" x="394" y="0" width="28" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{VCD}.detectChange("pr_po_qty",[$F{pr_no},$F{pr_prod}])
+? ($F{pr_po_qty} == null ? null : $P{DECIMAL_FORMATTER_DEFAULT}.format($F{pr_po_qty}))
+: null]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.2" stretchType="RelativeToTallestObject" x="422" y="0" width="10" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{VCD}.detectChange("pr_ou",[$F{pr_no},$F{pr_prod}])
+? ($F{pr_ou})
+: null]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="2.2.2" stretchType="RelativeToTallestObject" x="432" y="0" width="28" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{VCD}.detectChange("pr_ou_qty",[$F{pr_no},$F{pr_prod}])
+? ($F{pr_ou_qty} == null ? null : $P{DECIMAL_FORMATTER_DEFAULT}.format($F{pr_ou_qty}))
+: null]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.4" stretchType="RelativeToTallestObject" x="460" y="0" width="78" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{VCD}.detectChange("po_no",[$F{pr_no},$F{po_no}])
+? ($F{po_no})
+: null]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2" stretchType="RelativeToTallestObject" x="538" y="0" width="55" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{VCD}.detectChange("po_date",[$F{pr_no},$F{po_no}])
+? ($F{po_date} == null ? null : $P{DATE_FORMATTER_DEFAULT}.format($F{po_date}))
+: null]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="2.2.6" stretchType="RelativeToTallestObject" x="593" y="0" width="31" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{VCD}.detectChange("is_avg_days",[$F{pr_no},$F{po_no}])
+? ($F{po_to_is_avg} == null ? null : $P{DECIMAL_FORMATTER_1}.format($F{po_to_is_avg}))
+: null]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="2" stretchType="RelativeToTallestObject" x="624" y="0" width="78" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{VCD}.detectChange("supplier",[$F{pr_no},$F{po_no}])
+? ($F{po_supplier})
+: null]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2" stretchType="RelativeToTallestObject" x="702" y="0" width="100" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{VCD}.detectChange("po_product",[$F{pr_no},$F{po_no},$F{po_prod}])
+? ($F{po_prod})
+: null]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.2" stretchType="RelativeToTallestObject" x="802" y="0" width="28" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{VCD}.detectChange("po_qty",[$F{pr_no},$F{po_no},$F{po_prod}])
+? ($F{po_qty} == null ? null : $P{DECIMAL_FORMATTER_DEFAULT}.format($F{po_qty}))
+: null]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.2" stretchType="RelativeToTallestObject" x="830" y="0" width="28" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{VCD}.detectChange("po_is_qty",[$F{pr_no},$F{po_no},$F{po_prod}])
+? ($F{po_is_qty} == null ? null : $P{DECIMAL_FORMATTER_DEFAULT}.format($F{po_is_qty}))
+: null]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.2" stretchType="RelativeToTallestObject" x="858" y="0" width="10" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{VCD}.detectChange("po_ou",[$F{pr_no},$F{po_no},$F{po_prod}])
+? ($F{po_ou})
+: null]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement style="2.2.3" stretchType="RelativeToTallestObject" x="868" y="0" width="28" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{VCD}.detectChange("po_ou_qty",[$F{pr_no},$F{po_no},$F{po_prod}])
+? ($F{po_ou_qty} == null ? null : $P{DECIMAL_FORMATTER_DEFAULT}.format($F{po_ou_qty}))
+: null]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.2" stretchType="RelativeToTallestObject" x="896" y="0" width="31" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$P{VCD}.detectChange("pr_po_days",[$F{pr_no},$F{po_no},$F{po_prod}])
+? ($F{pr_to_po} == null ? null : $P{DECIMAL_FORMATTER_0}.format($F{pr_to_po}))
+: null]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.4" stretchType="RelativeToTallestObject" x="927" y="0" width="75" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{is_no}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2" stretchType="RelativeToTallestObject" x="1002" y="0" width="55" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[($F{is_date} == null ? null : $P{DATE_FORMATTER_DEFAULT}.format($F{is_date}))]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.2" stretchType="RelativeToTallestObject" x="1057" y="0" width="28" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[($F{is_qty} == null ? null : $P{DECIMAL_FORMATTER_DEFAULT}.format($F{is_qty}))]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.2" stretchType="RelativeToTallestObject" x="1085" y="0" width="32" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[($F{pr_to_is} == null ? null : $P{DECIMAL_FORMATTER_0}.format($F{pr_to_is}))]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="2.2" stretchType="RelativeToTallestObject" x="1117" y="0" width="32" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[($F{po_to_is} == null ? null : $P{DECIMAL_FORMATTER_0}.format($F{po_to_is}))]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="20" splitType="Prevent">
+			<printWhenExpression><![CDATA[$P{PRINTED_PAGE_FOOTER}.indexOf($V{PAGE_NUMBER}) == -1
+? $P{PRINTED_PAGE_FOOTER}.add($V{PAGE_NUMBER})
+: false]]></printWhenExpression>
+			<textField evaluationTime="Report">
+				<reportElement style="99" x="0" y="0" width="538" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["Printed by " + $P{OERP_USER}
++ " on " + $P{DATE_FORMATTER_TIME_DEFAULT}.format($P{TODAY})
++ ($P{SHOW_STOPWATCH}
+   ? String.format(" in %.3fs", $P{STOPWATCH}.stop().computeDeltaMs().deltaMs / 1000.0)
+   : "")]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="99" x="538" y="0" width="75" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Strictly Confidential]]></text>
+			</staticText>
+			<textField>
+				<reportElement style="99" x="1045" y="0" width="80" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER} + " of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement style="99" x="1125" y="0" width="25" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="40" splitType="Immediate">
+			<textField isStretchWithOverflow="true">
+				<reportElement style="3" x="0" y="0" width="1150" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["PR Summary"]]></textFieldExpression>
+			</textField>
+			<crosstab columnBreakOffset="999999999">
+				<reportElement positionType="Float" x="0" y="10" width="1150" height="10"/>
+				<crosstabParameter name="DECIMAL_FORMATTER_DEFAULT" class="java.lang.Object">
+					<parameterValueExpression><![CDATA[$P{DECIMAL_FORMATTER_DEFAULT}]]></parameterValueExpression>
+				</crosstabParameter>
+				<crosstabParameter name="DECIMAL_FORMATTER_1" class="java.lang.Object">
+					<parameterValueExpression><![CDATA[$P{DECIMAL_FORMATTER_1}]]></parameterValueExpression>
+				</crosstabParameter>
+				<crosstabParameter name="VCD" class="java.lang.Object">
+					<parameterValueExpression><![CDATA[$P{VCD}]]></parameterValueExpression>
+				</crosstabParameter>
+				<crosstabDataset>
+					<dataset>
+						<datasetRun subDataset="pr_summary">
+							<datasetParameter name="DECIMAL_FORMATTER_DEFAULT">
+								<datasetParameterExpression><![CDATA[$P{DECIMAL_FORMATTER_DEFAULT}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="DECIMAL_FORMATTER_1">
+								<datasetParameterExpression><![CDATA[$P{DECIMAL_FORMATTER_1}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="VCD">
+								<datasetParameterExpression><![CDATA[$P{VCD}]]></datasetParameterExpression>
+							</datasetParameter>
+							<dataSourceExpression><![CDATA[$P{dataset-pr_summary}]]></dataSourceExpression>
+						</datasetRun>
+					</dataset>
+				</crosstabDataset>
+				<crosstabHeaderCell>
+					<cellContents>
+						<textField isStretchWithOverflow="true">
+							<reportElement style="4.1" stretchType="RelativeToBandHeight" x="0" y="0" width="58" height="10"/>
+							<textElement/>
+							<textFieldExpression><![CDATA["Department"]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true">
+							<reportElement style="4.1" stretchType="RelativeToBandHeight" x="58" y="0" width="78" height="10"/>
+							<textElement/>
+							<textFieldExpression><![CDATA["PR No."]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true">
+							<reportElement style="4.1.1" stretchType="RelativeToBandHeight" x="136" y="0" width="31" height="10"/>
+							<textElement/>
+							<textFieldExpression><![CDATA["PR-PO Avg. (days)"]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true">
+							<reportElement style="4.1.1" stretchType="RelativeToBandHeight" x="167" y="0" width="32" height="10"/>
+							<textElement/>
+							<textFieldExpression><![CDATA["PR-IS Avg. (days)"]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabHeaderCell>
+				<rowGroup name="nth_row" width="199">
+					<bucket class="java.math.BigDecimal">
+						<bucketExpression><![CDATA[$F{nth_row}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents>
+							<textField isStretchWithOverflow="true">
+								<reportElement style="4" stretchType="RelativeToBandHeight" x="0" y="0" width="58" height="10"/>
+								<textElement/>
+								<textFieldExpression><![CDATA[$P{VCD}.detectChange("pr_summary-department",[$V{pr_dept}])
+? ($V{pr_dept})
+: null]]></textFieldExpression>
+							</textField>
+							<textField isStretchWithOverflow="true">
+								<reportElement style="4" stretchType="RelativeToBandHeight" x="58" y="0" width="78" height="10"/>
+								<textElement/>
+								<textFieldExpression><![CDATA[$V{pr_no}]]></textFieldExpression>
+							</textField>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement style="4.2.1" stretchType="RelativeToBandHeight" x="136" y="0" width="31" height="10"/>
+								<textElement/>
+								<textFieldExpression><![CDATA[($V{pr_to_po_avg} == null ? null : $P{DECIMAL_FORMATTER_1}.format($V{pr_to_po_avg}))]]></textFieldExpression>
+							</textField>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement style="4.2.2" stretchType="RelativeToBandHeight" x="167" y="0" width="32" height="10"/>
+								<textElement/>
+								<textFieldExpression><![CDATA[($V{pr_to_is_avg} == null ? null : $P{DECIMAL_FORMATTER_1}.format($V{pr_to_is_avg}))]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<columnGroup name="global" height="10">
+					<bucket class="java.lang.Boolean">
+						<bucketExpression><![CDATA[true]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents/>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents/>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<measure name="pr_dept" class="java.lang.String">
+					<measureExpression><![CDATA[$F{pr_dept}]]></measureExpression>
+				</measure>
+				<measure name="pr_no" class="java.lang.String">
+					<measureExpression><![CDATA[$F{pr_no}]]></measureExpression>
+				</measure>
+				<measure name="pr_to_po_avg" class="java.math.BigDecimal">
+					<measureExpression><![CDATA[$F{pr_to_po_avg}]]></measureExpression>
+				</measure>
+				<measure name="pr_to_is_avg" class="java.math.BigDecimal">
+					<measureExpression><![CDATA[$F{pr_to_is_avg}]]></measureExpression>
+				</measure>
+				<crosstabCell width="1" height="10">
+					<cellContents/>
+				</crosstabCell>
+				<whenNoDataCell>
+					<cellContents>
+						<textField isStretchWithOverflow="true">
+							<reportElement style="4.1" stretchType="RelativeToBandHeight" x="0" y="0" width="58" height="10"/>
+							<textElement/>
+							<textFieldExpression><![CDATA["Department"]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true">
+							<reportElement style="4.1" stretchType="RelativeToBandHeight" x="58" y="0" width="78" height="10"/>
+							<textElement/>
+							<textFieldExpression><![CDATA["PR No."]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true">
+							<reportElement style="4.1.1" stretchType="RelativeToBandHeight" x="136" y="0" width="31" height="10"/>
+							<textElement/>
+							<textFieldExpression><![CDATA["PR-PO Avg. (days)"]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true">
+							<reportElement style="4.1.1" stretchType="RelativeToBandHeight" x="167" y="0" width="32" height="10"/>
+							<textElement/>
+							<textFieldExpression><![CDATA["PR-IS Avg. (days)"]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</whenNoDataCell>
+			</crosstab>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="3" positionType="Float" x="0" y="20" width="1150" height="10"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["PO Summary"]]></textFieldExpression>
+			</textField>
+			<crosstab columnBreakOffset="999999999">
+				<reportElement positionType="Float" x="0" y="30" width="1150" height="10"/>
+				<crosstabParameter name="DECIMAL_FORMATTER_DEFAULT" class="java.lang.Object">
+					<parameterValueExpression><![CDATA[$P{DECIMAL_FORMATTER_DEFAULT}]]></parameterValueExpression>
+				</crosstabParameter>
+				<crosstabParameter name="DECIMAL_FORMATTER_1" class="java.lang.Object">
+					<parameterValueExpression><![CDATA[$P{DECIMAL_FORMATTER_1}]]></parameterValueExpression>
+				</crosstabParameter>
+				<crosstabParameter name="VCD" class="java.lang.Object">
+					<parameterValueExpression><![CDATA[$P{VCD}]]></parameterValueExpression>
+				</crosstabParameter>
+				<crosstabDataset>
+					<dataset>
+						<datasetRun subDataset="po_summary">
+							<datasetParameter name="DECIMAL_FORMATTER_DEFAULT">
+								<datasetParameterExpression><![CDATA[$P{DECIMAL_FORMATTER_DEFAULT}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="DECIMAL_FORMATTER_1">
+								<datasetParameterExpression><![CDATA[$P{DECIMAL_FORMATTER_1}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="VCD">
+								<datasetParameterExpression><![CDATA[$P{VCD}]]></datasetParameterExpression>
+							</datasetParameter>
+							<dataSourceExpression><![CDATA[$P{dataset-po_summary}]]></dataSourceExpression>
+						</datasetRun>
+					</dataset>
+				</crosstabDataset>
+				<crosstabHeaderCell>
+					<cellContents>
+						<textField isStretchWithOverflow="true">
+							<reportElement style="4.1" stretchType="RelativeToBandHeight" x="0" y="0" width="82" height="10"/>
+							<textElement/>
+							<textFieldExpression><![CDATA["Supplier"]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true">
+							<reportElement style="4.1" stretchType="RelativeToBandHeight" x="82" y="0" width="78" height="10"/>
+							<textElement/>
+							<textFieldExpression><![CDATA["PO No."]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true">
+							<reportElement style="4.1.1" stretchType="RelativeToBandHeight" x="160" y="0" width="32" height="10"/>
+							<textElement/>
+							<textFieldExpression><![CDATA["PO-IS Avg (days)"]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</crosstabHeaderCell>
+				<rowGroup name="nth_row" width="192">
+					<bucket class="java.math.BigDecimal">
+						<bucketExpression><![CDATA[$F{nth_row}]]></bucketExpression>
+					</bucket>
+					<crosstabRowHeader>
+						<cellContents>
+							<textField isStretchWithOverflow="true">
+								<reportElement style="4" stretchType="RelativeToBandHeight" x="0" y="0" width="82" height="10"/>
+								<textElement/>
+								<textFieldExpression><![CDATA[$P{VCD}.detectChange("po_summary-supplier",[$V{po_supplier}])
+? ($V{po_supplier})
+: null]]></textFieldExpression>
+							</textField>
+							<textField isStretchWithOverflow="true">
+								<reportElement style="4" stretchType="RelativeToBandHeight" x="82" y="0" width="78" height="10"/>
+								<textElement/>
+								<textFieldExpression><![CDATA[$V{po_no}]]></textFieldExpression>
+							</textField>
+							<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+								<reportElement style="4.2.3" stretchType="RelativeToBandHeight" x="160" y="0" width="32" height="10"/>
+								<textElement/>
+								<textFieldExpression><![CDATA[$P{DECIMAL_FORMATTER_1}.format(
+    ($V{po_to_is} == null
+     ? 0.0
+     : ($V{po_to_is}.doubleValue()
+        / ($V{gjsc_avg_count} == null || $V{gjsc_avg_count} == java.math.BigDecimal.ZERO
+           ? 1.0
+           : $V{gjsc_avg_count}.doubleValue()))))]]></textFieldExpression>
+							</textField>
+						</cellContents>
+					</crosstabRowHeader>
+					<crosstabTotalRowHeader>
+						<cellContents/>
+					</crosstabTotalRowHeader>
+				</rowGroup>
+				<columnGroup name="global" height="10">
+					<bucket class="java.lang.Boolean">
+						<bucketExpression><![CDATA[true]]></bucketExpression>
+					</bucket>
+					<crosstabColumnHeader>
+						<cellContents/>
+					</crosstabColumnHeader>
+					<crosstabTotalColumnHeader>
+						<cellContents/>
+					</crosstabTotalColumnHeader>
+				</columnGroup>
+				<measure name="po_supplier" class="java.lang.String">
+					<measureExpression><![CDATA[$F{po_supplier}]]></measureExpression>
+				</measure>
+				<measure name="po_no" class="java.lang.String">
+					<measureExpression><![CDATA[$F{po_no}]]></measureExpression>
+				</measure>
+				<measure name="po_to_is" class="java.math.BigDecimal">
+					<measureExpression><![CDATA[$F{po_to_is}]]></measureExpression>
+				</measure>
+				<measure name="gjsc_avg_count" class="java.math.BigDecimal">
+					<measureExpression><![CDATA[$F{gjsc_avg_count}]]></measureExpression>
+				</measure>
+				<crosstabCell width="1" height="10">
+					<cellContents/>
+				</crosstabCell>
+				<whenNoDataCell>
+					<cellContents>
+						<textField isStretchWithOverflow="true">
+							<reportElement style="4.1" stretchType="RelativeToBandHeight" x="0" y="0" width="82" height="10"/>
+							<textElement/>
+							<textFieldExpression><![CDATA["Supplier"]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true">
+							<reportElement style="4.1" stretchType="RelativeToBandHeight" x="82" y="0" width="78" height="10"/>
+							<textElement/>
+							<textFieldExpression><![CDATA["PO No."]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true">
+							<reportElement style="4.1.1" stretchType="RelativeToBandHeight" x="160" y="0" width="32" height="10"/>
+							<textElement/>
+							<textFieldExpression><![CDATA["PO-IS Avg (days)"]]></textFieldExpression>
+						</textField>
+					</cellContents>
+				</whenNoDataCell>
+			</crosstab>
+		</band>
+	</summary>
+</jasperReport>

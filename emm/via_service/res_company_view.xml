@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!-- Company Form View -->
+
+        <record id="view_company_service_form" model="ir.ui.view">
+            <field name="name">view.company.service.form</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                    <page string="Service Request">
+                        <form string="Employee Skills" version="7.0">
+                            <group col="4" colspan="4">
+                                <field name="hit"/>
+                                <field name="limit"/>
+                                <field name="auto_create_skill_set"/>
+                                <field name="spare_parts_location"/>
+                                <field name="pickup_location"/>
+                                <field name="transit_location"/>
+                                <field name="hr_employee_category" widget="many2many_tags"/>
+                                <field name="additional_service_fee"/>
+                            </group>
+                        </form>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+
+    </data>
+</openerp>

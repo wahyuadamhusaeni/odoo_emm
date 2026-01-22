@@ -1,0 +1,189 @@
+<?xml version="1.0"?>
+<openerp>
+<data>
+
+<record id="stock_inventory_form_approval" model="ir.ui.view">
+    <field name="name">Stock Inventory Form Approval</field>
+    <field name="model">stock.inventory</field>
+    <field name="inherit_id" ref="stock.view_inventory_form"/>
+    <field name="arch" type="xml">
+        <field name="name" position="before">
+            <field name="auto_approval_func" invisible="1"/>
+            <field name="auto_approval" invisible="1"/>
+        </field>
+        <page string="Posted Inventory" position="after"/>
+            <notebook>
+                <page string="Approval" groups="base.group_user">
+                    <form string="Approval List">
+                        <separator colspan="4" string="Approval List"/>
+                        <group col="4" colspan="4">
+                            <field name="approval_list" nolabel="1">
+                                <tree string="Approval List" editable="bottom">
+                                    <field name="approval_items_id" on_change="approval_items_id_change(approval_items_id)" domain="[('model','=','stock.inventory')]"/>
+                                    <field name="description"/>
+                                    <field name="approver" invisible="1"/>
+                                    <field name="user" invisible="1"/>
+                                    <field name="approver_user_show" attrs="{'readonly': [('approver_user','!=',False)]}" class="oe_highlight" on_change="approval_user_show_change(approver_user_show)" domain="[('id','in',user[0][2])]"/>
+                                    <field name="approver_user" invisible="1" on_change="approval_user_change(approver_user)"/>
+                                    <field name="visibility" invisible="1"/>
+                                    <field name="state"/>
+                                    <field name="user_filter"/>
+                                    <button name="approve" icon="gtk-apply" string="Approve" type="object" attrs="{'invisible': ['|',('visibility','=',False),('state','in',['na','approved','reject','ignore'])]}"/>
+                                    <button name="reject" icon="gtk-cancel" string="Reject" type="object" attrs="{'invisible': ['|',('visibility','=',False),('state','in',['na','approved','reject','ignore'])]}"/>
+                                    <button name="ignore" icon="gtk-close" string="Ignore" type="object" groups="via_approval.approval_super_user"/>
+                                    <button name="view" icon="gtk-find" string="View" type="object"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </form>
+                </page>
+            </notebook>
+    </field>
+</record>
+
+<record id="stock_picking_form_approval" model="ir.ui.view">
+    <field name="name">Stock Picking Form Approval</field>
+    <field name="model">stock.picking</field>
+    <field name="inherit_id" ref="stock.view_picking_form"/>
+    <field name="arch" type="xml">
+        <button name="button_cancel" position="replace">
+            <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel Transfer" groups="base.group_user" type="object"/>
+        </button>
+        <field name="partner_id" position="before">
+            <field name="auto_approval_func" invisible="1"/>
+            <field name="auto_approval" invisible="1"/>
+        </field>
+        <button string="Create Invoice/Refund" position="replace">
+            <button name="stock_invoice_onshipping" type="object" string="Create Invoice/Refund" attrs="{'invisible': ['|','|',('state','&lt;&gt;','done'),('invoice_state','=','invoiced'),('invoice_state','=','none')]}" class="oe_highlight" groups="base.group_user"/>
+        </button>
+        <button string="Reverse Transfer" position="replace">
+            <button name="stock_return_picking" type="object" string="Reverse Transfer" states="done" groups="base.group_user"/>
+        </button>
+        <page string="Additional Info" position="after"/>
+            <notebook>
+                <page string="Approval" groups="base.group_user">
+                    <form string="Approval List">
+                        <separator colspan="4" string="Approval List"/>
+                        <group col="4" colspan="4">
+                            <field name="approval_list" nolabel="1">
+                                <tree string="Approval List" editable="bottom">
+                                    <field name="approval_items_id" on_change="approval_items_id_change(approval_items_id)" domain="[('model','=','stock.picking')]"/>
+                                    <field name="description"/>
+                                    <field name="approver" invisible="1"/>
+                                    <field name="user" invisible="1"/>
+                                    <field name="approver_user_show" attrs="{'readonly': [('approver_user','!=',False)]}" class="oe_highlight" on_change="approval_user_show_change(approver_user_show)" domain="[('id','in',user[0][2])]"/>
+                                    <field name="approver_user" invisible="1" on_change="approval_user_change(approver_user)"/>
+                                    <field name="visibility" invisible="1"/>
+                                    <field name="state"/>
+                                    <field name="user_filter"/>
+                                    <button name="approve" icon="gtk-apply" string="Approve" type="object" attrs="{'invisible': ['|',('visibility','=',False),('state','in',['na','approved','reject','ignore'])]}"/>
+                                    <button name="reject" icon="gtk-cancel" string="Reject" type="object" attrs="{'invisible': ['|',('visibility','=',False),('state','in',['na','approved','reject','ignore'])]}"/>
+                                    <button name="ignore" icon="gtk-close" string="Ignore" type="object" groups="via_approval.approval_super_user"/>
+                                    <button name="view" icon="gtk-find" string="View" type="object"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </form>
+                </page>
+            </notebook>
+    </field>
+</record>
+
+<record id="stock_picking_in_form_approval" model="ir.ui.view">
+    <field name="name">Stock Picking In Form Approval</field>
+    <field name="model">stock.picking.in</field>
+    <field name="inherit_id" ref="stock.view_picking_in_form"/>
+    <field name="arch" type="xml">
+        <field name="partner_id" position="before">
+            <field name="auto_approval_func" invisible="1"/>
+            <field name="auto_approval" invisible="1"/>
+        </field>
+        <button string="Create Invoice/Refund" position="replace">
+            <button name="stock_invoice_onshipping" type="object" string="Create Invoice/Refund" attrs="{'invisible': ['|','|',('state','&lt;&gt;','done'),('invoice_state','=','invoiced'),('invoice_state','=','none')]}" class="oe_highlight" groups="base.group_user"/>
+        </button>
+        <xpath expr="/form/header//button[@string='Return Products']" position="replace">
+            <button name="stock_return_picking" string="Return Products" states="done" type="object"/>
+        </xpath>
+        <xpath expr="/form/header//button[@name='button_cancel']" position="replace">
+            <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel Transfer" type="object" groups="base.group_user"/>
+        </xpath>
+        <page string="Additional Info" position="after"/>
+            <notebook>
+                <page string="Approval" groups="base.group_user">
+                    <form string="Approval List">
+                        <separator colspan="4" string="Approval List"/>
+                        <group col="4" colspan="4">
+                            <field name="approval_list" nolabel="1">
+                                <tree string="Approval List" editable="bottom">
+                                    <field name="approval_items_id" on_change="approval_items_id_change(approval_items_id)" domain="[('model','=','stock.picking.in')]"/>
+                                    <field name="description"/>
+                                    <field name="approver" invisible="1"/>
+                                    <field name="user" invisible="1"/>
+                                    <field name="approver_user_show" attrs="{'readonly': [('approver_user','!=',False)]}" class="oe_highlight" on_change="approval_user_show_change(approver_user_show)" domain="[('id','in',user[0][2])]"/>
+                                    <field name="approver_user" invisible="1" on_change="approval_user_change(approver_user)"/>
+                                    <field name="visibility" invisible="1"/>
+                                    <field name="state"/>
+                                    <field name="user_filter"/>
+                                    <button name="approve" icon="gtk-apply" string="Approve" type="object" attrs="{'invisible': ['|',('visibility','=',False),('state','in',['na','approved','reject','ignore'])]}"/>
+                                    <button name="reject" icon="gtk-cancel" string="Reject" type="object" attrs="{'invisible': ['|',('visibility','=',False),('state','in',['na','approved','reject','ignore'])]}"/>
+                                    <button name="ignore" icon="gtk-close" string="Ignore" type="object" groups="via_approval.approval_super_user"/>
+                                    <button name="view" icon="gtk-find" string="View" type="object"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </form>
+                </page>
+            </notebook>
+    </field>
+</record>
+
+<record id="stock_picking_out_form_approval" model="ir.ui.view">
+    <field name="name">Stock Picking Out Form Approval</field>
+    <field name="model">stock.picking.out</field>
+    <field name="inherit_id" ref="stock.view_picking_out_form"/>
+    <field name="arch" type="xml">
+        <field name="partner_id" position="before">
+            <field name="auto_approval_func" invisible="1"/>
+            <field name="auto_approval" invisible="1"/>
+        </field>
+        <button string="Create Invoice/Refund" position="replace">
+            <button name="stock_invoice_onshipping" type="object" string="Create Invoice/Refund" attrs="{'invisible': ['|','|',('state','&lt;&gt;','done'),('invoice_state','=','invoiced'),('invoice_state','=','none')]}" class="oe_highlight" groups="base.group_user"/>
+        </button>
+        <xpath expr="/form/header//button[@string='Return Products']" position="replace">
+            <button name="stock_return_picking" string="Return Products" states="done" type="object"/>
+        </xpath>
+        <xpath expr="/form/header//button[@name='button_cancel']" position="replace">
+            <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel Transfer" type="object" groups="base.group_user"/>
+        </xpath>
+        <page string="Additional Info" position="after"/>
+            <notebook>
+                <page string="Approval" groups="base.group_user">
+                    <form string="Approval List" version="7.0">
+                        <separator colspan="4" string="Approval List"/>
+                        <group col="4" colspan="4">
+                            <field name="approval_list" nolabel="1" domain="[('model','=', 'stock.picking.out')]">
+                                <tree string="Approval List" editable="bottom">
+                                    <field name="approval_items_id" on_change="approval_items_id_change(approval_items_id)" domain="[('model','=','stock.picking.out')]"/>
+                                    <field name="description"/>
+                                    <field name="approver" invisible="1"/>
+                                    <field name="user" invisible="1"/>
+                                    <field name="approver_user_show" attrs="{'readonly': [('approver_user','!=',False)]}" class="oe_highlight" on_change="approval_user_show_change(approver_user_show)" domain="[('id','in',user[0][2])]"/>
+                                    <field name="approver_user" invisible="1" on_change="approval_user_change(approver_user)"/>
+                                    <field name="visibility" invisible="1"/>
+                                    <field name="state"/>
+                                    <field name="user_filter"/>
+                                    <button name="approve" icon="gtk-apply" string="Approve" type="object" attrs="{'invisible': ['|',('visibility','=',False),('state','in',['na','approved','reject','ignore'])]}"/>
+                                    <button name="reject" icon="gtk-cancel" string="Reject" type="object" attrs="{'invisible': ['|',('visibility','=',False),('state','in',['na','approved','reject','ignore'])]}"/>
+                                    <button name="ignore" icon="gtk-close" string="Ignore" type="object" groups="via_approval.approval_super_user"/>
+                                    <button name="view" icon="gtk-find" string="View" type="object"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </form>
+                </page>
+            </notebook>
+    </field>
+</record>
+
+</data>
+</openerp>

@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!-- HR Employe Skill View -->
+
+        <record id="view_hr_employee_skills_form" model="ir.ui.view">
+            <field name="name">view.hr.employee.skills.form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                    <page string="Skills">
+                        <form string="Employee Skills" version="7.0">
+                            <separator colspan="4" string="Employee Skills"/>
+                            <group col="4" colspan="4">
+                                <field name="available_date"/>
+                                <field name="available_duration"/>
+                            </group>
+                            <field name="hr_employee_skills" nolabel="1">
+                                <tree string="Employee Skills">
+                                    <field name="complete_name" string="Skill"/>
+                                </tree>
+                            </field>
+                        </form>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+
+        <record id="view_employee_skills_task_form" model="ir.ui.view">
+            <field name="name">view.employee.skills.task.form</field>
+            <field name="model">hr.employee</field>
+            <field name="type">form</field>
+            <field name="priority">99</field>
+            <field name="arch" type="xml">
+                <form string="Employee" version="7.0">
+                    <header>
+                        <!-- <button name="back" string="Back" type="object"/> -->
+                    </header>
+                    <sheet>
+                        <field name="image_medium" widget='image' class="oe_left oe_avatar"/>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" readonly="True"/>
+                            </h1>
+                            <label for="category_ids" class="oe_edit_only" groups="base.group_hr_user"/>
+                            <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time" groups="base.group_hr_user" readonly="True"/>
+                        </div>
+                        <div class="oe_right oe_button_box" name="button_box">
+                        </div>
+                        <notebook>
+                            <page string="Public Information">
+                                <group>
+                                    <group string="Contact Information">
+                                        <field name="address_id" on_change="onchange_address_id(address_id)" context="{'show_address': 1}" options='{"always_reload": True, "highlight_first_line": True}' readonly="True"/>
+                                        <field name="work_email" widget="email" readonly="True"/>
+                                        <field name="work_phone" readonly="True"/>
+                                        <field name="mobile_phone" readonly="True"/>
+                                        <field name="work_location" readonly="True"/>
+                                    </group>
+                                    <group string="Position">
+                                        <field name="department_id" on_change="onchange_department_id(department_id)" readonly="True"/>
+                                        <field name="job_id" options='{"no_open": True}' domain="[('state','!=','old')]" context="{'form_view_ref': 'hr.view_hr_job_employee_form'}" readonly="True"/>
+                                        <field name="parent_id" readonly="True"/>
+                                        <field name="coach_id" readonly="True"/>
+                                    </group>
+                                    <group>
+                                        <field name="company_id" groups="base.group_multi_company" on_change="onchange_company(company_id)" readonly="True"/>
+                                        <field name="user_id" on_change="onchange_user(user_id)" string="Related User" readonly="True"/>
+                                    </group>
+                                </group>
+                                <field name="notes" placeholder="Other Information ..." colspan="4" readonly="True"/>
+                            </page>
+                            <page string="Personal Information" groups="base.group_hr_user">
+                                <group>
+                                    <group string="Citizenship &amp; Other Info">
+                                        <field name="country_id" options='{"no_open": True}' readonly="True"/>
+                                        <field name="identification_id" groups="base.group_hr_user" readonly="True"/>
+                                        <field name="passport_id" groups="base.group_hr_user" readonly="True"/>
+                                        <field name="bank_account_id" readonly="True"/>
+                                        <field name="otherid" groups="base.group_hr_user" readonly="True"/>
+                                    </group>
+                                    <group string="Contact Information">
+                                        <field name="address_home_id" context="{'show_address': 1}" options='{"always_reload": True, "highlight_first_line": True}' readonly="True"/>
+                                    </group>
+                                    <group string="Status">
+                                        <field name="gender" readonly="True"/>
+                                        <field name="marital" readonly="True"/>
+                                    </group>
+                                    <group string="Birth">
+                                        <field name="birthday" readonly="True"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="HR Settings" groups="base.group_hr_user">
+                                <group>
+                                    <group string="Active" name="active_group">
+                                        <field name="active" readonly="True"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Skills">
+                                <form string="Employee Skills" version="7.0">
+                                    <separator colspan="4" string="Employee Skills"/>
+                                    <group col="4" colspan="4">
+                                        <field name="available_date" readonly="True"/>
+                                        <field name="available_duration" readonly="True"/>
+                                    </group>
+                                    <field name="hr_employee_skills" nolabel="1" readonly="True">
+                                        <tree string="Employee Skills">
+                                            <field name="complete_name" string="Skill" readonly="True"/>
+                                        </tree>
+                                    </field>
+                                </form>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</openerp>

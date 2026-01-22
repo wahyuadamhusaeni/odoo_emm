@@ -1,0 +1,40 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data>
+    	<record id="category_code_form_view" model="ir.ui.view">
+            <field name="name">product.category.form</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']/../.." position="attributes">
+                    <attribute name="class"></attribute>
+                </xpath>
+                <field name="name" position="attributes">
+                    <attribute name="class">oe_inline</attribute>
+                </field>
+                <field name="name" position="after">
+                    <span class="oe_inline" attrs="{'invisible':[('code','=',False)]}">[</span><field name="code" class="oe_inline" placeholder="Enter Category Code Here..."/><span class="oe_inline" attrs="{'invisible':[('code','=',False)]}">]</span>
+                </field>
+            </field>
+        </record>
+        <record id="category_code_config_form_view" model="ir.ui.view">
+            <field name="name">stock settings</field>
+            <field name="model">stock.config.settings</field>
+            <field name="inherit_id" ref="stock.view_stock_config_settings"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[last()]" position="after">
+                    <group>
+                        <label for="id" string="Product Categories"/>
+                        <div>
+                            <div>
+                                <label for="category_code_is_unique"/>
+                                <field name="category_code_is_unique" class="oe_inline" required="1"/>
+                            </div>
+                        </div>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Unlink Invoice from Sale Order is no longer relevant in 7.0 -->
+        <record id="sale_order_via_sale_enhancement_form_view" model="ir.ui.view">
+            <field name="name">sale.order.via.sale.enhancement.form</field>
+            <field name="model">sale.order</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <field name="date_order" position="after">
+                    <field name="validity"/>
+                </field>
+                <notebook>
+                    <page string="References" position="inside">
+                        <field colspan="4" mode="tree" name="sale_info" nolabel="1">
+                            <tree string="" editable="bottom">
+                                <field name="so_parameter"/>
+                                <field name="value"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+    </data>
+</openerp>

@@ -1,0 +1,940 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <delete id="report_taxform_webkit" model="ir.actions.report.xml"/>
+        <delete id="report_taxform" model="ir.actions.report.xml"/>
+        <delete id="report_taxform_one_page" model="ir.actions.report.xml"/>
+        <delete id="report_taxform_preprinted" model="ir.actions.report.xml"/>
+
+        <record id="via_account_taxform_form_template" model="via.form.templates">
+            <field name="name">Faktur Pajak PPN</field>
+            <field name="model_id" ref="model_account_taxform"/>
+            <field eval="False" name="company_id"/>
+            <field name="engine">mako</field>
+            <field name="webkit_header" ref="ir_header_webkit_taxform"/>
+            <field name="template"><![CDATA[<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<!--
+################################################################################################################################################
+                                                            VARIABLES
+################################################################################################################################################
+-->
+<%wrong_document_state = [] %>                      <!--Dipakai untuk menyimpan daftar dan status dari dokumen-dokumen yang tidak akan dicetak (status invalid)-->
+<%total_document = len(objects)%>                   <!--Dipakai untuk mencek jumlah dokumen-dokumen yang akan dicetak-->
+
+<!--KONFIGURASI untuk menentukan jumlah baris dari line item yang ingin dicetak setiap halamannya-->
+<!--Variabel berikut menentukan atau mengikuti 'layout' dari halaman kertas, sehingga menandakan batasan atau limit kertas-->
+<%max_lines = 25%>                                  <!--Jumlah baris maksimum untuk line item s/d akhir halaman.  Maksimum 25-->
+<%def_footer_lines = 3%>                            <!--Jumlah pemakaian baris untuk footer yang akan dicetak setiap halamannya-->
+<%last_page_footer_lines = 3%>                      <!--Jumlah pemakaian baris untuk footer yang akan dicetak khusus untuk halaman akhir-->
+<%target_lines = max_lines - def_footer_lines%>     <!--Jumlah line item yang akan dicetak setiap halamannya-->
+
+<!--KONFIGURASI untuk menentukan jumlah dan spesifikasi dari kolom untuk setiap baris line item yang akan dicetak-->
+<%column_width_in_chars=[3,51,7,10,4,15,4,16]%>      <!--Lebar masing-masing kolom line item dalam jumlah huruf/karakter-->
+<%line_item_columns=len(column_width_in_chars)%>    <!--Jumlah kolom dari setiap baris line item yang dicetak-->
+<%max_wrap_lines=3%>                                <!--Maksimum jumlah baris yang dibentuk untuk teks yang wrapping, sisa teks yang tidak 'muat' di'buang'-->
+                                                    <!--Nilai satu berarti tidak akan ada wrapping, sehingga semua teks untuk kolom akan di'truncate'-->
+
+<!--HA:KONFIGURASI untuk menentukan running total untuk setiap halaman-->
+<%show_line_item_cum_sum_by_page=True%>             <!--Hitung jumlah total per 'halaman' yang dicetak-->
+
+<!--KONFIGURASI untuk menentukan layout HTML dari formulir-->
+<%line_item_height = 11%>                           <!--Tinggi dari setiap line item yang dicetak-->
+<%font_size = 10%>                                  <!--Ukuran font yang dicetak dalam pt-->
+<%page_width = 575%>                                <!--Lebar formulir yang umum digunakan sebagai lebar tabel utama-->
+<%table_height = 398%>                              <!--Tinggi tabel line items dalam pt-->
+
+<!-- Determining the number of pages based on the given variant -->
+<%num_pages = (via_at_variant == 'normal' and 3 or 1)%>
+
+<!--
+##############################################################################################################################################
+                                                            CSS STYLE AND STATEMENTS
+##############################################################################################################################################
+-->
+    <head>
+        <style type="text/css">
+            .base {
+                text-align: left;
+                margin: 0pt;
+                font-family: Sans-Serif;
+                vertical-align: top;
+                padding: 0pt;
+                font-size: ${font_size | h}pt;
+                width: ${page_width | h}pt;
+            }
+
+            td {
+                padding: 0pt;
+            }
+
+            table {
+                padding: 0pt;
+                border-spacing: 0pt;
+            }
+
+            .note {
+                position: relative;
+                width: 220pt;
+                height: 20pt;
+                left: 360pt;
+                top: 10pt;
+                font-size: 9pt;
+            }
+
+            .pager {
+                position: relative;
+                width: 205pt;
+                height: 0pt;
+                left: 360pt;
+                top: 25pt;
+                font-size: 10pt;
+                text-align: right;
+            }
+
+            .doc_title {
+                border-top-color: white !important;
+                border-left-color: white !important;
+                border-right-color: white !important;
+            }
+
+            .title {
+                font-weight: bold;
+                text-align: center;
+                margin-top: 0pt;
+                margin-bottom: 0pt;
+            }
+
+            .contact {
+                vertical-align: top;
+                padding-left: 4pt;
+                height: 64pt;
+            }
+
+            .table {
+                width: 100%;
+                height: 221.5pt;
+            }
+
+            .outline {
+                border: 1pt solid black;
+                border-spacing: 0pt;
+                border-collapse: collapse;
+            }
+
+            .total_cells {
+                border-bottom: 1pt solid black;
+                border-top: 1pt solid black;
+                border-spacing: 0pt;
+                border-collapse: collapse;
+                vertical-align: middle;
+                padding-left: 4pt;
+                text-align: left;
+            }
+
+            .total_cells_label {
+                height: 25pt;
+                border-right: 1pt solid black;
+            }
+
+            .monetary {
+                text-align: right;
+                padding-right: 4pt;
+            }
+
+            .right_text {
+                text-align: right;
+                padding-right: 6pt;
+            }
+
+            .header_section {
+            }
+
+            .generic_cell {
+                vertical-align: top;
+            }
+
+            .generic_title_cell {
+                vertical-align: middle;
+                padding-left: 2pt;
+            }
+
+            .cell_header_1 {
+                width: 168pt;
+            }
+
+            .cell_header_2 {
+                text-align: center;
+                width: 4pt;
+            }
+
+            .cell_header_3 {
+                width: 200pt;
+            }
+
+            .cell_header_4 {
+                width: 200pt;
+            }
+
+            .cell_header_last {
+                width: 400pt;
+            }
+
+            .item_header {
+                font-size: 8.5pt;
+                padding: 0pt;
+                text-align: center;
+            }
+
+            .cell_row {
+                height: ${line_item_height | h}pt;
+            }
+
+            .cell_item_1 {
+                text-align: center;
+                border-right: 1pt solid black;
+                width: 32pt;
+            }
+
+            .cell_item_2 {
+                text-align: left;
+                padding-left: 2pt;
+                width: 307pt;
+            }
+
+            .cell_item_3 {
+                text-align: right;
+                padding-right: 2pt;
+                width: 40pt;
+            }
+
+            .cell_item_4 {
+                text-align: left;
+                padding-left: 2pt;
+                border-right: 1pt solid black;
+                width: 46pt;
+            }
+
+            .cell_item_5 {
+                text-align: left;
+                padding-left: 4pt;
+                width: 12pt;
+            }
+
+            .cell_item_6 {
+                text-align: right;
+                right-padding: 4pt;
+                width: 58pt;
+            }
+
+            .cell_item_7 {
+                text-align: left;
+                padding-left: 4pt;
+                width: 12pt;
+            }
+
+            .cell_item_8 {
+                text-align: right;
+                padding-right: 4pt;
+                width: 76pt;
+            }
+
+            .footer_item_last {
+                width: 22pt;
+                border-right: 1pt solid black;
+            }
+
+            .ppnbm_row {
+                padding-left: 4pt;
+                height: 11.4pt;
+                font-size: 8pt;
+            }
+
+            .ppnbm_title {
+                width: 105pt;
+                height: 10pt;
+                text-align: left;
+                vertical-align: middle;
+                border: 0pt !important;
+                font-size: 9pt;
+            }
+
+            .ppnbm_header {
+                text-align: center;
+                font-size: 8pt;
+            }
+
+            .ppnbm_cell_1 {
+                vertical-align: top;
+                text-align: right;
+                border-right: 1pt solid black;
+                border-left: 1pt solid black;
+                padding-right: 5pt;
+            }
+
+            .ppnbm_cell_2 {
+                width: 15pt;
+                vertical-align: top;
+                padding-left: 5pt;
+            }
+
+            .ppnbm_cell_3 {
+                width: 131pt;
+                vertical-align: top;
+                text-align: right;
+                border-right: 1pt solid black;
+                padding-left: 5pt;
+            }
+
+            .ppnbm_cell_4 {
+                width: 15pt;
+                vertical-align: top;
+                padding-left: 5pt;
+            }
+
+            .ppnbm_cell_5 {
+                width: 131pt;
+                text-align: right;
+                border-right: 1pt solid black;
+                padding-right: 5pt;
+            }
+
+            .ppnbm_footer {
+                border-top: 1pt solid black;
+                border-bottom: 1pt solid black;
+                height: 13pt;
+            }
+
+            .ppnbm_footer_label {
+                padding-left: 10pt;
+                text-align: left;
+            }
+
+            .signature_row {
+                vertical-align: top;
+                height: 12pt;
+            }
+
+            .signature_item_1 {
+                text-align: center;
+                border-bottom: 1pt dashed;
+                width: 57pt;
+            }
+
+            .signature_item_2 {
+                text-align: center;
+                width: 50pt;
+            }
+
+            .signature_item_3 {
+                text-align: center;
+                width: 139pt;
+                padding-right: 2pt;
+                border-bottom: 1pt dashed;
+            }
+
+            .signature {
+                border-bottom: 1pt dashed;
+                text-align: center;
+                vertical-align: bottom;
+                height: 74pt;
+            }
+
+            .strikethrough {
+                color: black !important;
+                text-decoration: line-through !important;
+            }
+
+            .preprinted {
+            %if (via_at_variant == 'preprinted'):
+                border-color: white !important;
+                color: white !important;
+            %endif
+            }
+
+            .always_print {
+                color: black !important;
+            }
+
+            .fineprint {
+                text-align: left;
+                font-size: 8pt;
+                margin: 0pt;
+                padding: 2pt;
+                font-weight: normal;
+            }
+
+            .page_breaker {
+                page-break-after: always !important;
+                margin: 0pt;
+            }
+        </style>
+    </head>
+    <!--pengaturan body dan tabel formulir-->
+    <body class="base">
+        <!--Proses semua dokumen satu per satu-->
+        %for taxform in objects :
+            %for current_template in range(num_pages):
+                <!--Menentukan kondisi status object untuk data yang dicetak-->
+                %if taxform.state not in ('draft', 'printed'):
+                    <!--Seluruh dokumen yang statusnya invalid akan di'catat' untuk kemudian diinfokan ke pengguna-->
+                    <% wrong_document_state.append('%s: %s' % (taxform.taxform_id, taxform.state)) %>
+                %else:
+                    <!--Hanya proses dokumen dengan status yang valid-->
+
+                    <!-- =============================================================================================================================================
+                    PRA-PROSES DATA: bagian ini adalah untuk memproses data line item yang akan dicetak.  Diperlukan proses awal (preprocessing) di mana teks atau
+                    deskripsi dari line item yang akan dicetak di'parsing' untuk menentukan apakah akan ada 'wrapping' atau tidak.  Jika wrapping akan terjadi, maka
+                    teks yang telah dibaca akan dipotong/split ke baris berikutnya (jumlah maksimum baris ditentukan oleh variabel max_wrap_lines).
+                    Hasil akhir dari preprocessing data ini adalah suatu list dari baris atau line item yang akan dicetak (secara data type berupa list of list).
+                    Untuk setiap baris yang juga berupa list data type, akan berisikan teks yang akan dicetak bagi masing-masing kolomnya.
+                    ============================================================================================================================================== -->
+                    <!--A. Menghitung baris line item yang akan dicetak-->
+                    <!--Siapkan variabel 'penyimpanan'-->
+                    <%line_item_print=[]%>            <!--Tempat untuk menyimpan semua teks dari produk atau 'line item' yang telah di proses mengikuti konfigurasi kolom-->
+                    <%total_lines_print=0%>           <!--Jumlah baris yang harus dicetak-->
+                    <%line_item_sum_by_page=[]%>      <!--Jumlah atau total dari seluruh line item untuk setiap halamannya-->
+                    <%line_item_to_sum=[]%>           <!--HA:List dari seluruh nilai line item yang akan/dapat dijumlah-->
+
+<!--################################################################################################################################################
+                                                             PRE-PROCESSING LOGIC LINE ITEM
+####################################################################################################################################################-->
+
+                    <!--Proses semua produk di dalam dokumen yang dimaksud-->
+                    %for prod_no, prod in enumerate(taxform.taxform_line):
+<!--================================================================== EDITABLE AREA ===============================================================-->
+                        <!--Tempat sementara untuk menyimpan data setiap produk atau 'line item'-->
+                        <%str_holder=[]%>
+                        <!--Proses seluruh kolom menjadi satu list-->
+                        <!--Kolom 1: no urut produk-->
+                        <%str_holder.append(str(prod_no + 1))%>
+                        <!--Kolom 2: nama produk-->
+                        <%str_holder.append(prod.product_id and prod.product_id.name_template or prod.name or '')%>
+                        <!--Kolom 3: jumlah/kuantitas produk-->
+                        <%str_holder.append(formatLang(prod.quantity or 0.0, digits=0))%>
+                        <!--Kolom 4: satuan unit (UOM) produk-->
+                        <%str_holder.append(prod.uom)%>
+                        <!--Kolom 5: Satuan unit price-->
+                        <%str_holder.append("Rp.")%>
+                        <!--Kolom 6: harga satuan produk-->
+                        <%str_holder.append(formatLang(prod.price_unit_base or 0.0, digits=0))%>
+                        <!--Kolom 7: Satuan harga jual-->
+                        <%str_holder.append("Rp.")%>
+                        <!--Kolom 8: harga jual produk-->
+                        <%str_holder.append(formatLang(prod.amount_base or 0.0, digits=0))%>
+                        <!--HA:Setiap nilai atau kolom yang akan dicari running totalnya disimpan ke dalam list ini-->
+                        <%line_item_to_sum.append(prod.amount_base)%>
+
+<!--================================================================================================================================================-->
+
+                        <!--Untuk setiap produk yang diproses, kita tambahkan satu list baru, jika terdapat wrapping akan diproses/tambahkan di bagian wrapping-->
+                        <%no_lines=0%>
+                        <%line_item_print.append([])%>
+                        <%wrappable_column=0%>
+
+                        <%rv = wrap_line(str_holder, column_width_in_chars)%>
+
+                        <!--Ambil teks yang terbaru atau yang sudah diproses wrapping-nya-->
+                        <%str_holder = rv[1][:]%>
+                        <%line_item_print[total_lines_print] = rv[2][:]%>
+
+                        <!--Jika terdapat baris yang diproses, maka naikkan counter (hitungan)-->
+                        %if rv[0] >= 0:
+                            <%no_lines = no_lines + 1%>
+                            <%total_lines_print = total_lines_print + 1%>
+                        %endif
+                        %while (no_lines < max_wrap_lines) and (rv[0] > 0):
+                            <%line_item_print.append([])%>
+                            <%rv = wrap_line(str_holder, column_width_in_chars)%>
+
+                            <!--Ambil teks yang terbaru atau yang sudah diproses wrapping-nya-->
+                            <%str_holder = rv[1][:]%>
+                            <%line_item_print[total_lines_print] = rv[2][:]%>
+
+                            <%no_lines = no_lines + 1%>
+                            <%total_lines_print = total_lines_print + 1%>
+                        %endwhile
+                    %endfor
+
+<!--================================================================== EDITABLE AREA ===============================================================-->
+
+                    <!--For testing only: adding dummy line items-->
+                    <!--%test_lines = total_lines_print + 50%-->
+                    <!--%for line_number in range(total_lines_print,test_lines):-->
+                        <!--%line_item_print.append([str(line_number+1),'12345678901234567890123456890','B','C','D','E','F','1000'])%-->
+                        <!--%line_item_to_sum.append(1000)%-->
+                    <!--%endfor-->
+                    <!--%total_lines_print = test_lines%-->
+
+<!--================================================================================================================================================-->
+
+                    <!--B. Menghitung jumlah halaman formulir berdasarkan perhitungan target_lines-->
+                    <%total_page = total_lines_print / target_lines%>
+                    %if last_page_footer_lines <= def_footer_lines:
+                        <!--Footer untuk halaman akhir akan muat, sehingga tidak perlu dibuatkan halaman terakhir tambahan-->
+                        <%blank_last_page = False%>
+                        <%compact_page = False%>
+                        %if total_lines_print % target_lines > 0:
+                            <!--Jika terdapat sisa baris,maka sisa baris tersebut akan dicetak dihalaman baru, yaitu halaman terakhir-->
+                            <%total_page = total_page + 1%>
+                        %endif
+                    %else:
+                        <!--Footer untuk halaman akhir bisa bisa 'memakan' area line items, sehingga mungkin perlu dibuatkan halaman baru-->
+                        <%compact_page = True%>
+                        %if total_lines_print % target_lines == 0:
+                            <!--Jika tidak terdapat sisa baris,maka footer halaman akhir akan dicetak di halaman baru-->
+                            <%total_page = total_page + 1%>
+                            <%blank_last_page = True%>
+                        %elif ((total_lines_print % target_lines) + last_page_footer_lines) > max_lines:
+                            <!--Jika terdapat sisa baris dan area footer tidak cukup, maka akan ditambahkan 2 halaman baru-->
+                            <%total_page = total_page + 2%>
+                            <%blank_last_page = True%>
+                        %else:
+                            <%total_page = total_page + 1%>
+                            <%blank_last_page = False%>
+                        %endif
+                    %endif
+
+                    <%current_line = 0%>
+
+<!--##################################################################################################################################################
+                                                            BAGIAN HEADER LAPORAN (INFO PARTNER)
+####################################################################################################################################################-->
+                    <!--Looping untuk menghasilkan ('render') halaman dari formulir-->
+                    %for current_page in range (1, total_page + 1):
+                        <%_last_page = (current_page == total_page)%>
+                        <div class="note">
+                            %if (via_at_variant == 'normal'):
+                                %if (current_template == 0):
+                                    Lembar ke-1 : Untuk Pembeli BKP/Penerima JKP<br/>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sebagai bukti Pajak Masukan<br/>
+                                %elif (current_template == 1):
+                                    Lembar ke-2 : Untuk Pengusaha Kena Pajak<br/>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;menerbitkan Faktur Pajak<br/>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Sebagai bukti Pajak Keluaran<br/>
+                                %elif (current_template == 2):
+                                    Lembar ke-3 : Copy<br/>
+                                %endif
+                            %endif
+                        </div>
+                        <div class="pager">
+                            ${(total_page > 1) and "Halaman %s / %s" % (unicode(current_page), unicode(total_page)) or ''| h}
+                        </div>
+                        <table class="base table">
+                            <tr class="header_section">
+                                <!-- START OF HEADER SECTION -->
+                                <td class="header_section">
+                                    <table class="base table outline preprinted">
+                                        <tr>
+                                            <td class="outline preprinted doc_title" style="height: 33pt">
+                                                <h2 class="title">${(taxform.invoice_id.type == 'in_refund') and 'NOTA RETUR' or 'FAKTUR PAJAK' | h}</h2>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="outline preprinted generic_title_cell" style="height: 15.7pt">
+                                                <table>
+                                                    <tr>
+                                                        <!--Area Kode dan Nomor seri faktur pajak-->
+                                                        <td class="generic_cell cell_header_1">Kode dan Nomor Seri ${(taxform.invoice_id.type == 'in_refund') and 'Nota Retur' or 'Faktur Pajak' | h}</td>
+                                                        <td class="generic_cell cell_header_2">:</td>
+                                                        <td class="generic_cell cell_header_last always_print">${"%s.%s" % (taxform.trx_code or '', taxform.taxform_id or '') | h}</td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <!--Area pengusaha kena pajak-->
+                                        <tr>
+                                            <td class="outline preprinted generic_title_cell" style="font-weight: bold; height: 12pt">
+                                                Pengusaha Kena Pajak
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="contact outline preprinted" style="height: 50pt">
+                                                <table>
+                                                    <tr>
+                                                        <td class="generic_cell cell_header_1">Nama</td>
+                                                        <td class="generic_cell cell_header_2">:</td>
+                                                        <td class="generic_cell cell_header_last always_print" style="font-weight: bold">${taxform.company_id and taxform.company_id.name or '' | h}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="generic_cell cell_header_1">Alamat</td>
+                                                        <td class="generic_cell cell_header_2">:</td>
+                                                        <td class="generic_cell cell_header_last always_print">
+                                                        %if taxform.company_address_id:
+                                                            ${strip_name(taxform.company_address_id.street or '', maxlen=100) | h}
+                                                            ${strip_name(taxform.company_address_id.street2 or '', maxlen=100) | h}<br/>
+                                                            ${strip_name(taxform.company_address_id.zip or '', maxlen=100) | h}
+                                                            ${strip_name(taxform.company_address_id.city or '', maxlen=100) | h}
+                                                            ${strip_name(taxform.company_address_id.state_id and taxform.company_address_id.state_id.name or '', maxlen=100) | h}<br/>
+                                                        %else:
+                                                            <br/><br/>
+                                                        %endif
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="generic_cell cell_header_1">NPWP</td>
+                                                        <td class="generic_cell cell_header_2">:</td>
+                                                        <td class="generic_cell cell_header_last always_print">${taxform.company_id and taxform.company_id.vat or '' | h}</td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+
+                                        <!--Area info partner-->
+                                        <tr>
+                                            <td class="outline preprinted generic_title_cell" style="font-weight: bold; height: 12pt">
+                                                Pembeli Barang Kena Pajak / Penerima Jasa Kena Pajak
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="contact outline preprinted" style="height: 43pt">
+                                                <table>
+                                                    <tr>
+                                                        <td class="generic_cell cell_header_1">Nama</td>
+                                                        <td class="generic_cell cell_header_2">:</td>
+                                                        <td class="generic_cell cell_header_last always_print" style="font-weight: bold">${taxform.partner_id and taxform.partner_id.name or '' | h}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="generic_cell cell_header_1">Alamat</td>
+                                                        <td class="generic_cell cell_header_2">:</td>
+                                                        <td class="generic_cell cell_header_last always_print">
+                                                        % if taxform.partner_address_id:
+                                                            ${strip_name(taxform.partner_address_id.street or '', maxlen=100) | h}
+                                                            ${strip_name(taxform.partner_address_id.street2 or '', maxlen=100) | h}<br/>
+                                                            ${strip_name(taxform.partner_address_id.zip or '', maxlen=100) | h}
+                                                            ${strip_name(taxform.partner_address_id.city or '', maxlen=100) | h}
+                                                            ${strip_name(taxform.partner_address_id.state_id and taxform.partner_address_id.state_id.name or '', maxlen=100) | h}<br/>
+                                                        %else:
+                                                            <br/><br/>
+                                                        % endif
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="generic_cell cell_header_1">NPWP</td>
+                                                        <td class="generic_cell cell_header_2">:</td>
+                                                        <td class="generic_cell cell_header_last always_print">${taxform.partner_npwp and taxform.partner_npwp.value or '' | h}</td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <!-- END OF HEADER SECTION -->
+                            </tr>
+
+<!--##################################################################################################################################################
+                                                BAGIAN BODY / LINE ITEM LAPORAN (TABEL ITEM)
+####################################################################################################################################################-->
+
+                            <tr>
+                                <!-- START OF LINE ITEM AND TOTAL SECTION -->
+                                <td>
+                                    <div style="overflow: hidden; max-height:  ${str(table_height - 1)| n}pt;">
+                                        <!--Area untuk pencetakan line item-->
+                                        <table class="outline preprinted table" style="height: ${str(table_height) | n}pt;">
+                                            <!--Cetak header dari area line item -->
+                                            <tr>
+                                                <td class="item_header outline preprinted" style="height: 30pt; width: 32pt">No. Urut</td>
+                                                <td class="item_header outline preprinted" style="width: 386pt" colspan="3">Nama Barang Kena Pajak/<br/>Jasa Kena Pajak</td>
+                                                <td class="item_header outline preprinted" style="width: 158pt" colspan="4">Harga Jual/Penggantian/Uang<br/>Muka/Termin<br/>(Rp)</td>
+                                            </tr>
+                                            <!--tampilan detail item body-->
+                                            <!--Menentukan-->
+                                            %if compact_page and _last_page:
+                                                <%last_line = current_line + (max_lines - last_page_footer_lines)%>
+                                            %else:
+                                                <%last_line = current_line + target_lines%>
+                                            %endif
+
+                                            <!--HA:Tambahkan running total untuk halaman yang akan diproses ini-->
+                                            <%line_item_sum_by_page.append(0)%>
+                                            %if show_line_item_cum_sum_by_page and (current_page > 1):
+                                                <%line_item_sum_by_page[current_page-1] = line_item_sum_by_page[current_page-2]%>
+                                            %endif
+
+                                            %for line_no in range (current_line,last_line):
+                                                %if line_no < total_lines_print:
+                                                    <!--HA:Penghitungan running total untuk halaman yang diproses-->
+                                                    <!--Jika no urut bukan nol (0), maka diasumsikan item dengan nomor urut tersebut (di kurangi 1 karena 0 indexing)-->
+                                                    <!--akan dirunning totalkan-->
+                                                    %if line_item_print[line_no][0] != '':
+                                                        <%line_item_sum_by_page[current_page-1] = line_item_sum_by_page[current_page-1] + (line_item_to_sum[int(line_item_print[line_no][0])-1] or 0.0)%>
+                                                    %endif
+
+                                                    <!--Cetak line item yang telah diproses dari dokumen yang dimaksud-->
+                                                    <tr class="cell_row">
+                                                        <td class="cell_item_1 preprinted always_print">${line_item_print[line_no][0] | h}</td>
+                                                        <td class="cell_item_2 preprinted always_print">${line_item_print[line_no][1] | h}</td>
+                                                        <td class="cell_item_3 preprinted always_print">${line_item_print[line_no][2] | h}</td>
+                                                        <td class="cell_item_4 preprinted always_print">${line_item_print[line_no][3] | h}</td>
+                                                        <td class="cell_item_5 preprinted always_print">${line_item_print[line_no][4] | h}</td>
+                                                        <td class="cell_item_6 preprinted always_print">${line_item_print[line_no][5] | h}</td>
+                                                        <td class="cell_item_7 preprinted always_print">${line_item_print[line_no][6] | h}</td>
+                                                        <td class="cell_item_8 preprinted always_print">${line_item_print[line_no][7] | h}</td>
+                                                    </tr>
+                                                %else:
+                                                    <!--Cetak baris line item 'kosong', untuk mem-fill sisa tabel line item-->
+                                                    <tr class="cell_row">
+                                                        <td class="cell_item_1 preprinted always_print"></td>
+                                                        <td class="cell_item_2 preprinted always_print"></td>
+                                                        <td class="cell_item_3 preprinted always_print"></td>
+                                                        <td class="cell_item_4 preprinted always_print"></td>
+                                                        <td class="cell_item_5 preprinted always_print"></td>
+                                                        <td class="cell_item_6 preprinted always_print"></td>
+                                                        <td class="cell_item_7 preprinted always_print"></td>
+                                                        <td class="cell_item_8 preprinted always_print"></td>
+                                                    </tr>
+                                                %endif
+                                            %endfor
+                                            <%current_line = last_line%>
+                                            <!--Cetak baris kosong di bagian bawah tabel line item (ini adalah filler)-->
+                                            <tr class="preprinted">
+                                                <td class="item_header cell_item_1 preprinted"></td>
+                                                <td class="item_header cell_item_4 preprinted" colspan="3"></td>
+                                                <td class="item_header cell_item_8 preprinted" colspan="4"></td>
+                                            </tr>
+
+<!--##################################################################################################################################################
+                                                    BAGIAN FOOTER LAPORAN (SIGNATURE, TOTAL)
+####################################################################################################################################################-->
+
+                                            <!--Area Harga Jual/Penggantian/Uang Muka/Termin-->
+                                            <tr>
+                                                <td colspan="4" class="total_cells preprinted total_cells_label" style="width: 418pt;height: 22pt;">
+                                                    <div>
+                                                        %if taxform.trx_type == "hargajual":
+                                                             <span class="preprinted">Harga Jual</span><span class="strikethrough"><span class="preprinted">/Penggantian/Uang Muka/Termin *)</span></span>
+                                                         %elif taxform.trx_type == "penggantian":
+                                                             <span class="strikethrough"><span class="preprinted">Harga Jual/</span></span><span class="preprinted">Penggantian</span><span class="strikethrough"><span class="preprinted">/Uang Muka/Termin *)</span></span>
+                                                         %elif taxform.trx_type == "uangmuka":
+                                                             <span class="strikethrough"><span class="preprinted">Harga Jual/Penggantian/</span></span><span class="preprinted">Uang Muka</span><span class="strikethrough"><span class="preprinted">/Termin *)</span></span>
+                                                         %elif taxform.trx_type == "termin":
+                                                             <span class="strikethrough"><span class="preprinted">Harga Jual/Penggantian/Uang Muka/</span></span><span class="preprinted">Termin *)</span>
+                                                         %else:
+                                                             <span class="preprinted">Harga Jual/Penggantian/Uang Muka/Termin *)</span>
+                                                         %endif
+                                                    </div>
+                                                </td>
+                                                <td colspan="2" class="total_cells preprinted right_text always_print">
+                                                    <div>
+                                                        ${_last_page and "    " or "Dipindahkan" | h}
+                                                    </div>
+                                                </td>
+                                                <td class="total_cells preprinted always_print"><div>Rp.</div></td>
+                                                <td class="total_cells preprinted monetary always_print">
+                                                    <div>
+                                                        ${formatLang(_last_page and taxform.amount_base or line_item_sum_by_page[current_page-1]  or 0.0, digits=0) | h}
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <!--Area Potongan Harga-->
+                                            <tr>
+                                                <td colspan="4" class="total_cells preprinted total_cells_label" style="height: 22pt">
+                                                    Dikurangi Potongan Harga
+                                                </td>
+                                                <td colspan="2" class="total_cells preprinted"></td>
+                                                <td class="total_cells preprinted always_print">Rp.</td>
+                                                <td class="total_cells preprinted monetary always_print">
+                                                    ${_last_page and formatLang(taxform.amount_discount or 0.0, digits=0) or '' | h}
+                                                </td>
+                                            </tr>
+
+                                            <!-- Area Uang Muka-->
+                                            <tr>
+                                                <td colspan="4" class="total_cells preprinted total_cells_label" style="height: 22pt">
+                                                    Dikurangi Uang Muka yang telah diterima
+                                                </td>
+                                                <td colspan="2" class="total_cells preprinted"></td>
+                                                <td class="total_cells preprinted always_print">Rp.</td>
+                                                <td class="total_cells preprinted monetary always_print">
+                                                    ${_last_page and formatLang(abs(taxform.amount_advance_payment), digits=0) or '' | h}
+                                                </td>
+                                            </tr>
+
+                                            <!--Area DPP-->
+                                            <tr>
+                                                <td colspan="4" class="total_cells preprinted total_cells_label" style="height: 22pt">
+                                                    Dasar Pengenaan Pajak
+                                                </td>
+                                                <td colspan="2" class="total_cells preprinted"></td>
+                                                <td class="total_cells preprinted always_print">Rp.</td>
+                                                <td class="total_cells preprinted monetary always_print">
+                                                    ${_last_page and formatLang(taxform.amount_base_disc or 0.0, digits=0) or '' | h}
+                                                </td>
+                                            </tr>
+
+                                            <!--Area PPN -->
+                                            <tr>
+                                                <td colspan="4" class="total_cells preprinted total_cells_label" style="height: 22pt">
+                                                    PPN = 10% x Dasar Pengenaan Pajak
+                                                </td>
+                                                <td colspan="2" class="total_cells preprinted"></td>
+                                                <td class="total_cells preprinted always_print">Rp.</td>
+                                                <td class="total_cells preprinted monetary always_print">
+                                                    ${_last_page and formatLang((taxform.amount_base_disc or 0.0) * 0.10 , digits=0) or '' | h}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </td>
+                                <!-- END OF LINE ITEM AND TOTAL SECTION -->
+                            </tr>
+
+                            <!--Area Ppn BM dan Signature -->
+                            <tr>
+                                <td colspan="7" class="outline preprinted" style="padding-top: 4pt;">
+                                    <div>
+                                        <table>
+                                            <tr>
+                                                <td style="padding: 5pt;">
+                                                    <!-- spacer -->
+                                                </td>
+                                                <td style="vertical-align: top;">
+                                                    <table>
+                                                        <tr>
+                                                            <td class="ppnbm_title preprinted" colspan="5">
+                                                                Pajak Penjualan Atas Barang Mewah
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <table class="outline preprinted">
+                                                                    <tr class="ppnbm_row">
+                                                                        <td class="ppnbm_header outline preprinted" width="79.5pt">
+                                                                            Tarif
+                                                                        </td>
+                                                                        <td class="ppnbm_header outline preprinted" colspan="2">
+                                                                            DPP
+                                                                        </td>
+                                                                        <td class="ppnbm_header outline preprinted" colspan="2">
+                                                                            PPn BM
+                                                                        </td>
+                                                                    </tr>
+                                                                    <% _grouped = {} %>
+                                                                    %for _line in taxform.taxform_ppnbm:
+                                                                        <%tariff = _line.tariff %>
+                                                                        %if (tariff) in _grouped:
+                                                                            <%_grouped [tariff]['amount_tax'] += _line.amount_tax%>
+                                                                            <%_grouped [tariff]['tax_base'] += _line.tax_base%>
+                                                                        %else:
+                                                                            <%_grouped [tariff] = {'amount_tax' : _line.amount_tax, 'tax_base' : _line.tax_base}%>
+                                                                        %endif
+                                                                    %endfor
+
+                                                                    <% _grouped_info = [] %>
+                                                                    %for k, v in _grouped.iteritems():
+                                                                        <%v.update({'tariff': k})%>
+                                                                        <%_grouped_info.append(v)%>
+                                                                    %endfor
+
+                                                                    <%lines = _grouped_info + [False, False, False, False]%>
+                                                                    %for p in lines[:4]:
+                                                                        %if p:
+                                                                            <tr class="ppnbm_row">
+                                                                                <td class="ppnbm_cell_1 preprinted always_print">
+                                                                                    ${formatLang(p.get('tariff', 0.00) * 100.0, digits=0) | h} %
+                                                                                </td>
+                                                                                <td class="ppnbm_cell_2 preprinted">Rp.</td>
+                                                                                <td class="ppnbm_cell_3 preprinted always_print">
+                                                                                    ${formatLang(p.get('tax_base', 0.00), digits=0) | h}
+                                                                                </td>
+                                                                                <td class="ppnbm_cell_4 preprinted">Rp.</td>
+                                                                                <td class="ppnbm_cell_5 preprinted always_print">
+                                                                                    ${formatLang(p.get('amount_tax', 0.00), digits=0) | h}
+                                                                                </td>
+                                                                            </tr>
+                                                                        %else:
+                                                                            <!--Cetak baris line item 'kosong', untuk mem-fill sisa tabel line item-->
+                                                                            <tr class="ppnbm_row">
+                                                                                <td class="ppnbm_cell_1 preprinted">
+                                                                                    ..........%
+                                                                                </td>
+                                                                                <td class="ppnbm_cell_2 preprinted">Rp.</td>
+                                                                                <td class="ppnbm_cell_3 preprinted"></td>
+                                                                                <td class="ppnbm_cell_4 preprinted">Rp.</td>
+                                                                                <td class="ppnbm_cell_5 preprinted"></td>
+                                                                            </tr>
+                                                                        %endif
+                                                                    %endfor
+                                                                    <tr class="ppnbm_row">
+                                                                        <td class="ppnbm_cell_1 ppnbm_footer ppnbm_footer_label preprinted" colspan="3">Jumlah</td>
+                                                                        <td class="ppnbm_cell_4 ppnbm_footer preprinted">Rp.</td>
+                                                                        <td class="ppnbm_cell_5 ppnbm_footer preprinted always_print">
+                                                                            ${taxform.amount_total_ppnbm and formatLang(taxform.amount_total_ppnbm, digits=0) or '' | h}
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                                <td style="padding: 20pt;">
+                                                    <!-- spacer -->
+                                                </td>
+                                                <td>
+                                                    <table>
+                                                        <tr class="signature_row">
+                                                            <td class="signature_item_1 preprinted always_print">
+                                                                ${strip_name(taxform.company_address_id and taxform.company_address_id.city or '', maxlen=10) or ''|h}
+                                                            </td>
+                                                            <td class="signature_item_2 preprinted">
+                                                                tanggal,
+                                                            </td>
+                                                            <td class="signature_item_3 preprinted always_print">
+                                                                ${formatDate(taxform.invoice_date or '', '%d-%b-%Y') | h}
+                                                            </td>
+                                                        </tr>
+                                                        </tr>
+                                                            <td class="signature preprinted always_print" colspan="3">
+                                                                ${taxform.signature or '' | h}
+                                                            </td>
+                                                        </tr>
+                                                        </tr>
+                                                            <td colspan="3" style="height: 28pt;">
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="fineprint preprinted">*) Coret yang tidak perlu</div>
+                    %if current_page > total_page or current_page <= 6:
+                        <p class="page_breaker"></p>
+                    %endif
+                %endfor
+                <!-- Tambahkan page break kecuali untuk dokumen terakhir-->
+                %if total_document > 1:
+                    <p class="page_breaker"></p>
+                    <%total_document = total_document - 1 %>
+                %endif
+            %endif
+        %endfor
+    %endfor
+<!--##################################################################################################################################################
+                                                                WRONG STATE STATEMENT
+####################################################################################################################################################-->
+        %if wrong_document_state:
+            <p class="page_breaker"></p>
+            <small>
+                <br/><br/><br/>
+                <b>Dokumen-dokumen ini tidak dicetak karena statusnya:</b><br/>
+                ${', '.join(wrong_document_state) | h}
+            </small>
+        %endif
+    </body>
+</html>
+]]></field>
+        </record>
+
+        <!-- Activate the form -->
+        <function model="via.form.templates" name="activate"
+            eval="[ ref('via_account_taxform_form_template') ], "
+        />
+    </data>
+</openerp>

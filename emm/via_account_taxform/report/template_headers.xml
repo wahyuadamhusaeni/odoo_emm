@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data noupdate="1">
+        <record id="ir_header_webkit_taxform" model="ir.header_webkit">
+            <field name="footer_html"><![CDATA[<html></html>]]></field>
+            <field eval="&quot;&quot;&quot;Portrait&quot;&quot;&quot;" name="orientation"/>
+            <field eval="&quot;&quot;&quot;Letter&quot;&quot;&quot;" name="format"/>
+            <field name="html"><![CDATA[<html></html>]]></field>
+            <field name="css" ><![CDATA[]]> </field>
+            <field eval="1.0" name="margin_top"/>
+            <field eval="1.0" name="margin_bottom"/>
+            <field eval="7.0" name="margin_left"/>
+            <field eval="1.0" name="margin_right"/>
+            <field eval="&quot;&quot;&quot;Indonesian Taxform Layout&quot;&quot;&quot;" name="name"/>
+        </record>
+    </data>
+</openerp>
+

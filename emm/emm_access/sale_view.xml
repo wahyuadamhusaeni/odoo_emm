@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    	<record id="view_order_line_form2_emm" model="ir.ui.view">
+            <field name="name">sale.order.line.form2.emm</field>
+            <field name="model">sale.order.line</field>
+            <field name="inherit_id" ref="sale.view_order_line_form2"/>
+            <field name="arch" type="xml">
+                <field name="price_unit" position="attributes">
+                    <attribute name="groups">base.group_sale_manager,base.group_sale_salesman,base.group_sale_salesman_all_leads,account.group_account_invoice,account.group_account_user,account.group_account_manager</attribute>
+                </field>
+                <field name="price_subtotal" position="attributes">
+                    <attribute name="groups">base.group_sale_manager,base.group_sale_salesman,base.group_sale_salesman_all_leads,account.group_account_invoice,account.group_account_user,account.group_account_manager</attribute>
+                </field>
+            </field>
+        </record>
+        <record id="view_order_form2_emm" model="ir.ui.view">
+            <field name="name">sale.view.order.form2.emm</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/sheet/notebook/page/field[@name='order_line']/form/div/field[@name='invoice_lines']/.." position="attributes">
+                    <attribute name="groups">base.group_sale_salesman,base.group_sale_salesman_all_leads,base.group_sale_manager,emm_approval.emm_group_director,base.group_no_one</attribute>
+                </xpath>
+                
+            </field>
+        </record>
+    </data>
+</openerp>

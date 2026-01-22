@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<openerp>
+  <data>
+
+    <record id="form_view_via_reporting_tree_node_gl"
+            model="ir.ui.view">
+      <field name="name">General Ledger Reporting Tree Node (Form View)</field>
+      <field name="model">via.reporting.tree.node</field>
+      <field name="type">form</field>
+      <field name="inherit_id" ref="via_reporting_tree.form_view_via_reporting_tree_node"/>
+      <field name="arch" type="xml">
+        <xpath expr="//separator[@string='Formatting']/../field[last()]" position="after">
+                <group colspan="10" attrs="{'invisible': [('tree_type_name','!=','Financial Report')]}">
+                  <separator string="Lines Formatting"/>
+                </group>
+                <field name="move_bold" attrs="{'invisible': [('tree_type_name','!=','Financial Report')]}"/>
+                <field name="move_italic" attrs="{'invisible': [('tree_type_name','!=','Financial Report')]}"/>
+                <field name="move_underline" attrs="{'invisible': [('tree_type_name','!=','Financial Report')]}"/>
+        </xpath>
+      </field>
+    </record>
+
+    <record id="action_via_financial_gl"
+            model="ir.actions.act_window">
+      <field name="name">Trial Balance With Moves</field>
+      <field name="res_model">via.jasper.report</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">form</field>
+      <field name="view_id" ref="via_jasper_report_utils_account.via_jasper_report_main_form_view_account"/>
+      <field name="context">{'via_jasper_report_utils.rpt_name': 'General Ledger'}</field>
+      <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_via_financial_gl"
+              name="General Ledger"
+              parent="menu_via_reporting_financial_root"
+              action="action_via_financial_gl"/>
+  </data>
+</openerp>

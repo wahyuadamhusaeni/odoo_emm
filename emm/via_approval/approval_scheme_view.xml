@@ -1,0 +1,283 @@
+<?xml version="1.0"?>
+<openerp>
+<data>
+
+<record id="view_approval_items_tree" model="ir.ui.view">
+    <field name="name">approval.items.tree</field>
+    <field name="model">approval.items</field>
+    <field name="type">tree</field>
+    <field name="arch" type="xml">
+        <tree string="Approval Items">
+            <field name="name"/>
+            <field name="model"/>
+            <field name="rule"/>
+            <field name="approver"/>
+            <field name="approver_user"/>
+            <field name="description"/>
+            <field name="hash_code"/>
+            <field name="hook"/>
+            <field name="approval_type"/>
+        </tree>
+    </field>
+</record>
+
+<record id="view_approval_items_form" model="ir.ui.view">
+    <field name="name">approval.items.form</field>
+    <field name="model">approval.items</field>
+    <field name="type">form</field>
+    <field name="arch" type="xml">
+        <form string="Approval Items">
+            <separator colspan="4" string="Approval Items Details"/>
+            <group col="2" colspan="4">
+                <field name="name"/>
+                <field name="model" on_change="model_change(model)"/>
+                <field name="approval_type"/>
+                <field name="rule"/>
+                <field name="approver" on_change="approver_change(approver)"/>
+                <field name="approver_user"/>
+                <field name="description"/>
+                <field name="hash_code"/>
+                <field name="hook"/>
+            </group>
+        </form>
+    </field>
+</record>
+
+<record id="view_approval_scheme_tree" model="ir.ui.view">
+    <field name="name">approval.scheme.tree</field>
+    <field name="model">approval.scheme</field>
+    <field name="type">tree</field>
+    <field name="arch" type="xml">
+        <tree string="Approval Scheme">
+            <field name="name"/>
+            <field name="model"/>
+            <field name="filter"/>
+            <field name="valid_date_to"/>
+            <field name="approval_scheme_line"/>
+        </tree>
+    </field>
+</record>
+
+<record id="view_approval_scheme_form" model="ir.ui.view">
+    <field name="name">approval.scheme.form</field>
+    <field name="model">approval.scheme</field>
+    <field name="type">form</field>
+    <field name="arch" type="xml">
+        <form string="Approval Scheme" version="7.0">
+            <header>
+                <button name="update_scheme_line" type="object" string="Update" class="oe_highlight"/>
+            </header>
+            <separator colspan="4" string="Scheme Details"/>
+            <group col="4" colspan="4">
+                <field name="name"/>
+                <field name="model" on_change="model_change(model)"/>
+                <field name="filter"/>
+                <field name="valid_date_to"/>
+                <field name="sequence"/>
+            </group>
+            <separator colspan="4" string="Approval Items List"/>
+            <field name="approval_scheme_line" nolabel="1" colspan="4">
+                <tree string="Approval List" editable="bottom">
+                    <field name="approval_items_id" on_change="approval_items_id_change(approval_items_id)" domain="[('model','=',parent.model)]" required="True"/>
+                    <field name="model" readonly="True"/>
+                    <field name="approval_rule" readonly="True"/>
+                    <field name="approver" readonly="True"/>
+                    <field name="approver_user" readonly="True"/>
+                    <field name="description" readonly="True"/>
+                    <field name="hash_code" readonly="True"/>
+                    <field name="hook" readonly="True"/>
+                    <field name="approval_type" readonly="True"/>
+                </tree>
+            </field>
+        </form>
+    </field>
+</record>
+
+<record id="view_approval_scheme_line_tree" model="ir.ui.view">
+    <field name="name">approval.scheme.line.tree</field>
+    <field name="model">approval.scheme.line</field>
+    <field name="type">tree</field>
+    <field name="arch" type="xml">
+        <tree string="Approval Scheme Line">
+            <field name="approval_scheme_id"/>
+            <field name="approval_items_id"/>
+            <field name="model"/>
+            <field name="approval_rule"/>
+            <field name="approver"/>
+            <field name="approver_user"/>
+            <field name="description"/>
+            <field name="hash_code"/>
+            <field name="hook"/>
+            <field name="approval_type"/>
+        </tree>
+    </field>
+</record>
+
+<record id="view_approval_scheme_line_form" model="ir.ui.view">
+    <field name="name">approval.scheme.line.form</field>
+    <field name="model">approval.scheme.line</field>
+    <field name="type">form</field>
+    <field name="arch" type="xml">
+        <form string="Approval Scheme Line">
+            <separator colspan="4" string="Approval Line Details"/>
+            <group col="2" colspan="4">
+                <field name="approval_scheme_id"/>
+                <field name="approval_items_id"/>
+                <field name="model"/>
+                <field name="approval_type"/>
+                <field name="approval_rule"/>
+                <field name="approver"/>
+                <field name="approver_user"/>
+                <field name="description"/>
+                <field name="hash_code"/>
+                <field name="hook"/>
+            </group>
+        </form>
+    </field>
+</record>
+
+<record id="view_approval_audit_tree" model="ir.ui.view">
+    <field name="name">approval.audit.tree</field>
+    <field name="model">approval.audit</field>
+    <field name="type">tree</field>
+    <field name="arch" type="xml">
+        <tree string="Approval List">
+            <field name="doc_name"/>
+            <field name="approval_items_id"/>
+            <field name="model"/>
+            <field name="description"/>
+            <field name="scheme_name"/>
+            <field name="state_from"/>
+            <field name="state_to"/>
+            <field name="date"/>
+            <field name="user"/>
+        </tree>
+    </field>
+</record>
+
+<record id="view_approval_hook_tree" model="ir.ui.view">
+    <field name="name">approval.hook.tree</field>
+    <field name="model">approval.hook</field>
+    <field name="type">tree</field>
+    <field name="arch" type="xml">
+        <tree string="Approval Hook">
+            <field name="name"/>
+            <field name="model"/>
+            <field name="method_name"/>
+        </tree>
+    </field>
+</record>
+
+<record id="view_approval_list_tree" model="ir.ui.view">
+    <field name="name">approval.list.tree</field>
+    <field name="model">approval.list</field>
+    <field name="type">tree</field>
+    <field name="arch" type="xml">
+        <tree string="Approval List">
+            <field name="doc_name"/>
+            <field name="model"/>
+            <field name="approval_items_id"/>
+            <field name="description"/>
+            <field name="approver"/>
+            <field name="approver_user"/>
+            <field name="scheme_name"/>
+            <field name="state"/>
+            <field name="aging"/>
+            <field name="visibility" invisible="1"/>
+            <field name="approval_type"/>
+            <field name="user_filter" readonly="True"/>
+            <button name="approve" icon="gtk-apply" string="Approve" type="object" attrs="{'invisible': ['|',('visibility','=',False),('state','in',['na','approved','reject','ignore','passed'])]}"/>
+            <button name="reject" icon="gtk-cancel" string="Reject" type="object" attrs="{'invisible': ['|',('visibility','=',False),('state','in',['na','approved','reject','ignore','passed','failed'])]}"/>
+            <button name="ignore" icon="gtk-close" string="Ignore" type="object" groups="via_approval.approval_super_user"/>
+            <button name="view_doc" icon="gtk-find" string="View" type="object"/>
+        </tree>
+    </field>
+</record>
+
+<record id="view_approval_list_search" model="ir.ui.view">
+    <field name="name">approval.list.search</field>
+    <field name="model">approval.list</field>
+    <field name="arch" type="xml">
+        <search string="Approval List">
+            <field name="doc_name"/>
+            <field name="model"/>
+            <field name="approval_items_id"/>
+            <field name="approver"/>
+            <field name="approver_user"/>
+            <field name="scheme_name"/>
+            <field name="state"/>
+            <field name="approval_type"/>
+            <filter name="na" string="State N/A" domain="[('state','=','na')]"/>
+            <filter name="approved" string="State Approved" domain="[('state','=','approved')]"/>
+            <filter name="pending" string="State Pending" domain="[('state','=','pending')]"/>
+            <filter name="reject" string="State Rejected" domain="[('state','=','reject')]"/>
+            <filter name="ignore" string="State Ignored" domain="[('state','=','ignore')]"/>
+            <filter name="passed" string="State Passed" domain="[('state','=','passed')]"/>
+            <filter name="failed" string="State Failed" domain="[('state','=','failed')]"/>
+            <filter name="user_filter" string="User Filter" domain="[('user_filter','=',True)]"/>
+            <separator/>
+            <group expand="0" string="Group By...">
+                <filter string="Document" domain="[]" context="{'group_by':'doc_name'}"/>
+                <filter string="Model" domain="[]" context="{'group_by':'model'}"/>
+                <filter string="Approval Item" domain="[]" context="{'group_by':'approval_items_id'}"/>
+                <filter string="Scheme" domain="[]" context="{'group_by':'scheme_name'}"/>
+                <filter string="Approval Type" domain="[]" context="{'group_by' : 'approval_type'}" />
+            </group>
+        </search>
+    </field>
+</record>
+
+<act_window id="act_approval_items"
+    name="Approval Items"
+    res_model="approval.items"
+    view_type="form"
+    view_mode="tree,form"/>
+
+<act_window id="act_approval_scheme"
+    name="Approval Scheme"
+    res_model="approval.scheme"
+    view_type="form"
+    view_mode="tree,form"/>
+
+<act_window id="act_approval_scheme_line"
+    name="Approval Scheme Line"
+    res_model="approval.scheme.line"
+    view_type="form"
+    view_mode="tree"/>
+
+<act_window id="act_approval_list"
+    name="Approval List"
+    res_model="approval.list"
+    view_type="form"
+    view_mode="tree,form"/>
+
+<menuitem
+    id="menu_document_control" name="Approval Configuration"
+    parent="base.menu_custom"/>
+
+<menuitem
+    id="menu_approval_items" name="Approval Items"
+    parent="menu_document_control" action="act_approval_items"/>
+
+<menuitem
+    id="menu_approval_scheme" name="Approval Scheme"
+    parent="menu_document_control" action="act_approval_scheme"/>
+
+<menuitem
+    id="menu_approval_scheme_line" name="Approval Scheme Line"
+    parent="menu_document_control" action="act_approval_scheme_line"/>
+
+<menuitem
+    id="menu_approval_list" name="Approval List"
+    parent="menu_document_control" action="act_approval_list"/>
+
+<menuitem
+    id="menu_approval_messaging" name="Approval"
+    parent="mail.mail_feeds_main"/>
+
+<menuitem
+    id="menu_approval_list_messaging_" name="Approval List"
+    parent="menu_approval_messaging" action="act_approval_list"/>
+
+</data>
+</openerp>

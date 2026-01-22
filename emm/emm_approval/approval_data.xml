@@ -1,0 +1,2575 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <!-- Director Group -->
+
+        <record model="res.groups" id="emm_group_director">
+            <field name="name">EMM Approval Director</field>
+        </record>
+
+        <record model="res.groups" id="emm_group_sales_admin">
+            <field name="name">EMM Approval Sales Admin</field>
+        </record>
+
+        <!-- ############################################################################# -->
+        <!--                               Approval Items                                  -->
+        <!-- ############################################################################# -->
+
+        <!-- ############################### Sales Order ################################# -->
+
+        <record model="approval.items" id="sale_konfirmasi_penawaran">
+            <field name="name">SO 001 - Konfirmasi Penawaran</field>
+            <field name="model" search="[('model','=','sale.order')]" model="ir.model"/>
+            <field name="approval_type">standard</field>
+            <field name="rule">pricelist_obj = self.pool.get('product.pricelist')
+
+so_pricelist_currency = obj.pricelist_id.currency_id.id
+
+retail_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Retail'),('currency_id','=',so_pricelist_currency)])
+nett_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Nett'),('currency_id','=',so_pricelist_currency)])
+manager_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Manager'),('currency_id','=',so_pricelist_currency)])
+reseller_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Reseller'),('currency_id','=',so_pricelist_currency)])
+agent_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Agent'),('currency_id','=',so_pricelist_currency)])
+
+final = True
+
+for line in obj.order_line:
+ nett_price = pricelist_obj.price_get(cr, SUPERUSER_ID, nett_pricelist_id, line.product_id.id, 1, context=context)
+ manager_price = pricelist_obj.price_get(cr, SUPERUSER_ID, manager_pricelist_id, line.product_id.id, 1, context=context)
+ nett = nett_price.get(nett_pricelist_id[0], 0.0)
+ manager = manager_price.get(manager_pricelist_id[0], 0.0)
+
+ if nett > line.price_unit and line.price_unit >= manager:
+   a = True
+ else:
+   a = False
+
+ final = final and a
+
+result = final</field>
+            <field name="approver" search="[('name','=','Manager'),('category_id','=','Sales')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Konfirmasi untuk mengkonfirmasi penawaran yang dibuat menjadi SO. Grup yang melakukan persetujuan ini adalah Sales Manager.</field>
+            <field name="hash_code">a = ""
+for line in obj.order_line:
+    a += str(line.price_unit)
+result = str(obj.amount_total) + a
+            </field>
+            <field name="hook" search="[('method_name','=','action_button_confirm'),('model','=','sale.order')]" model="approval.hook"/>
+        </record>
+
+        <record model="approval.items" id="sale_kirim_dengan_email">
+            <field name="name">SO 002 - Kirim dengan Email</field>
+            <field name="model" search="[('model','=','sale.order')]" model="ir.model"/>
+            <field name="approval_type">standard</field>
+            <field name="rule">pricelist_obj = self.pool.get('product.pricelist')
+
+so_pricelist_currency = obj.pricelist_id.currency_id.id
+
+retail_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Retail'),('currency_id','=',so_pricelist_currency)])
+nett_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Nett'),('currency_id','=',so_pricelist_currency)])
+manager_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Manager'),('currency_id','=',so_pricelist_currency)])
+reseller_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Reseller'),('currency_id','=',so_pricelist_currency)])
+agent_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Agent'),('currency_id','=',so_pricelist_currency)])
+
+final = True
+
+for line in obj.order_line:
+ nett_price = pricelist_obj.price_get(cr, SUPERUSER_ID, nett_pricelist_id, line.product_id.id, 1, context=context)
+ manager_price = pricelist_obj.price_get(cr, SUPERUSER_ID, manager_pricelist_id, line.product_id.id, 1, context=context)
+ nett = nett_price.get(nett_pricelist_id[0], 0.0)
+ manager = manager_price.get(manager_pricelist_id[0], 0.0)
+
+ if nett > line.price_unit and line.price_unit >= manager:
+   a = True
+ else:
+   a = False
+
+ final = final and a
+
+result = final</field>
+            <field name="approver" search="[('name','=','Manager'),('category_id','=','Sales')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Kirim dengan Email untuk mengirim penawaran yang dibuat dengan email. Grup yang melakukan persetujuan ini adalah Sales Manager.</field>
+            <field name="hash_code">a = ""
+for line in obj.order_line:
+    a += str(line.price_unit)
+result = str(obj.amount_total) + a
+            </field>
+            <field name="hook" search="[('method_name','=','action_quotation_send'),('model','=','sale.order')]" model="approval.hook"/>
+        </record>
+
+        <record model="approval.items" id="sale_cetak_penawaran">
+            <field name="name">SO 003 - Cetak Penawaran</field>
+            <field name="model" search="[('model','=','sale.order')]" model="ir.model"/>
+            <field name="approval_type">standard</field>
+            <field name="rule">pricelist_obj = self.pool.get('product.pricelist')
+
+so_pricelist_currency = obj.pricelist_id.currency_id.id
+
+retail_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Retail'),('currency_id','=',so_pricelist_currency)])
+nett_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Nett'),('currency_id','=',so_pricelist_currency)])
+manager_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Manager'),('currency_id','=',so_pricelist_currency)])
+reseller_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Reseller'),('currency_id','=',so_pricelist_currency)])
+agent_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Agent'),('currency_id','=',so_pricelist_currency)])
+
+final = True
+
+for line in obj.order_line:
+ nett_price = pricelist_obj.price_get(cr, SUPERUSER_ID, nett_pricelist_id, line.product_id.id, 1, context=context)
+ manager_price = pricelist_obj.price_get(cr, SUPERUSER_ID, manager_pricelist_id, line.product_id.id, 1, context=context)
+ nett = nett_price.get(nett_pricelist_id[0], 0.0)
+ manager = manager_price.get(manager_pricelist_id[0], 0.0)
+
+ if nett > line.price_unit and line.price_unit >= manager:
+   a = True
+ else:
+   a = False
+
+ final = final and a
+
+result = final</field>
+            <field name="approver" search="[('name','=','Manager'),('category_id','=','Sales')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Cetak >> Catak Penawaran untuk mencetak penawaran yang dibuat. Grup yang melakukan persetujuan ini adalah Sales Manager.</field>
+            <field name="hash_code">a = ""
+for line in obj.order_line:
+    a += str(line.price_unit)
+result = str(obj.amount_total) + a
+            </field>
+            <!-- <field name="hook" search="[('method_name','=','action_quotation_send'),('model','=','sale.order')]" model="approval.hook"/> -->
+        </record>
+
+        <record model="approval.items" id="sale_cetak_sale_order">
+            <field name="name">SO 004 - Cetak SO</field>
+            <field name="model" search="[('model','=','sale.order')]" model="ir.model"/>
+            <field name="approval_type">standard</field>
+            <field name="rule">pricelist_obj = self.pool.get('product.pricelist')
+
+so_pricelist_currency = obj.pricelist_id.currency_id.id
+
+retail_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Retail'),('currency_id','=',so_pricelist_currency)])
+nett_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Nett'),('currency_id','=',so_pricelist_currency)])
+manager_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Manager'),('currency_id','=',so_pricelist_currency)])
+reseller_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Reseller'),('currency_id','=',so_pricelist_currency)])
+agent_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Agent'),('currency_id','=',so_pricelist_currency)])
+
+final = True
+
+for line in obj.order_line:
+ nett_price = pricelist_obj.price_get(cr, SUPERUSER_ID, nett_pricelist_id, line.product_id.id, 1, context=context)
+ manager_price = pricelist_obj.price_get(cr, SUPERUSER_ID, manager_pricelist_id, line.product_id.id, 1, context=context)
+ nett = nett_price.get(nett_pricelist_id[0], 0.0)
+ manager = manager_price.get(manager_pricelist_id[0], 0.0)
+
+ if nett > line.price_unit and line.price_unit >= manager:
+   a = True
+ else:
+   a = False
+
+ final = final and a
+
+result = final</field>
+            <field name="approver" search="[('name','=','Manager'),('category_id','=','Sales')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Cetak >> Cetak SO untuk mencetak SO penawaran yang dibuat. Grup yang melakukan persetujuan ini adalah Sales Manager.</field>
+            <field name="hash_code">a = ""
+for line in obj.order_line:
+    a += str(line.price_unit)
+result = str(obj.amount_total) + a
+            </field>
+            <!-- <field name="hook" search="[('method_name','=','action_quotation_send'),('model','=','sale.order')]" model="approval.hook"/> -->
+        </record>
+
+        <record model="approval.items" id="sale_konfirmasi_penawaran_director">
+            <field name="name">SO 005 - Konfirmasi Penawaran Direktur</field>
+            <field name="model" search="[('model','=','sale.order')]" model="ir.model"/>
+            <field name="approval_type">standard</field>
+            <field name="rule">pricelist_obj = self.pool.get('product.pricelist')
+
+customer_pricelist = obj.partner_id.property_product_pricelist.name
+
+so_pricelist_currency = obj.pricelist_id.currency_id.id
+
+retail_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Retail'),('currency_id','=',so_pricelist_currency)])
+nett_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Nett'),('currency_id','=',so_pricelist_currency)])
+manager_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Manager'),('currency_id','=',so_pricelist_currency)])
+reseller_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Reseller'),('currency_id','=',so_pricelist_currency)])
+agent_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Agent'),('currency_id','=',so_pricelist_currency)])
+nett_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Nett'),('currency_id','=',so_pricelist_currency)])
+
+final = False
+
+for line in obj.order_line:
+ manager_price = pricelist_obj.price_get(cr, SUPERUSER_ID, manager_pricelist_id, line.product_id.id, 1, context=context)
+ reseller_price = pricelist_obj.price_get(cr, SUPERUSER_ID, reseller_pricelist_id, line.product_id.id, 1, context=context)
+ agent_price = pricelist_obj.price_get(cr, SUPERUSER_ID, agent_pricelist_id, line.product_id.id, 1, context=context)
+ nett_price = pricelist_obj.price_get(cr, SUPERUSER_ID, nett_pricelist_id, line.product_id.id, 1, context=context)
+ retail_price = pricelist_obj.price_get(cr, SUPERUSER_ID, retail_pricelist_id, line.product_id.id, 1, context=context)
+
+ manager = manager_price.get(manager_pricelist_id[0], 0.0)
+ reseller = reseller_price.get(reseller_pricelist_id[0], 0.0)
+ agent = agent_price.get(agent_pricelist_id[0], 0.0)
+ nett = nett_price.get(nett_pricelist_id[0], 0.0)
+ retail = retail_price.get(retail_pricelist_id[0], 0.0)
+
+ if customer_pricelist == 'Reseller' and reseller > line.price_unit:
+   a = True
+ elif customer_pricelist == 'Agent' and agent > line.price_unit:
+   a = True
+ elif customer_pricelist == 'Retail' and manager > line.price_unit:
+   a = True
+ elif 0.0 >= reseller or 0.0 >= agent or 0.0 >= manager or 0.0 >= nett or 0.0 >= retail:
+   a = True
+ else:
+   a = False
+
+ final = final or a
+
+result = final</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Konfirmasi untuk mengkonfirmasi penawaran yang dibuat menjadi SO. Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">a = ""
+for line in obj.order_line:
+    a += str(line.price_unit)
+result = str(obj.amount_total) + a
+            </field>
+            <field name="hook" search="[('method_name','=','action_button_confirm'),('model','=','sale.order')]" model="approval.hook"/>
+        </record>
+
+        <record model="approval.items" id="sale_kirim_dengan_email_director">
+            <field name="name">SO 006 - Kirim dengan Email Direktur</field>
+            <field name="model" search="[('model','=','sale.order')]" model="ir.model"/>
+            <field name="approval_type">standard</field>
+            <field name="rule">pricelist_obj = self.pool.get('product.pricelist')
+
+customer_pricelist = obj.partner_id.property_product_pricelist.name
+
+so_pricelist_currency = obj.pricelist_id.currency_id.id
+
+retail_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Retail'),('currency_id','=',so_pricelist_currency)])
+nett_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Nett'),('currency_id','=',so_pricelist_currency)])
+manager_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Manager'),('currency_id','=',so_pricelist_currency)])
+reseller_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Reseller'),('currency_id','=',so_pricelist_currency)])
+agent_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Agent'),('currency_id','=',so_pricelist_currency)])
+nett_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Nett'),('currency_id','=',so_pricelist_currency)])
+
+final = False
+
+for line in obj.order_line:
+ manager_price = pricelist_obj.price_get(cr, SUPERUSER_ID, manager_pricelist_id, line.product_id.id, 1, context=context)
+ reseller_price = pricelist_obj.price_get(cr, SUPERUSER_ID, reseller_pricelist_id, line.product_id.id, 1, context=context)
+ agent_price = pricelist_obj.price_get(cr, SUPERUSER_ID, agent_pricelist_id, line.product_id.id, 1, context=context)
+ nett_price = pricelist_obj.price_get(cr, SUPERUSER_ID, nett_pricelist_id, line.product_id.id, 1, context=context)
+ retail_price = pricelist_obj.price_get(cr, SUPERUSER_ID, retail_pricelist_id, line.product_id.id, 1, context=context)
+
+ manager = manager_price.get(manager_pricelist_id[0], 0.0)
+ reseller = reseller_price.get(reseller_pricelist_id[0], 0.0)
+ agent = agent_price.get(agent_pricelist_id[0], 0.0)
+ nett = nett_price.get(nett_pricelist_id[0], 0.0)
+ retail = retail_price.get(retail_pricelist_id[0], 0.0)
+
+ if customer_pricelist == 'Reseller' and reseller > line.price_unit:
+   a = True
+ elif customer_pricelist == 'Agent' and agent > line.price_unit:
+   a = True
+ elif customer_pricelist == 'Retail' and manager > line.price_unit:
+   a = True
+ elif 0.0 >= reseller or 0.0 >= agent or 0.0 >= manager or 0.0 >= nett or 0.0 >= retail:
+   a = True
+ else:
+   a = False
+
+ final = final or a
+
+result = final</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Kirim dengan Email untuk mengirim penawaran yang dibuat dengan email. Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">a = ""
+for line in obj.order_line:
+    a += str(line.price_unit)
+result = str(obj.amount_total) + a
+            </field>
+            <field name="hook" search="[('method_name','=','action_quotation_send'),('model','=','sale.order')]" model="approval.hook"/>
+        </record>
+
+        <record model="approval.items" id="sale_cetak_penawaran_director">
+            <field name="name">SO 007 - Cetak Penawaran Direktur</field>
+            <field name="model" search="[('model','=','sale.order')]" model="ir.model"/>
+            <field name="approval_type">standard</field>
+            <field name="rule">pricelist_obj = self.pool.get('product.pricelist')
+
+customer_pricelist = obj.partner_id.property_product_pricelist.name
+
+so_pricelist_currency = obj.pricelist_id.currency_id.id
+
+retail_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Retail'),('currency_id','=',so_pricelist_currency)])
+nett_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Nett'),('currency_id','=',so_pricelist_currency)])
+manager_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Manager'),('currency_id','=',so_pricelist_currency)])
+reseller_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Reseller'),('currency_id','=',so_pricelist_currency)])
+agent_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Agent'),('currency_id','=',so_pricelist_currency)])
+nett_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Nett'),('currency_id','=',so_pricelist_currency)])
+
+final = False
+
+for line in obj.order_line:
+ manager_price = pricelist_obj.price_get(cr, SUPERUSER_ID, manager_pricelist_id, line.product_id.id, 1, context=context)
+ reseller_price = pricelist_obj.price_get(cr, SUPERUSER_ID, reseller_pricelist_id, line.product_id.id, 1, context=context)
+ agent_price = pricelist_obj.price_get(cr, SUPERUSER_ID, agent_pricelist_id, line.product_id.id, 1, context=context)
+ nett_price = pricelist_obj.price_get(cr, SUPERUSER_ID, nett_pricelist_id, line.product_id.id, 1, context=context)
+ retail_price = pricelist_obj.price_get(cr, SUPERUSER_ID, retail_pricelist_id, line.product_id.id, 1, context=context)
+
+ manager = manager_price.get(manager_pricelist_id[0], 0.0)
+ reseller = reseller_price.get(reseller_pricelist_id[0], 0.0)
+ agent = agent_price.get(agent_pricelist_id[0], 0.0)
+ nett = nett_price.get(nett_pricelist_id[0], 0.0)
+ retail = retail_price.get(retail_pricelist_id[0], 0.0)
+
+ if customer_pricelist == 'Reseller' and reseller > line.price_unit:
+   a = True
+ elif customer_pricelist == 'Agent' and agent > line.price_unit:
+   a = True
+ elif customer_pricelist == 'Retail' and manager > line.price_unit:
+   a = True
+ elif 0.0 >= reseller or 0.0 >= agent or 0.0 >= manager or 0.0 >= nett or 0.0 >= retail:
+   a = True
+ else:
+   a = False
+
+ final = final or a
+
+result = final</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Cetak >> Cetak Penawaran untuk mencetak penawaran yang dibuat.  Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">a = ""
+for line in obj.order_line:
+    a += str(line.price_unit)
+result = str(obj.amount_total) + a
+            </field>
+            <!-- <field name="hook" search="[('method_name','=','action_quotation_send')]" model="approval.hook"/> -->
+        </record>
+
+        <record model="approval.items" id="sale_cetak_sale_order_director">
+            <field name="name">SO 008 - Cetak SO Direktur</field>
+            <field name="model" search="[('model','=','sale.order')]" model="ir.model"/>
+            <field name="approval_type">standard</field>
+            <field name="rule">pricelist_obj = self.pool.get('product.pricelist')
+
+customer_pricelist = obj.partner_id.property_product_pricelist.name
+
+so_pricelist_currency = obj.pricelist_id.currency_id.id
+
+retail_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Retail'),('currency_id','=',so_pricelist_currency)])
+nett_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Nett'),('currency_id','=',so_pricelist_currency)])
+manager_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Manager'),('currency_id','=',so_pricelist_currency)])
+reseller_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Reseller'),('currency_id','=',so_pricelist_currency)])
+agent_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Agent'),('currency_id','=',so_pricelist_currency)])
+nett_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Nett'),('currency_id','=',so_pricelist_currency)])
+
+final = False
+
+for line in obj.order_line:
+ manager_price = pricelist_obj.price_get(cr, SUPERUSER_ID, manager_pricelist_id, line.product_id.id, 1, context=context)
+ reseller_price = pricelist_obj.price_get(cr, SUPERUSER_ID, reseller_pricelist_id, line.product_id.id, 1, context=context)
+ agent_price = pricelist_obj.price_get(cr, SUPERUSER_ID, agent_pricelist_id, line.product_id.id, 1, context=context)
+ nett_price = pricelist_obj.price_get(cr, SUPERUSER_ID, nett_pricelist_id, line.product_id.id, 1, context=context)
+ retail_price = pricelist_obj.price_get(cr, SUPERUSER_ID, retail_pricelist_id, line.product_id.id, 1, context=context)
+
+ manager = manager_price.get(manager_pricelist_id[0], 0.0)
+ reseller = reseller_price.get(reseller_pricelist_id[0], 0.0)
+ agent = agent_price.get(agent_pricelist_id[0], 0.0)
+ nett = nett_price.get(nett_pricelist_id[0], 0.0)
+ retail = retail_price.get(retail_pricelist_id[0], 0.0)
+
+ if customer_pricelist == 'Reseller' and reseller > line.price_unit:
+   a = True
+ elif customer_pricelist == 'Agent' and agent > line.price_unit:
+   a = True
+ elif customer_pricelist == 'Retail' and manager > line.price_unit:
+   a = True
+ elif 0.0 >= reseller or 0.0 >= agent or 0.0 >= manager or 0.0 >= nett or 0.0 >= retail:
+   a = True
+ else:
+   a = False
+
+ final = final or a
+
+result = final</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Cetak >> Cetak SO untuk mencetak SO yang dibuat.  Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">a = ""
+for line in obj.order_line:
+    a += str(line.price_unit)
+result = str(obj.amount_total) + a
+            </field>
+            <!-- <field name="hook" search="[('method_name','=','action_quotation_send'),('model','=','sale.order')]" model="approval.hook"/> -->
+        </record>
+
+        <!-- <record model="approval.items" id="sale_pembatalan_penawaran">
+            <field name="name">SO 009 - Pembatalan Penawaran</field>
+            <field name="model" search="[('model','=','sale.order')]" model="ir.model"/>
+            <field name="approval_type">standard</field>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Batalkan untuk membatalkan Penawaran yang dibuat.  Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','cancel'),('model','=','sale.order')]" model="approval.hook"/>
+        </record> -->
+
+        <record model="approval.items" id="sale_pembatalan_sale_order">
+            <field name="name">SO 009 - Pembatalan Penawaran/SO</field>
+            <field name="model" search="[('model','=','sale.order')]" model="ir.model"/>
+            <field name="approval_type">standard</field>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Batalkan Order untuk membatalkan penawaran / SO yang dibuat.  Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','action_cancel'),('model','=','sale.order')]" model="approval.hook"/>
+        </record>
+
+        <record model="approval.items" id="sale_hapus_pengecualian">
+            <field name="name">SO 011 - Hapus Pengecualian</field>
+            <field name="model" search="[('model','=','sale.order')]" model="ir.model"/>
+            <field name="approval_type">standard</field>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Hapus Pengecualian. Grup yang memberikan persetujuan adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','ship_corrected'),('model','=','sale.order')]" model="approval.hook"/>
+        </record>
+
+        <record model="approval.items" id="sale_hapus_pengecualian_faktur">
+            <field name="name">SO 012 - Hapus Pengecualian (Faktur)</field>
+            <field name="model" search="[('model','=','sale.order')]" model="ir.model"/>
+            <field name="approval_type">standard</field>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Hapus Pengecualian. Grup yang memberikan persetujuan adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','invoice_corrected'),('model','=','sale.order')]" model="approval.hook"/>
+        </record>
+
+        <record model="approval.items" id="sale_auto_konfirmasi_penawaran">
+            <field name="name">T&amp;C SO 001 - Konfirmasi Penawaran</field>
+            <field name="model" search="[('model','=','sale.order')]" model="ir.model"/>
+            <field name="approval_type">auto</field>
+            <field name="rule">module_category = self.pool.get('ir.module.category').search(cr, uid, [('name','=','Sales')])
+group_ids = self.pool.get('res.groups').search(cr, uid, [('category_id','in',module_category),('name','=','Manager')])
+group_ids_2 = self.pool.get('res.groups').search(cr, uid, [('name','=','EMM Approval Sales Admin')])
+group_director_ids = self.pool.get('res.groups').search(cr, uid, [('name','=','EMM Approval Director')])
+
+for group_id_2 in group_ids_2:
+  group_ids.append(group_id_2)
+for director in group_director_ids:
+  group_ids.append(director)
+
+group_obj = self.pool.get('res.groups').browse(cr, uid, group_ids)
+user_list = []
+for group in group_obj:
+  for user in group.users:
+    user_list.append(user.id)
+a = False
+if uid in user_list:
+  a = True
+result = a
+            </field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat mengakses tombol Confirm Sale jika user adalah grup Sales/Admin, Sales/Manager, atau Director.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','action_button_confirm'),('model','=','sale.order')]" model="approval.hook"/>
+        </record>
+
+        <!-- ############################### Incoming Shipment ################################# -->
+
+        <record model="approval.items" id="incoming_shipment_pembatalan_transfer">
+            <field name="name">IS 001 - Pembatalan Transfer</field>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="approval_type">standard</field>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Batalkan untuk membatalkan transfer pada penerimaan (IS).  Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','button_cancel'),('model','=','stock.picking'),('name','=','Cancel Transfer (IS)')]" model="approval.hook"/>
+        </record>
+
+        <record model="approval.items" id="incoming_shipment_retur_produk">
+            <field name="name">IS 002 - Retur Produk</field>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="approval_type">standard</field>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Retur Produk untuk melakukan retur produk pada penerimaan (IS).  Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','stock_return_picking'),('model','=','stock.picking'),('name','=','Return Products (IS)')]" model="approval.hook"/>
+        </record>
+
+        <record model="approval.items" id="incoming_shipment_auto_buat_serial_number">
+            <field name="name">T&amp;C IS 001 - Buat Serial Number</field>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="approval_type">auto</field>
+            <field name="rule">group_ids = self.pool.get('res.groups').search(cr, uid, [('name','=','EMM Approval Sales Admin')])
+group_obj = self.pool.get('res.groups').browse(cr, uid, group_ids)
+user_list = []
+for group in group_obj:
+  for user in group.users:
+    user_list.append(user.id)
+a = False
+if uid in user_list:
+  a = True
+result = a
+            </field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat mengakses tombol Buat Serial Number pada Dokumen Penerimaan (IS) jika user adalah grup sales/admin.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','action_prodlot_assign'),('model','=','stock.picking'),('name','=','Assign Serial Number (IS)')]" model="approval.hook"/>
+        </record>
+
+        <record model="approval.items" id="incoming_shipment_auto_cetak_barcode">
+            <field name="name">T&amp;C IS 002 - Cetak Barcode</field>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="approval_type">auto</field>
+            <field name="rule">group_ids = self.pool.get('res.groups').search(cr, uid, [('name','=','EMM Approval Sales Admin')])
+group_obj = self.pool.get('res.groups').browse(cr, uid, group_ids)
+user_list = []
+for group in group_obj:
+  for user in group.users:
+    user_list.append(user.id)
+a = False
+if uid in user_list:
+  a = True
+result = a
+            </field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat mengakses tombol Cetak Barcode jika user adalah grup Sales/Admin</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','print_serial_barcode'),('model','=','stock.picking'),('name','=','Print Barcode (IS)')]" model="approval.hook"/>
+        </record>
+
+        <record model="approval.items" id="incoming_shipment_auto_konfirmasi_dan_terima">
+            <field name="name">T&amp;C IS 003 - Konfirmasi &amp; Terima</field>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="approval_type">auto</field>
+            <field name="rule">group_ids = self.pool.get('res.groups').search(cr, uid, [('name','=','EMM Approval Director')])
+group_obj = self.pool.get('res.groups').browse(cr, uid, group_ids)
+user_list = []
+for group in group_obj:
+  for user in group.users:
+    user_list.append(user.id)
+a = False
+if uid in user_list:
+  a = True
+result = a</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat mengakses tombol Konfirmasi &amp; Transfer jika user adalah grup Direktur</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','draft_validate'),('model','=','stock.picking'),('name','=','Confirm &amp; Receive (IS)')]" model="approval.hook"/>
+        </record>
+
+        <!-- ############################### Internal Move ################################# -->
+
+        <record model="approval.items" id="internal_move_memaksakan_ketersediaan_produk">
+            <field name="name">IM 001 - Memaksakan Ketersediaan Produk</field>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="approval_type">standard</field>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Paksa Tersedia untuk melakukan pemaksaan ketersediaan produk pada perpindahan internal (IM).  Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','force_assign'),('model','=','stock.picking'),('name','=','Force Availability (IM)')]" model="approval.hook"/>
+        </record>
+
+        <record model="approval.items" id="internal_move_pembatalan_transfer">
+            <field name="name">IM 002 - Pembatalan Transfer</field>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="approval_type">standard</field>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Batalkan untuk membatalkan transfer produk pada perpindahan internal (IM).  Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','button_cancel'),('model','=','stock.picking'),('name','=','Cancel Transfer (IM)')]" model="approval.hook"/>
+        </record>
+
+        <record model="approval.items" id="internal_move_auto_konfirmasi_dan_terima">
+            <field name="name">T&amp;C IM 001 - Konfirmasi &amp; Terima</field>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="approval_type">auto</field>
+            <field name="rule">group_ids = self.pool.get('res.groups').search(cr, uid, [('name','=','EMM Approval Director')])
+group_obj = self.pool.get('res.groups').browse(cr, uid, group_ids)
+user_list = []
+for group in group_obj:
+  for user in group.users:
+    user_list.append(user.id)
+a = False
+if uid in user_list:
+  a = True
+result = a</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat mengakses tombol Konfirmasi &amp; Transfer jika user adalah grup Direktur</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','draft_validate'),('model','=','stock.picking'),('name','=','Confirm &amp; Transfer (IM)')]" model="approval.hook"/>
+        </record>
+
+        <!-- ############################### Delivery Order ################################# -->
+
+        <record model="approval.items" id="delivery_order_memaksakan_ketersediaan_produk">
+            <field name="name">DO 001 - Memaksakan Ketersediaan Produk</field>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="approval_type">standard</field>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Paksa Tersedia untuk melakukan pemaksaan ketersediaan produk pada Dokumen Pengiriman  (DO).  Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','force_assign'),('model','=','stock.picking'),('name','=','Force Availability (DO)')]" model="approval.hook"/>
+        </record>
+
+        <record model="approval.items" id="delivery_order_pembatalan_transfer">
+            <field name="name">DO 002 - Pembatalan Transfer</field>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="approval_type">standard</field>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Batalkan untuk membatalkan transfer produk pada Dokumen Pengiriman (DO).  Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','button_cancel'),('model','=','stock.picking'),('name','=','Cancel Transfer (DO)')]" model="approval.hook"/>
+        </record>
+
+        <record model="approval.items" id="delivery_order_retur_produk">
+            <field name="name">DO 003 - Retur Produk</field>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="approval_type">standard</field>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Retur Produk untuk melakukan retur produk pada Dokumen Penerimaan.  Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','stock_return_picking'),('model','=','stock.picking'),('name','=','Return Products (DO)')]" model="approval.hook"/>
+        </record>
+
+        <record model="approval.items" id="delivery_order_siap_kirim">
+            <field name="name">DO 004 - Siap Kirim</field>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="approval_type">standard</field>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','in',['EMM Approval Director','EMM Approval Sales Admin'])]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Ready To Transfer pada dokumen Pengiriman (DO). Grup yang melakukan persetujuan adalah Sales Admin.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','ready_for_transfer'),('model','=','stock.picking'),('name','=','Ready for Transfer Field (DO)')]" model="approval.hook"/>
+        </record>
+
+        <record model="approval.items" id="delivery_order_auto_kirim_produk">
+            <field name="name">T&amp;C DO 001 - Kirim Produk</field>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="approval_type">auto</field>
+            <field name="rule">module_category = self.pool.get('ir.module.category').search(cr, uid, [('name','=','Warehouse')])
+group_ids = self.pool.get('res.groups').search(cr, uid, [('category_id','in',module_category),('name','in',['User','Manager'])])
+group_obj = self.pool.get('res.groups').browse(cr, uid, group_ids)
+user_list = []
+for group in group_obj:
+  for user in group.users:
+    user_list.append(user.id)
+a = False
+if uid in user_list:
+  a = True
+result = a
+            </field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat mengakses tombol Kirim pada dokumen Pengiriman (DO) jika user adalah grup warehouse/user atau warehouse/manager.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','action_process'),('model','=','stock.picking'),('name','=','Deliver (DO)')]" model="approval.hook"/>
+        </record>
+
+        <record model="approval.items" id="delivery_order_auto_kirim_produk_2">
+            <field name="name">T&amp;C DO 002 - Kirim Produk</field>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="approval_type">auto</field>
+            <field name="rule">a = False
+if obj.sale_id:
+  amount_total = obj.sale_id.amount_total
+  total_paid = 0
+  for invoice in obj.sale_id.invoice_ids:
+    balance = invoice.amount_total - invoice.residual
+    total_paid += balance
+  ratio = total_paid / amount_total * 100
+  if (obj.sale_id.payment_term.id == 4 and ratio >= 50) or (obj.sale_id.payment_term.id == 5 and ratio >= 30) or (obj.sale_id.payment_term.id not in [4,5] and ratio != 0.0):
+    a = True
+result = a
+            </field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat mengakses tombol Kirim jika pembayaran telah sesuai paymen term pada SO.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','action_process'),('model','=','stock.picking'),('name','=','Deliver (DO)')]" model="approval.hook"/>
+        </record>
+
+        <record model="approval.items" id="delivery_order_auto_konfirmasi_dan_kirim">
+            <field name="name">T&amp;C DO 003 - Konfirmasi &amp; Kirim</field>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="approval_type">auto</field>
+            <field name="rule">group_ids = self.pool.get('res.groups').search(cr, uid, [('name','=','EMM Approval Director')])
+group_obj = self.pool.get('res.groups').browse(cr, uid, group_ids)
+user_list = []
+for group in group_obj:
+  for user in group.users:
+    user_list.append(user.id)
+a = False
+if uid in user_list:
+  a = True
+result = a</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat mengakses tombol Konfirmasi &amp; Kirim jika user adalah Grup Director.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','draft_validate'),('model','=','stock.picking'),('name','=','Confirm &amp; Deliver (DO)')]" model="approval.hook"/>
+        </record>
+
+        <!-- ############################### Physical Inventory ################################# -->
+
+        <record model="approval.items" id="physical_inventory_konfirmasi_persediaan">
+            <field name="name">PI 001 - Konfirmasi Persediaan</field>
+            <field name="model" search="[('model','=','stock.inventory')]" model="ir.model"/>
+            <field name="approval_type">standard</field>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','Manager'),('category_id','=','Warehouse')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Konfirmasi Persediaan untuk melakukan konfirmasi persediaan produk pada Dokumen Persediaan Fisik. Grup yang melakukan persetujuan ini adalah Warehoause/Manager.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','action_confirm'),('model','=','stock.inventory')]" model="approval.hook"/>
+        </record>
+
+        <record model="approval.items" id="physical_inventory_validasi_persediaan">
+            <field name="name">PI 002 - Validasi Persediaan</field>
+            <field name="model" search="[('model','=','stock.inventory')]" model="ir.model"/>
+            <field name="approval_type">standard</field>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Validasi Persediaan untuk melakukan validasi persediaan produk pada Dokumen Persediaan Fisik.  Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','action_done'),('model','=','stock.inventory')]" model="approval.hook"/>
+        </record>
+
+        <record model="approval.items" id="physical_inventory_pembatalan_persediaan">
+            <field name="name">PI 003 - Pembatalan Persediaan</field>
+            <field name="model" search="[('model','=','stock.inventory')]" model="ir.model"/>
+            <field name="approval_type">standard</field>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Batalkan Persediaan untuk melakukan pembatalan persediaan produk pada Dokumen Persediaan Fisik.  Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','action_cancel_inventory'),('model','=','stock.inventory')]" model="approval.hook"/>
+        </record>
+
+        <!-- ############################### RMA ################################# -->
+
+        <record model="approval.items" id="rma_membuat_rma">
+            <field name="name">RMA 001 - Membuat RMA</field>
+            <field name="model" search="[('model','=','crm.claim')]" model="ir.model"/>
+            <field name="approval_type">standard</field>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Buat RMA untuk menghasilkan nomor RMA pada dokumen Klaim.  Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','generate_rma'),('model','=','crm.claim')]" model="approval.hook"/>
+        </record>
+
+        <record model="approval.items" id="rma_menolak_klaim">
+            <field name="name">RMA 002 - Menolak Klaim</field>
+            <field name="model" search="[('model','=','crm.claim')]" model="ir.model"/>
+            <field name="approval_type">standard</field>
+            <field name="rule">a = False
+if obj.rma_number:
+  a = True
+result = a
+            </field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Tolak jika dokumen RMA telah memiliki nomor RMA. User yang melakukan persetujuan adalah Director.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','case_cancel'),('model','=','crm.claim')]" model="approval.hook"/>
+        </record>
+
+        <record model="approval.items" id="rma_auto_retur_selesai">
+            <field name="name">T&amp;C RMA 001 - Retur Selesai</field>
+            <field name="model" search="[('model','=','crm.claim')]" model="ir.model"/>
+            <field name="approval_type">auto</field>
+            <field name="rule">a = False
+b = False
+if obj.rma_number:
+  a = True
+group_ids = self.pool.get('res.groups').search(cr, uid, [('name','=','EMM Approval Sales Admin')])
+group_obj = self.pool.get('res.groups').browse(cr, uid, group_ids)
+user_list = []
+for group in group_obj:
+  for user in group.users:
+    user_list.append(user.id)
+if uid in user_list:
+  b = True
+result = a and b
+            </field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat mengakses tombol Selesai jika dokumen klaim memiliki nomor RMA.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','case_close'),('model','=','crm.claim')]" model="approval.hook"/>
+        </record>
+
+        <record model="approval.items" id="rma_auto_menolak_klaim">
+            <field name="name">T&amp;C RMA 002 - Menolak Klaim</field>
+            <field name="model" search="[('model','=','crm.claim')]" model="ir.model"/>
+            <field name="approval_type">auto</field>
+            <field name="rule">a = False
+group_ids = self.pool.get('res.groups').search(cr, uid, [('name','=','EMM Approval Sales Admin')])
+group_obj = self.pool.get('res.groups').browse(cr, uid, group_ids)
+user_list = []
+for group in group_obj:
+  for user in group.users:
+    user_list.append(user.id)
+if uid in user_list:
+  a = True
+result = a
+            </field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat mengakses tombol Tolak jika user yang melakukan adalah Sales/Admin.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','case_cancel'),('model','=','crm.claim')]" model="approval.hook"/>
+        </record>
+
+        <record model="approval.items" id="rma_auto_konfirmasi_klaim">
+            <field name="name">T&amp;C RMA 003 - Konfirmasi Klaim</field>
+            <field name="model" search="[('model','=','crm.claim')]" model="ir.model"/>
+            <field name="approval_type">auto</field>
+            <field name="rule">rma_ids = self.pool.get('crm.claim').search(cr, uid, [('serial_number','=',obj.serial_number),('state','=','open')])
+a = True
+rma_temp = []
+for rma_id in rma_ids:
+  if rma_id != obj.id:
+    rma_temp.append(rma_id)
+if rma_temp:
+  a = False
+result = a
+            </field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat melakukan Submit jika Serial Number yang di daftar kan tidak dalam proses klaim.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','case_open'),('model','=','crm.claim')]" model="approval.hook"/>
+        </record>
+
+        <record model="approval.items" id="rma_auto_submit_klaim">
+            <field name="name">T&amp;C RMA 004 - Submit Klaim</field>
+            <field name="model" search="[('model','=','crm.claim')]" model="ir.model"/>
+            <field name="approval_type">auto</field>
+            <field name="rule">a = False
+group_ids = self.pool.get('res.groups').search(cr, uid, [('name','=','EMM Approval Sales Admin')])
+group_obj = self.pool.get('res.groups').browse(cr, uid, group_ids)
+user_list = []
+for group in group_obj:
+  for user in group.users:
+    user_list.append(user.id)
+if uid in user_list:
+  a = True
+result = a
+            </field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat melakukan Submit jika user adalah grup Sales/Admin</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','case_open'),('model','=','crm.claim')]" model="approval.hook"/>
+        </record>
+
+        <record model="approval.items" id="rma_auto_membuat_pengiriman">
+            <field name="name">T&amp;C RMA 005 - Membuat Pengiriman</field>
+            <field name="model" search="[('model','=','crm.claim')]" model="ir.model"/>
+            <field name="approval_type">auto</field>
+            <field name="rule">claim_id = obj.id
+picking_ids = self.pool.get('stock.picking').search(cr, uid, [('claim_id','=',claim_id),('type','=','out')])
+a = True
+if picking_ids:
+  a = False
+result = a
+            </field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat mengakses Tombol Buat Pengiriman jika belum pernah dilakukan pengiriman sebelumnya.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','create_delivery'),('model','=','crm.claim')]" model="approval.hook"/>
+        </record>
+
+        <!-- ############################### Purchase Order ################################# -->
+
+        <record model="approval.items" id="purchase_order_konfirmasi_po">
+            <field name="name">PO 001 - Konfirmasi PO</field>
+            <field name="model" search="[('model','=','purchase.order')]" model="ir.model"/>
+            <field name="approval_type">standard</field>
+            <field name="rule">a = False
+if obj.amount_total >= 10000000:
+  a = True
+result = a
+            </field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Konfirmasi untuk melakukan konfirmasi pembelian. Grup yang melakukan persetujuan adalah Direktur.</field>
+            <field name="hash_code">result = obj.amount_total</field>
+            <field name="hook" search="[('method_name','=','wkf_confirm_order'),('model','=','purchase.order')]" model="approval.hook"/>
+        </record>
+
+        <record model="approval.items" id="purchase_order_koreksi_manual">
+            <field name="name">PO 002 - Koreksi Manual</field>
+            <field name="model" search="[('model','=','purchase.order')]" model="ir.model"/>
+            <field name="approval_type">standard</field>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Koreksi Manual. Grup yang memberikan persetujuan adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','picking_ok'),('model','=','purchase.order')]" model="approval.hook"/>
+        </record>
+
+        <record model="approval.items" id="purchase_order_koreksi_manual_2">
+            <field name="name">PO 003 - Koreksi Manual</field>
+            <field name="model" search="[('model','=','purchase.order')]" model="ir.model"/>
+            <field name="approval_type">standard</field>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Koreksi Manual. Grup yang memberikan persetujuan adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','invoice_ok'),('model','=','purchase.order')]" model="approval.hook"/>
+        </record>
+
+        <!-- ############################### Account Period ################################# -->
+
+        <record model="approval.items" id="account_period_auto_reopen_period">
+            <field name="name">T&amp;C AP 001 - Re-Open Period</field>
+            <field name="model" search="[('model','=','account.period')]" model="ir.model"/>
+            <field name="approval_type">auto</field>
+            <field name="rule">a = False
+module_category = self.pool.get('ir.module.category').search(cr, uid, [('name','=','Accounting &amp; Finance')])
+group_ids = self.pool.get('res.groups').search(cr, uid, [('category_id','in',module_category),('name','=','Financial Manager')])
+group_obj = self.pool.get('res.groups').browse(cr, uid, group_ids)
+user_list = []
+for group in group_obj:
+  for user in group.users:
+    user_list.append(user.id)
+if uid in user_list:
+  a = True
+result = a
+            </field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat mengakses tombol Buka Kembali Periode grup Finance Manager</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','action_draft'),('model','=','account.period')]" model="approval.hook"/>
+        </record>
+
+        <!-- ############################### Service Request ################################# -->
+
+        <record model="approval.items" id="service_batalkan_swo">
+            <field name="name">SWO 001 - Batalkan SWO</field>
+            <field name="model" search="[('model','=','service.request')]" model="ir.model"/>
+            <field name="approval_type">standard</field>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Sales Admin')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Batal pada dokumen Servis. Grup yang melakukan persetujuan ini adalah Sales/Admin.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','cancel_sr'),('model','=','service.request')]" model="approval.hook"/>
+        </record>
+
+        <record model="approval.items" id="service_auto_konfirmasi_swo">
+            <field name="name">T&amp;C SWO 001 - Konfirmasi SWO</field>
+            <field name="model" search="[('model','=','service.request')]" model="ir.model"/>
+            <field name="approval_type">auto</field>
+            <field name="rule">a = False
+group_ids = self.pool.get('res.groups').search(cr, uid, [('name','=','EMM Approval Sales Admin')])
+group_obj = self.pool.get('res.groups').browse(cr, uid, group_ids)
+user_list = []
+for group in group_obj:
+  for user in group.users:
+    user_list.append(user.id)
+if uid in user_list:
+  a = True
+result = a
+            </field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat mengakses tombol Konfirmasi jika user adalah grup Sales/Admin</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','confirm_sr'),('model','=','service.request')]" model="approval.hook"/>
+        </record>
+
+        <record model="approval.items" id="service_auto_tunda_swo">
+            <field name="name">T&amp;C SWO 002 - Tunda SWO</field>
+            <field name="model" search="[('model','=','service.request')]" model="ir.model"/>
+            <field name="approval_type">auto</field>
+            <field name="rule">a = False
+group_ids = self.pool.get('res.groups').search(cr, uid, [('name','=','EMM Approval Sales Admin')])
+group_obj = self.pool.get('res.groups').browse(cr, uid, group_ids)
+user_list = []
+for group in group_obj:
+  for user in group.users:
+    user_list.append(user.id)
+if uid in user_list:
+  a = True
+result = a
+            </field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat mengakses tombol Tunda jika user adalah grup Sales/Admin</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','pending_sr'),('model','=','service.request')]" model="approval.hook"/>
+        </record>
+
+        <record model="approval.items" id="service_auto_selesai_swo">
+            <field name="name">T&amp;C SWO 003 - Selesai SWO</field>
+            <field name="model" search="[('model','=','service.request')]" model="ir.model"/>
+            <field name="approval_type">auto</field>
+            <field name="rule">temp_consume_ids = [temp.id for temp in obj.spare_parts_consume]
+consume_ids = self.pool.get('stock.picking').search(cr, uid, [('id','in',temp_consume_ids),('state','=','done')], context=context)
+temp_invoice_ids = [temp.id for temp in obj.service_invoice]
+invoice_ids = self.pool.get('account.invoice').search(cr, uid, [('id','in',temp_invoice_ids),('state','=','paid')], context=context)
+temp_move_ids = [temp.id for temp in obj.spare_parts_consume_move]
+move_ids = self.pool.get('stock.move').search(cr, uid, [('id','in',temp_move_ids),('has_invoiced','=',True)], context=context)
+
+a = False
+b = False
+c = False
+d = False
+
+if len(temp_consume_ids) == 0 or len(temp_consume_ids) ==  len(consume_ids):
+  a = True
+if len(temp_invoice_ids) == 0 or len(temp_invoice_ids) == len(invoice_ids):
+  b = True
+if len(move_ids) == 0 or len(temp_move_ids) == len(move_ids):
+  c = True
+
+group_ids = self.pool.get('res.groups').search(cr, uid, [('name','=','EMM Approval Sales Admin')])
+group_obj = self.pool.get('res.groups').browse(cr, uid, group_ids)
+user_list = []
+for group in group_obj:
+  for user in group.users:
+    user_list.append(user.id)
+if uid in user_list:
+  d = True
+
+result = a and b and c and d
+            </field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat mengakses tombol Selesai jika tidak ada suku cadang di lokasi pickup atau transit, dan semua invoice telah terbayar.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','done_sr'),('model','=','service.request')]" model="approval.hook"/>
+        </record>
+
+        <!-- ############################################################################# -->
+        <!--                               Approval Scheme                                 -->
+        <!-- ############################################################################# -->
+
+        <!-- ############################### Sales Order ################################# -->
+
+        <record model="approval.scheme" id="scheme_approval_so">
+            <field name="name">Scheme Approval SO</field>
+            <field name="model" search="[('model','=','sale.order')]" model="ir.model"/>
+            <field name="filter">result = True</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_sale_konfirmasi_penawaran">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval SO')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','SO 001 - Konfirmasi Penawaran')]" model="approval.items"/>
+            <field name="model" search="[('model','=','sale.order')]" model="ir.model"/>
+            <field name="rule">pricelist_obj = self.pool.get('product.pricelist')
+
+so_pricelist_currency = obj.pricelist_id.currency_id.id
+
+retail_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Retail'),('currency_id','=',so_pricelist_currency)])
+nett_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Nett'),('currency_id','=',so_pricelist_currency)])
+manager_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Manager'),('currency_id','=',so_pricelist_currency)])
+reseller_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Reseller'),('currency_id','=',so_pricelist_currency)])
+agent_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Agent'),('currency_id','=',so_pricelist_currency)])
+
+final = True
+
+for line in obj.order_line:
+ nett_price = pricelist_obj.price_get(cr, SUPERUSER_ID, nett_pricelist_id, line.product_id.id, 1, context=context)
+ manager_price = pricelist_obj.price_get(cr, SUPERUSER_ID, manager_pricelist_id, line.product_id.id, 1, context=context)
+ nett = nett_price.get(nett_pricelist_id[0], 0.0)
+ manager = manager_price.get(manager_pricelist_id[0], 0.0)
+
+ if nett > line.price_unit and line.price_unit >= manager:
+   a = True
+ else:
+   a = False
+
+ final = final and a
+
+result = final</field>
+            <field name="approver" search="[('name','=','Manager'),('category_id','=','Sales')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Konfirmasi untuk mengkonfirmasi penawaran yang dibuat menjadi SO. Grup yang melakukan persetujuan ini adalah Sales Manager.</field>
+            <field name="hash_code">a = ""
+for line in obj.order_line:
+    a += str(line.price_unit)
+result = str(obj.amount_total) + a
+            </field>
+            <field name="hook" search="[('method_name','=','action_button_confirm'),('model','=','sale.order')]" model="approval.hook"/>
+            <field name="approval_type">standard</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_sale_kirim_dengan_email">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval SO')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','SO 002 - Kirim dengan Email')]" model="approval.items"/>
+            <field name="model" search="[('model','=','sale.order')]" model="ir.model"/>
+            <field name="rule">pricelist_obj = self.pool.get('product.pricelist')
+
+so_pricelist_currency = obj.pricelist_id.currency_id.id
+
+retail_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Retail'),('currency_id','=',so_pricelist_currency)])
+nett_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Nett'),('currency_id','=',so_pricelist_currency)])
+manager_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Manager'),('currency_id','=',so_pricelist_currency)])
+reseller_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Reseller'),('currency_id','=',so_pricelist_currency)])
+agent_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Agent'),('currency_id','=',so_pricelist_currency)])
+
+final = True
+
+for line in obj.order_line:
+ nett_price = pricelist_obj.price_get(cr, SUPERUSER_ID, nett_pricelist_id, line.product_id.id, 1, context=context)
+ manager_price = pricelist_obj.price_get(cr, SUPERUSER_ID, manager_pricelist_id, line.product_id.id, 1, context=context)
+ nett = nett_price.get(nett_pricelist_id[0], 0.0)
+ manager = manager_price.get(manager_pricelist_id[0], 0.0)
+
+ if nett > line.price_unit and line.price_unit >= manager:
+   a = True
+ else:
+   a = False
+
+ final = final and a
+
+result = final</field>
+            <field name="approver" search="[('name','=','Manager'),('category_id','=','Sales')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Kirim dengan Email untuk mengirim penawaran yang dibuat dengan email. Grup yang melakukan persetujuan ini adalah Sales Manager.</field>
+            <field name="hash_code">a = ""
+for line in obj.order_line:
+    a += str(line.price_unit)
+result = str(obj.amount_total) + a
+            </field>
+            <field name="hook" search="[('method_name','=','action_quotation_send'),('model','=','sale.order')]" model="approval.hook"/>
+            <field name="approval_type">standard</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_sale_cetak_penawaran">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval SO')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','SO 003 - Cetak Penawaran')]" model="approval.items"/>
+            <field name="model" search="[('model','=','sale.order')]" model="ir.model"/>
+            <field name="rule">pricelist_obj = self.pool.get('product.pricelist')
+
+so_pricelist_currency = obj.pricelist_id.currency_id.id
+
+retail_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Retail'),('currency_id','=',so_pricelist_currency)])
+nett_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Nett'),('currency_id','=',so_pricelist_currency)])
+manager_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Manager'),('currency_id','=',so_pricelist_currency)])
+reseller_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Reseller'),('currency_id','=',so_pricelist_currency)])
+agent_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Agent'),('currency_id','=',so_pricelist_currency)])
+
+final = True
+
+for line in obj.order_line:
+ nett_price = pricelist_obj.price_get(cr, SUPERUSER_ID, nett_pricelist_id, line.product_id.id, 1, context=context)
+ manager_price = pricelist_obj.price_get(cr, SUPERUSER_ID, manager_pricelist_id, line.product_id.id, 1, context=context)
+ nett = nett_price.get(nett_pricelist_id[0], 0.0)
+ manager = manager_price.get(manager_pricelist_id[0], 0.0)
+
+ if nett > line.price_unit and line.price_unit >= manager:
+   a = True
+ else:
+   a = False
+
+ final = final and a
+
+result = final</field>
+            <field name="approver" search="[('name','=','Manager'),('category_id','=','Sales')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Cetak >> Catak Penawaran untuk mencetak penawaran yang dibuat. Grup yang melakukan persetujuan ini adalah Sales Manager.</field>
+            <field name="hash_code">a = ""
+for line in obj.order_line:
+    a += str(line.price_unit)
+result = str(obj.amount_total) + a
+            </field>
+            <field name="approval_type">standard</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_sale_cetak_sale_order">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval SO')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','SO 004 - Cetak SO')]" model="approval.items"/>
+            <field name="model" search="[('model','=','sale.order')]" model="ir.model"/>
+            <field name="rule">pricelist_obj = self.pool.get('product.pricelist')
+
+so_pricelist_currency = obj.pricelist_id.currency_id.id
+
+retail_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Retail'),('currency_id','=',so_pricelist_currency)])
+nett_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Nett'),('currency_id','=',so_pricelist_currency)])
+manager_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Manager'),('currency_id','=',so_pricelist_currency)])
+reseller_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Reseller'),('currency_id','=',so_pricelist_currency)])
+agent_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Agent'),('currency_id','=',so_pricelist_currency)])
+
+final = True
+
+for line in obj.order_line:
+ nett_price = pricelist_obj.price_get(cr, SUPERUSER_ID, nett_pricelist_id, line.product_id.id, 1, context=context)
+ manager_price = pricelist_obj.price_get(cr, SUPERUSER_ID, manager_pricelist_id, line.product_id.id, 1, context=context)
+ nett = nett_price.get(nett_pricelist_id[0], 0.0)
+ manager = manager_price.get(manager_pricelist_id[0], 0.0)
+
+ if nett > line.price_unit and line.price_unit >= manager:
+   a = True
+ else:
+   a = False
+
+ final = final and a
+
+result = final</field>
+            <field name="approver" search="[('name','=','Manager'),('category_id','=','Sales')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Cetak >> Cetak SO untuk mencetak SO penawaran yang dibuat. Grup yang melakukan persetujuan ini adalah Sales Manager.</field>
+            <field name="hash_code">a = ""
+for line in obj.order_line:
+    a += str(line.price_unit)
+result = str(obj.amount_total) + a
+            </field>
+            <field name="approval_type">standard</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_sale_konfirmasi_penawaran_director">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval SO')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','SO 005 - Konfirmasi Penawaran Direktur')]" model="approval.items"/>
+            <field name="model" search="[('model','=','sale.order')]" model="ir.model"/>
+            <field name="rule">pricelist_obj = self.pool.get('product.pricelist')
+
+customer_pricelist = obj.partner_id.property_product_pricelist.name
+
+so_pricelist_currency = obj.pricelist_id.currency_id.id
+
+retail_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Retail'),('currency_id','=',so_pricelist_currency)])
+nett_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Nett'),('currency_id','=',so_pricelist_currency)])
+manager_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Manager'),('currency_id','=',so_pricelist_currency)])
+reseller_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Reseller'),('currency_id','=',so_pricelist_currency)])
+agent_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Agent'),('currency_id','=',so_pricelist_currency)])
+nett_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Nett'),('currency_id','=',so_pricelist_currency)])
+
+final = False
+
+for line in obj.order_line:
+ manager_price = pricelist_obj.price_get(cr, SUPERUSER_ID, manager_pricelist_id, line.product_id.id, 1, context=context)
+ reseller_price = pricelist_obj.price_get(cr, SUPERUSER_ID, reseller_pricelist_id, line.product_id.id, 1, context=context)
+ agent_price = pricelist_obj.price_get(cr, SUPERUSER_ID, agent_pricelist_id, line.product_id.id, 1, context=context)
+ nett_price = pricelist_obj.price_get(cr, SUPERUSER_ID, nett_pricelist_id, line.product_id.id, 1, context=context)
+ retail_price = pricelist_obj.price_get(cr, SUPERUSER_ID, retail_pricelist_id, line.product_id.id, 1, context=context)
+
+ manager = manager_price.get(manager_pricelist_id[0], 0.0)
+ reseller = reseller_price.get(reseller_pricelist_id[0], 0.0)
+ agent = agent_price.get(agent_pricelist_id[0], 0.0)
+ nett = nett_price.get(nett_pricelist_id[0], 0.0)
+ retail = retail_price.get(retail_pricelist_id[0], 0.0)
+
+ if customer_pricelist == 'Reseller' and reseller > line.price_unit:
+   a = True
+ elif customer_pricelist == 'Agent' and agent > line.price_unit:
+   a = True
+ elif customer_pricelist == 'Retail' and manager > line.price_unit:
+   a = True
+ elif 0.0 >= reseller or 0.0 >= agent or 0.0 >= manager or 0.0 >= nett or 0.0 >= retail:
+   a = True
+ else:
+   a = False
+
+ final = final or a
+
+result = final</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Konfirmasi untuk mengkonfirmasi penawaran yang dibuat menjadi SO. Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">a = ""
+for line in obj.order_line:
+    a += str(line.price_unit)
+result = str(obj.amount_total) + a
+            </field>
+            <field name="hook" search="[('method_name','=','action_button_confirm'),('model','=','sale.order')]" model="approval.hook"/>
+            <field name="approval_type">standard</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_sale_kirim_dengan_email_director">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval SO')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','SO 006 - Kirim dengan Email Direktur')]" model="approval.items"/>
+            <field name="model" search="[('model','=','sale.order')]" model="ir.model"/>
+            <field name="rule">pricelist_obj = self.pool.get('product.pricelist')
+
+customer_pricelist = obj.partner_id.property_product_pricelist.name
+
+so_pricelist_currency = obj.pricelist_id.currency_id.id
+
+retail_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Retail'),('currency_id','=',so_pricelist_currency)])
+nett_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Nett'),('currency_id','=',so_pricelist_currency)])
+manager_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Manager'),('currency_id','=',so_pricelist_currency)])
+reseller_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Reseller'),('currency_id','=',so_pricelist_currency)])
+agent_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Agent'),('currency_id','=',so_pricelist_currency)])
+nett_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Nett'),('currency_id','=',so_pricelist_currency)])
+
+final = False
+
+for line in obj.order_line:
+ manager_price = pricelist_obj.price_get(cr, SUPERUSER_ID, manager_pricelist_id, line.product_id.id, 1, context=context)
+ reseller_price = pricelist_obj.price_get(cr, SUPERUSER_ID, reseller_pricelist_id, line.product_id.id, 1, context=context)
+ agent_price = pricelist_obj.price_get(cr, SUPERUSER_ID, agent_pricelist_id, line.product_id.id, 1, context=context)
+ nett_price = pricelist_obj.price_get(cr, SUPERUSER_ID, nett_pricelist_id, line.product_id.id, 1, context=context)
+ retail_price = pricelist_obj.price_get(cr, SUPERUSER_ID, retail_pricelist_id, line.product_id.id, 1, context=context)
+
+ manager = manager_price.get(manager_pricelist_id[0], 0.0)
+ reseller = reseller_price.get(reseller_pricelist_id[0], 0.0)
+ agent = agent_price.get(agent_pricelist_id[0], 0.0)
+ nett = nett_price.get(nett_pricelist_id[0], 0.0)
+ retail = retail_price.get(retail_pricelist_id[0], 0.0)
+
+ if customer_pricelist == 'Reseller' and reseller > line.price_unit:
+   a = True
+ elif customer_pricelist == 'Agent' and agent > line.price_unit:
+   a = True
+ elif customer_pricelist == 'Retail' and manager > line.price_unit:
+   a = True
+ elif 0.0 >= reseller or 0.0 >= agent or 0.0 >= manager or 0.0 >= nett or 0.0 >= retail:
+   a = True
+ else:
+   a = False
+
+ final = final or a
+
+result = final</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Kirim dengan Email untuk mengirim penawaran yang dibuat dengan email. Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">a = ""
+for line in obj.order_line:
+    a += str(line.price_unit)
+result = str(obj.amount_total) + a
+            </field>
+            <field name="hook" search="[('method_name','=','action_quotation_send'),('model','=','sale.order')]" model="approval.hook"/>
+            <field name="approval_type">standard</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_sale_cetak_penawaran_director">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval SO')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','SO 007 - Cetak Penawaran Direktur')]" model="approval.items"/>
+            <field name="model" search="[('model','=','sale.order')]" model="ir.model"/>
+            <field name="rule">pricelist_obj = self.pool.get('product.pricelist')
+
+customer_pricelist = obj.partner_id.property_product_pricelist.name
+
+so_pricelist_currency = obj.pricelist_id.currency_id.id
+
+retail_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Retail'),('currency_id','=',so_pricelist_currency)])
+nett_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Nett'),('currency_id','=',so_pricelist_currency)])
+manager_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Manager'),('currency_id','=',so_pricelist_currency)])
+reseller_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Reseller'),('currency_id','=',so_pricelist_currency)])
+agent_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Agent'),('currency_id','=',so_pricelist_currency)])
+nett_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Nett'),('currency_id','=',so_pricelist_currency)])
+
+final = False
+
+for line in obj.order_line:
+ manager_price = pricelist_obj.price_get(cr, SUPERUSER_ID, manager_pricelist_id, line.product_id.id, 1, context=context)
+ reseller_price = pricelist_obj.price_get(cr, SUPERUSER_ID, reseller_pricelist_id, line.product_id.id, 1, context=context)
+ agent_price = pricelist_obj.price_get(cr, SUPERUSER_ID, agent_pricelist_id, line.product_id.id, 1, context=context)
+ nett_price = pricelist_obj.price_get(cr, SUPERUSER_ID, nett_pricelist_id, line.product_id.id, 1, context=context)
+ retail_price = pricelist_obj.price_get(cr, SUPERUSER_ID, retail_pricelist_id, line.product_id.id, 1, context=context)
+
+ manager = manager_price.get(manager_pricelist_id[0], 0.0)
+ reseller = reseller_price.get(reseller_pricelist_id[0], 0.0)
+ agent = agent_price.get(agent_pricelist_id[0], 0.0)
+ nett = nett_price.get(nett_pricelist_id[0], 0.0)
+ retail = retail_price.get(retail_pricelist_id[0], 0.0)
+
+ if customer_pricelist == 'Reseller' and reseller > line.price_unit:
+   a = True
+ elif customer_pricelist == 'Agent' and agent > line.price_unit:
+   a = True
+ elif customer_pricelist == 'Retail' and manager > line.price_unit:
+   a = True
+ elif 0.0 >= reseller or 0.0 >= agent or 0.0 >= manager or 0.0 >= nett or 0.0 >= retail:
+   a = True
+ else:
+   a = False
+
+ final = final or a
+
+result = final</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Cetak >> Cetak Penawaran untuk mencetak penawaran yang dibuat.  Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">a = ""
+for line in obj.order_line:
+    a += str(line.price_unit)
+result = str(obj.amount_total) + a
+            </field>
+            <field name="approval_type">standard</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_sale_cetak_sale_order_director">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval SO')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','SO 008 - Cetak SO Direktur')]" model="approval.items"/>
+            <field name="model" search="[('model','=','sale.order')]" model="ir.model"/>
+            <field name="rule">pricelist_obj = self.pool.get('product.pricelist')
+
+customer_pricelist = obj.partner_id.property_product_pricelist.name
+
+so_pricelist_currency = obj.pricelist_id.currency_id.id
+
+retail_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Retail'),('currency_id','=',so_pricelist_currency)])
+nett_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Nett'),('currency_id','=',so_pricelist_currency)])
+manager_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Manager'),('currency_id','=',so_pricelist_currency)])
+reseller_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Reseller'),('currency_id','=',so_pricelist_currency)])
+agent_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Agent'),('currency_id','=',so_pricelist_currency)])
+nett_pricelist_id = pricelist_obj.search(cr, SUPERUSER_ID, [('name','=','Nett'),('currency_id','=',so_pricelist_currency)])
+
+final = False
+
+for line in obj.order_line:
+ manager_price = pricelist_obj.price_get(cr, SUPERUSER_ID, manager_pricelist_id, line.product_id.id, 1, context=context)
+ reseller_price = pricelist_obj.price_get(cr, SUPERUSER_ID, reseller_pricelist_id, line.product_id.id, 1, context=context)
+ agent_price = pricelist_obj.price_get(cr, SUPERUSER_ID, agent_pricelist_id, line.product_id.id, 1, context=context)
+ nett_price = pricelist_obj.price_get(cr, SUPERUSER_ID, nett_pricelist_id, line.product_id.id, 1, context=context)
+ retail_price = pricelist_obj.price_get(cr, SUPERUSER_ID, retail_pricelist_id, line.product_id.id, 1, context=context)
+
+ manager = manager_price.get(manager_pricelist_id[0], 0.0)
+ reseller = reseller_price.get(reseller_pricelist_id[0], 0.0)
+ agent = agent_price.get(agent_pricelist_id[0], 0.0)
+ nett = nett_price.get(nett_pricelist_id[0], 0.0)
+ retail = retail_price.get(retail_pricelist_id[0], 0.0)
+
+ if customer_pricelist == 'Reseller' and reseller > line.price_unit:
+   a = True
+ elif customer_pricelist == 'Agent' and agent > line.price_unit:
+   a = True
+ elif customer_pricelist == 'Retail' and manager > line.price_unit:
+   a = True
+ elif 0.0 >= reseller or 0.0 >= agent or 0.0 >= manager or 0.0 >= nett or 0.0 >= retail:
+   a = True
+ else:
+   a = False
+
+ final = final or a
+
+result = final</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Cetak >> Cetak SO untuk mencetak SO yang dibuat.  Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">a = ""
+for line in obj.order_line:
+    a += str(line.price_unit)
+result = str(obj.amount_total) + a
+            </field>
+            <field name="approval_type">standard</field>
+        </record>
+
+        <!-- <record model="approval.scheme.line" id="line_sale_pembatalan_penawaran">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval SO')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','SO 009 - Pembatalan Penawaran')]" model="approval.items"/>
+            <field name="model" search="[('model','=','sale.order')]" model="ir.model"/>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Batalkan untuk membatalkan Penawaran yang dibuat.  Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','cancel'),('model','=','sale.order')]" model="approval.hook"/>
+            <field name="approval_type">standard</field>
+        </record> -->
+
+        <record model="approval.scheme.line" id="line_sale_pembatalan_sale_order">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval SO')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','SO 009 - Pembatalan Penawaran/SO')]" model="approval.items"/>
+            <field name="model" search="[('model','=','sale.order')]" model="ir.model"/>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Batalkan Order untuk membatalkan Penawaran / SO yang dibuat.  Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','action_cancel'),('model','=','sale.order')]" model="approval.hook"/>
+            <field name="approval_type">standard</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_sale_hapus_pengecualian">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval SO')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','SO 011 - Hapus Pengecualian')]" model="approval.items"/>
+            <field name="model" search="[('model','=','sale.order')]" model="ir.model"/>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Hapus Pengecualian. Grup yang memberikan persetujuan adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','ship_corrected'),('model','=','sale.order')]" model="approval.hook"/>
+            <field name="approval_type">standard</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_sale_hapus_pengecualian_faktur">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval SO')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','SO 012 - Hapus Pengecualian (Faktur)')]" model="approval.items"/>
+            <field name="model" search="[('model','=','sale.order')]" model="ir.model"/>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Hapus Pengecualian. Grup yang memberikan persetujuan adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','invoice_corrected'),('model','=','sale.order')]" model="approval.hook"/>
+            <field name="approval_type">standard</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_sale_auto_konfirmasi_penawaran">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval SO')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','T&amp;C SO 001 - Konfirmasi Penawaran')]" model="approval.items"/>
+            <field name="model" search="[('model','=','sale.order')]" model="ir.model"/>
+            <field name="rule">module_category = self.pool.get('ir.module.category').search(cr, uid, [('name','=','Sales')])
+group_ids = self.pool.get('res.groups').search(cr, uid, [('category_id','in',module_category),('name','=','Manager')])
+group_ids_2 = self.pool.get('res.groups').search(cr, uid, [('name','=','EMM Approval Sales Admin')])
+group_director_ids = self.pool.get('res.groups').search(cr, uid, [('name','=','EMM Approval Director')])
+
+for group_id_2 in group_ids_2:
+  group_ids.append(group_id_2)
+for director in group_director_ids:
+  group_ids.append(director)
+
+group_obj = self.pool.get('res.groups').browse(cr, uid, group_ids)
+user_list = []
+for group in group_obj:
+  for user in group.users:
+    user_list.append(user.id)
+a = False
+if uid in user_list:
+  a = True
+result = a
+            </field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat mengakses tombol Confirm Sale jika user adalah grup Sales/Admin, Sales/Manager, atau Director.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','action_button_confirm'),('model','=','sale.order')]" model="approval.hook"/>
+            <field name="approval_type">auto</field>
+        </record>
+
+        <!-- ############################### Incoming Shipment ################################# -->
+
+        <record model="approval.scheme" id="scheme_approval_incoming_shipment">
+            <field name="name">Scheme Approval Incoming Shipment</field>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="filter">a = False
+if obj.type == 'in':
+  a = True
+result = a
+            </field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record model="approval.scheme" id="scheme_approval_incoming_shipment_direct">
+            <field name="name">Scheme Approval Incoming Shipment (Direct)</field>
+            <field name="model" search="[('model','=','stock.picking.in')]" model="ir.model"/>
+            <field name="filter">result = True
+            </field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_incoming_shipment_pembatalan_transfer">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Incoming Shipment')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','IS 001 - Pembatalan Transfer')]" model="approval.items"/>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Batalkan untuk membatalkan transfer pada penerimaan (IS).  Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','button_cancel'),('model','=','stock.picking'),('name','=','Cancel Transfer (IS)')]" model="approval.hook"/>
+            <field name="approval_type">standard</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_incoming_shipment_pembatalan_transfer_direct">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Incoming Shipment (Direct)')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','IS 001 - Pembatalan Transfer')]" model="approval.items"/>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Batalkan untuk membatalkan transfer pada penerimaan (IS).  Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','button_cancel'),('model','=','stock.picking'),('name','=','Cancel Transfer (IS)')]" model="approval.hook"/>
+            <field name="approval_type">standard</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_incoming_shipment_retur_produk">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Incoming Shipment')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','IS 002 - Retur Produk')]" model="approval.items"/>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Retur Produk untuk melakukan retur produk pada penerimaan (IS).  Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','stock_return_picking'),('model','=','stock.picking'),('name','=','Return Products (IS)')]" model="approval.hook"/>
+            <field name="approval_type">standard</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_incoming_shipment_retur_produk_direct">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Incoming Shipment (Direct)')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','IS 002 - Retur Produk')]" model="approval.items"/>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Retur Produk untuk melakukan retur produk pada penerimaan (IS).  Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','stock_return_picking'),('model','=','stock.picking'),('name','=','Return Products (IS)')]" model="approval.hook"/>
+            <field name="approval_type">standard</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_incoming_shipment_auto_buat_serial_number">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Incoming Shipment')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','T&amp;C IS 001 - Buat Serial Number')]" model="approval.items"/>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="rule">group_ids = self.pool.get('res.groups').search(cr, uid, [('name','=','EMM Approval Sales Admin')])
+group_obj = self.pool.get('res.groups').browse(cr, uid, group_ids)
+user_list = []
+for group in group_obj:
+  for user in group.users:
+    user_list.append(user.id)
+a = False
+if uid in user_list:
+  a = True
+result = a
+            </field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat mengakses tombol Buat Serial Number pada Dokumen Penerimaan (IS) jika user adalah grup sales/admin.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','action_prodlot_assign'),('model','=','stock.picking'),('name','=','Assign Serial Number (IS)')]" model="approval.hook"/>
+            <field name="approval_type">auto</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_incoming_shipment_auto_buat_serial_number_direct">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Incoming Shipment (Direct)')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','T&amp;C IS 001 - Buat Serial Number')]" model="approval.items"/>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="rule">group_ids = self.pool.get('res.groups').search(cr, uid, [('name','=','EMM Approval Sales Admin')])
+group_obj = self.pool.get('res.groups').browse(cr, uid, group_ids)
+user_list = []
+for group in group_obj:
+  for user in group.users:
+    user_list.append(user.id)
+a = False
+if uid in user_list:
+  a = True
+result = a
+            </field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat mengakses tombol Buat Serial Number pada Dokumen Penerimaan (IS) jika user adalah grup sales/admin.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','action_prodlot_assign'),('model','=','stock.picking'),('name','=','Assign Serial Number (IS)')]" model="approval.hook"/>
+            <field name="approval_type">auto</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_incoming_shipment_auto_cetak_barcode">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Incoming Shipment')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','T&amp;C IS 002 - Cetak Barcode')]" model="approval.items"/>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="rule">group_ids = self.pool.get('res.groups').search(cr, uid, [('name','=','EMM Approval Sales Admin')])
+group_obj = self.pool.get('res.groups').browse(cr, uid, group_ids)
+user_list = []
+for group in group_obj:
+  for user in group.users:
+    user_list.append(user.id)
+a = False
+if uid in user_list:
+  a = True
+result = a
+            </field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat mengakses tombol Cetak Barcode jika user adalah grup Sales/Admin</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','print_serial_barcode'),('model','=','stock.picking'),('name','=','Print Barcode (IS)')]" model="approval.hook"/>
+            <field name="approval_type">auto</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_incoming_shipment_auto_cetak_barcode_direct">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Incoming Shipment (Direct)')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','T&amp;C IS 002 - Cetak Barcode')]" model="approval.items"/>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="rule">group_ids = self.pool.get('res.groups').search(cr, uid, [('name','=','EMM Approval Sales Admin')])
+group_obj = self.pool.get('res.groups').browse(cr, uid, group_ids)
+user_list = []
+for group in group_obj:
+  for user in group.users:
+    user_list.append(user.id)
+a = False
+if uid in user_list:
+  a = True
+result = a
+            </field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat mengakses tombol Cetak Barcode jika user adalah grup Sales/Admin</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','print_serial_barcode'),('model','=','stock.picking'),('name','=','Print Barcode (IS)')]" model="approval.hook"/>
+            <field name="approval_type">auto</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_incoming_shipment_auto_konfirmasi_dan_terima">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Incoming Shipment')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','T&amp;C IS 003 - Konfirmasi &amp; Terima')]" model="approval.items"/>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="rule">group_ids = self.pool.get('res.groups').search(cr, uid, [('name','=','EMM Approval Director')])
+group_obj = self.pool.get('res.groups').browse(cr, uid, group_ids)
+user_list = []
+for group in group_obj:
+  for user in group.users:
+    user_list.append(user.id)
+a = False
+if uid in user_list:
+  a = True
+result = a</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat mengakses tombol Konfirmasi &amp; Transfer jika user adalah grup Direktur</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','draft_validate'),('model','=','stock.picking'),('name','=','Confirm &amp; Receive (IS)')]" model="approval.hook"/>
+            <field name="approval_type">auto</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_incoming_shipment_auto_konfirmasi_dan_terima_direct">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Incoming Shipment (Direct)')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','T&amp;C IS 003 - Konfirmasi &amp; Terima')]" model="approval.items"/>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="rule">group_ids = self.pool.get('res.groups').search(cr, uid, [('name','=','EMM Approval Director')])
+group_obj = self.pool.get('res.groups').browse(cr, uid, group_ids)
+user_list = []
+for group in group_obj:
+  for user in group.users:
+    user_list.append(user.id)
+a = False
+if uid in user_list:
+  a = True
+result = a</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat mengakses tombol Konfirmasi &amp; Transfer jika user adalah grup Direktur</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','draft_validate'),('model','=','stock.picking'),('name','=','Confirm &amp; Receive (IS)')]" model="approval.hook"/>
+            <field name="approval_type">auto</field>
+        </record>
+
+        <!-- ############################### Internal Move ################################# -->
+
+        <record model="approval.scheme" id="scheme_approval_internal_move">
+            <field name="name">Scheme Approval Internal Move</field>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="filter">a = False
+if obj.type == 'internal':
+  a = True
+result = a
+            </field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_internal_move_memaksakan_ketersediaan_produk">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Internal Move')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','IM 001 - Memaksakan Ketersediaan Produk')]" model="approval.items"/>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Paksa Tersedia untuk melakukan pemaksaan ketersediaan produk pada perpindahan internal (IM).  Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','force_assign'),('model','=','stock.picking'),('name','=','Force Availability (IM)')]" model="approval.hook"/>
+            <field name="approval_type">standard</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_internal_move_pembatalan_transfer">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Internal Move')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','IM 002 - Pembatalan Transfer')]" model="approval.items"/>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Batalkan untuk membatalkan transfer produk pada perpindahan internal (IM).  Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','button_cancel'),('model','=','stock.picking'),('name','=','Cancel Transfer (IM)')]" model="approval.hook"/>
+            <field name="approval_type">standard</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_internal_move_auto_konfirmasi_dan_terima">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Internal Move')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','T&amp;C IM 001 - Konfirmasi &amp; Terima')]" model="approval.items"/>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="rule">group_ids = self.pool.get('res.groups').search(cr, uid, [('name','=','EMM Approval Director')])
+group_obj = self.pool.get('res.groups').browse(cr, uid, group_ids)
+user_list = []
+for group in group_obj:
+  for user in group.users:
+    user_list.append(user.id)
+a = False
+if uid in user_list:
+  a = True
+result = a</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat mengakses tombol Konfirmasi &amp; Transfer jika user adalah grup Direktur</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','draft_validate'),('model','=','stock.picking'),('name','=','Confirm &amp; Transfer (IM)')]" model="approval.hook"/>
+            <field name="approval_type">auto</field>
+        </record>
+
+        <!-- ############################### Delivery Order ################################# -->
+
+        <!-- <record model="approval.scheme" id="scheme_approval_delivery_order_so">
+            <field name="name">Scheme Approval Delivery Order (SO)</field>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="filter">a = False
+if obj.type == 'out' and obj.sale_id and not obj.purchase_id:
+  a = True
+result = a
+            </field>
+            <field name="sequence">10</field>
+        </record> -->
+
+        <record model="approval.scheme" id="scheme_approval_delivery_order_direct">
+            <field name="name">Scheme Approval Delivery Order (Direct)</field>
+            <field name="model" search="[('model','=','stock.picking.out')]" model="ir.model"/>
+            <field name="filter">a = False
+if not obj.picking_svc_type:
+  a = True
+result = a
+            </field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record model="approval.scheme" id="scheme_approval_delivery_order_return">
+            <field name="name">Scheme Approval Delivery Order (Return)</field>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="filter">a = False
+if obj.type == 'out' and not obj.sale_id and obj.purchase_id:
+  a = True
+result = a
+            </field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record model="approval.scheme" id="scheme_approval_delivery_order_service">
+            <field name="name">Scheme Approval Delivery Order (Service)</field>
+            <field name="model" search="[('model','=','stock.picking.out')]" model="ir.model"/>
+            <field name="filter">a = False
+if obj.picking_svc_type:
+  a = True
+result = a
+            </field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_delivery_order_memaksakan_ketersediaan_produk_so">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Delivery Order (SO)')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','DO 001 - Memaksakan Ketersediaan Produk')]" model="approval.items"/>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Paksa Tersedia untuk melakukan pemaksaan ketersediaan produk pada Dokumen Pengiriman  (DO).  Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','force_assign'),('model','=','stock.picking'),('name','=','Force Availability (DO)')]" model="approval.hook"/>
+            <field name="approval_type">standard</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_delivery_order_memaksakan_ketersediaan_produk_direct">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Delivery Order (Direct)')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','DO 001 - Memaksakan Ketersediaan Produk')]" model="approval.items"/>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Paksa Tersedia untuk melakukan pemaksaan ketersediaan produk pada Dokumen Pengiriman  (DO).  Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','force_assign'),('model','=','stock.picking'),('name','=','Force Availability (DO)')]" model="approval.hook"/>
+            <field name="approval_type">standard</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_delivery_order_memaksakan_ketersediaan_produk_return">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Delivery Order (Return)')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','DO 001 - Memaksakan Ketersediaan Produk')]" model="approval.items"/>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Paksa Tersedia untuk melakukan pemaksaan ketersediaan produk pada Dokumen Pengiriman  (DO).  Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','force_assign'),('model','=','stock.picking'),('name','=','Force Availability (DO)')]" model="approval.hook"/>
+            <field name="approval_type">standard</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_delivery_order_memaksakan_ketersediaan_produk_service">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Delivery Order (Service)')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','DO 001 - Memaksakan Ketersediaan Produk')]" model="approval.items"/>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Paksa Tersedia untuk melakukan pemaksaan ketersediaan produk pada Dokumen Pengiriman  (DO).  Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','force_assign'),('model','=','stock.picking'),('name','=','Force Availability (DO)')]" model="approval.hook"/>
+            <field name="approval_type">standard</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_delivery_order_pembatalan_transfer_so">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Delivery Order (SO)')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','DO 002 - Pembatalan Transfer')]" model="approval.items"/>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Batalkan untuk membatalkan transfer produk pada Dokumen Pengiriman (DO).  Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','button_cancel'),('model','=','stock.picking'),('name','=','Cancel Transfer (DO)')]" model="approval.hook"/>
+            <field name="approval_type">standard</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_delivery_order_pembatalan_transfer_direct">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Delivery Order (Direct)')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','DO 002 - Pembatalan Transfer')]" model="approval.items"/>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Batalkan untuk membatalkan transfer produk pada Dokumen Pengiriman (DO).  Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','button_cancel'),('model','=','stock.picking'),('name','=','Cancel Transfer (DO)')]" model="approval.hook"/>
+            <field name="approval_type">standard</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_delivery_order_pembatalan_transfer_return">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Delivery Order (Return)')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','DO 002 - Pembatalan Transfer')]" model="approval.items"/>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Batalkan untuk membatalkan transfer produk pada Dokumen Pengiriman (DO).  Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','button_cancel'),('model','=','stock.picking'),('name','=','Cancel Transfer (DO)')]" model="approval.hook"/>
+            <field name="approval_type">standard</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_delivery_order_pembatalan_transfer_service">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Delivery Order (Service)')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','DO 002 - Pembatalan Transfer')]" model="approval.items"/>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Batalkan untuk membatalkan transfer produk pada Dokumen Pengiriman (DO).  Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','button_cancel'),('model','=','stock.picking'),('name','=','Cancel Transfer (DO)')]" model="approval.hook"/>
+            <field name="approval_type">standard</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_delivery_order_retur_produk_so">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Delivery Order (SO)')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','DO 003 - Retur Produk')]" model="approval.items"/>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Retur Produk untuk melakukan retur produk pada Dokumen Penerimaan.  Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','stock_return_picking'),('model','=','stock.picking'),('name','=','Return Products (DO)')]" model="approval.hook"/>
+            <field name="approval_type">standard</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_delivery_order_retur_produk_direct">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Delivery Order (Direct)')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','DO 003 - Retur Produk')]" model="approval.items"/>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Retur Produk untuk melakukan retur produk pada Dokumen Penerimaan.  Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','stock_return_picking'),('model','=','stock.picking'),('name','=','Return Products (DO)')]" model="approval.hook"/>
+            <field name="approval_type">standard</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_delivery_order_retur_produk_return">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Delivery Order (Return)')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','DO 003 - Retur Produk')]" model="approval.items"/>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Retur Produk untuk melakukan retur produk pada Dokumen Penerimaan.  Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','stock_return_picking'),('model','=','stock.picking'),('name','=','Return Products (DO)')]" model="approval.hook"/>
+            <field name="approval_type">standard</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_delivery_order_retur_produk_service">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Delivery Order (Service)')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','DO 003 - Retur Produk')]" model="approval.items"/>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Retur Produk untuk melakukan retur produk pada Dokumen Penerimaan.  Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','stock_return_picking'),('model','=','stock.picking'),('name','=','Return Products (DO)')]" model="approval.hook"/>
+            <field name="approval_type">standard</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_delivery_order_siap_kirim_so">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Delivery Order (SO)')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','DO 004 - Siap Kirim')]" model="approval.items"/>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','in',['EMM Approval Director','EMM Approval Sales Admin'])]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Ready To Transfer pada dokumen Pengiriman (DO). Grup yang melakukan persetujuan adalah Sales Admin.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','ready_for_transfer'),('model','=','stock.picking'),('name','=','Ready for Transfer Field (DO)')]" model="approval.hook"/>
+            <field name="approval_type">standard</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_delivery_order_siap_kirim_direct">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Delivery Order (Direct)')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','DO 004 - Siap Kirim')]" model="approval.items"/>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','in',['EMM Approval Director','EMM Approval Sales Admin'])]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Ready To Transfer pada dokumen Pengiriman (DO). Grup yang melakukan persetujuan adalah Sales Admin.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','ready_for_transfer'),('model','=','stock.picking'),('name','=','Ready for Transfer Field (DO)')]" model="approval.hook"/>
+            <field name="approval_type">standard</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_delivery_order_auto_kirim_produk_so">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Delivery Order (SO)')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','T&amp;C DO 001 - Kirim Produk')]" model="approval.items"/>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="rule">module_category = self.pool.get('ir.module.category').search(cr, uid, [('name','=','Warehouse')])
+group_ids = self.pool.get('res.groups').search(cr, uid, [('category_id','in',module_category),('name','in',['User','Manager'])])
+group_obj = self.pool.get('res.groups').browse(cr, uid, group_ids)
+user_list = []
+for group in group_obj:
+  for user in group.users:
+    user_list.append(user.id)
+a = False
+if uid in user_list:
+  a = True
+result = a
+            </field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat mengakses tombol Kirim pada dokumen Pengiriman (DO) jika user adalah grup warehouse/user atau warehouse/manager.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','action_process'),('model','=','stock.picking'),('name','=','Deliver (DO)')]" model="approval.hook"/>
+            <field name="approval_type">auto</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_delivery_order_auto_kirim_produk_direct">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Delivery Order (Direct)')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','T&amp;C DO 001 - Kirim Produk')]" model="approval.items"/>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="rule">module_category = self.pool.get('ir.module.category').search(cr, uid, [('name','=','Warehouse')])
+group_ids = self.pool.get('res.groups').search(cr, uid, [('category_id','in',module_category),('name','in',['User','Manager'])])
+group_obj = self.pool.get('res.groups').browse(cr, uid, group_ids)
+user_list = []
+for group in group_obj:
+  for user in group.users:
+    user_list.append(user.id)
+a = False
+if uid in user_list:
+  a = True
+result = a
+            </field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat mengakses tombol Kirim pada dokumen Pengiriman (DO) jika user adalah grup warehouse/user atau warehouse/manager.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','action_process'),('model','=','stock.picking'),('name','=','Deliver (DO)')]" model="approval.hook"/>
+            <field name="approval_type">auto</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_delivery_order_auto_kirim_produk_return">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Delivery Order (Return)')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','T&amp;C DO 001 - Kirim Produk')]" model="approval.items"/>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="rule">module_category = self.pool.get('ir.module.category').search(cr, uid, [('name','=','Warehouse')])
+group_ids = self.pool.get('res.groups').search(cr, uid, [('category_id','in',module_category),('name','in',['User','Manager'])])
+group_obj = self.pool.get('res.groups').browse(cr, uid, group_ids)
+user_list = []
+for group in group_obj:
+  for user in group.users:
+    user_list.append(user.id)
+a = False
+if uid in user_list:
+  a = True
+result = a
+            </field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat mengakses tombol Kirim pada dokumen Pengiriman (DO) jika user adalah grup warehouse/user atau warehouse/manager.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','action_process'),('model','=','stock.picking'),('name','=','Deliver (DO)')]" model="approval.hook"/>
+            <field name="approval_type">auto</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_delivery_order_auto_kirim_produk_service">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Delivery Order (Service)')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','T&amp;C DO 001 - Kirim Produk')]" model="approval.items"/>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="rule">module_category = self.pool.get('ir.module.category').search(cr, uid, [('name','=','Warehouse')])
+group_ids = self.pool.get('res.groups').search(cr, uid, [('category_id','in',module_category),('name','in',['User','Manager'])])
+group_obj = self.pool.get('res.groups').browse(cr, uid, group_ids)
+user_list = []
+for group in group_obj:
+  for user in group.users:
+    user_list.append(user.id)
+a = False
+if uid in user_list:
+  a = True
+result = a
+            </field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat mengakses tombol Kirim pada dokumen Pengiriman (DO) jika user adalah grup warehouse/user atau warehouse/manager.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','action_process'),('model','=','stock.picking'),('name','=','Deliver (DO)')]" model="approval.hook"/>
+            <field name="approval_type">auto</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_delivery_order_auto_kirim_produk_2_so">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Delivery Order (SO)')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','T&amp;C DO 002 - Kirim Produk')]" model="approval.items"/>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="rule">a = False
+if obj.sale_id:
+  amount_total = obj.sale_id.amount_total
+  total_paid = 0
+  for invoice in obj.sale_id.invoice_ids:
+    balance = invoice.amount_total - invoice.residual
+    total_paid += balance
+  ratio = total_paid / amount_total * 100
+  if (obj.sale_id.payment_term.id == 4 and ratio >= 50) or (obj.sale_id.payment_term.id == 5 and ratio >= 30) or (obj.sale_id.payment_term.id not in [4,5] and ratio != 0.0):
+    a = True
+result = a
+            </field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat mengakses tombol Kirim jika pembayaran telah sesuai paymen term pada SO.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','action_process'),('model','=','stock.picking'),('name','=','Deliver (DO)')]" model="approval.hook"/>
+            <field name="approval_type">auto</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_delivery_order_auto_konfirmasi_dan_kirim_so">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Delivery Order (SO)')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','T&amp;C DO 003 - Konfirmasi &amp; Kirim')]" model="approval.items"/>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="rule">group_ids = self.pool.get('res.groups').search(cr, uid, [('name','=','EMM Approval Director')])
+group_obj = self.pool.get('res.groups').browse(cr, uid, group_ids)
+user_list = []
+for group in group_obj:
+  for user in group.users:
+    user_list.append(user.id)
+a = False
+if uid in user_list:
+  a = True
+result = a</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat mengakses tombol Konfirmasi &amp; Kirim jika user adalah Grup Director.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','draft_validate'),('model','=','stock.picking'),('name','=','Confirm &amp; Deliver (DO)')]" model="approval.hook"/>
+            <field name="approval_type">auto</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_delivery_order_auto_konfirmasi_dan_kirim_direct">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Delivery Order (Direct)')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','T&amp;C DO 003 - Konfirmasi &amp; Kirim')]" model="approval.items"/>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="rule">group_ids = self.pool.get('res.groups').search(cr, uid, [('name','=','EMM Approval Director')])
+group_obj = self.pool.get('res.groups').browse(cr, uid, group_ids)
+user_list = []
+for group in group_obj:
+  for user in group.users:
+    user_list.append(user.id)
+a = False
+if uid in user_list:
+  a = True
+result = a</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat mengakses tombol Konfirmasi &amp; Kirim jika user adalah Grup Director.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','draft_validate'),('model','=','stock.picking'),('name','=','Confirm &amp; Deliver (DO)')]" model="approval.hook"/>
+            <field name="approval_type">auto</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_delivery_order_auto_konfirmasi_dan_kirim_return">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Delivery Order (Return)')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','T&amp;C DO 003 - Konfirmasi &amp; Kirim')]" model="approval.items"/>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="rule">group_ids = self.pool.get('res.groups').search(cr, uid, [('name','=','EMM Approval Director')])
+group_obj = self.pool.get('res.groups').browse(cr, uid, group_ids)
+user_list = []
+for group in group_obj:
+  for user in group.users:
+    user_list.append(user.id)
+a = False
+if uid in user_list:
+  a = True
+result = a</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat mengakses tombol Konfirmasi &amp; Kirim jika user adalah Grup Director.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','draft_validate'),('model','=','stock.picking'),('name','=','Confirm &amp; Deliver (DO)')]" model="approval.hook"/>
+            <field name="approval_type">auto</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_delivery_order_auto_konfirmasi_dan_kirim_service">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Delivery Order (Service)')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','T&amp;C DO 003 - Konfirmasi &amp; Kirim')]" model="approval.items"/>
+            <field name="model" search="[('model','=','stock.picking')]" model="ir.model"/>
+            <field name="rule">group_ids = self.pool.get('res.groups').search(cr, uid, [('name','=','EMM Approval Director')])
+group_obj = self.pool.get('res.groups').browse(cr, uid, group_ids)
+user_list = []
+for group in group_obj:
+  for user in group.users:
+    user_list.append(user.id)
+a = False
+if uid in user_list:
+  a = True
+result = a</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat mengakses tombol Konfirmasi &amp; Kirim jika user adalah Grup Director.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','draft_validate'),('model','=','stock.picking'),('name','=','Confirm &amp; Deliver (DO)')]" model="approval.hook"/>
+            <field name="approval_type">auto</field>
+        </record>
+
+        <!-- ############################### Physical Inventory ################################# -->
+
+        <record model="approval.scheme" id="scheme_approval_physical_inventory">
+            <field name="name">Scheme Approval Physical Inventory</field>
+            <field name="model" search="[('model','=','stock.inventory')]" model="ir.model"/>
+            <field name="filter">result = True</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_physical_inventory_konfirmasi_persediaan">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Physical Inventory')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','PI 001 - Konfirmasi Persediaan')]" model="approval.items"/>
+            <field name="model" search="[('model','=','stock.inventory')]" model="ir.model"/>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','Manager'),('category_id','=','Warehouse')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Konfirmasi Persediaan untuk melakukan konfirmasi persediaan produk pada Dokumen Persediaan Fisik. Grup yang melakukan persetujuan ini adalah Warehoause/Manager.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','action_confirm'),('model','=','stock.inventory')]" model="approval.hook"/>
+            <field name="approval_type">standard</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_physical_inventory_validasi_persediaan">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Physical Inventory')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','PI 002 - Validasi Persediaan')]" model="approval.items"/>
+            <field name="model" search="[('model','=','stock.inventory')]" model="ir.model"/>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Validasi Persediaan untuk melakukan validasi persediaan produk pada Dokumen Persediaan Fisik.  Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','action_done'),('model','=','stock.inventory')]" model="approval.hook"/>
+            <field name="approval_type">standard</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_physical_inventory_pembatalan_persediaan">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Physical Inventory')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','PI 003 - Pembatalan Persediaan')]" model="approval.items"/>
+            <field name="model" search="[('model','=','stock.inventory')]" model="ir.model"/>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Batalkan Persediaan untuk melakukan pembatalan persediaan produk pada Dokumen Persediaan Fisik.  Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','action_cancel_inventory'),('model','=','stock.inventory')]" model="approval.hook"/>
+            <field name="approval_type">standard</field>
+        </record>
+
+        <!-- ############################### RMA ################################# -->
+
+        <record model="approval.scheme" id="scheme_approval_rma">
+            <field name="name">Scheme Approval RMA</field>
+            <field name="model" search="[('model','=','crm.claim')]" model="ir.model"/>
+            <field name="filter">result = True
+            </field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_rma_membuat_rma">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval RMA')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','RMA 001 - Membuat RMA')]" model="approval.items"/>
+            <field name="model" search="[('model','=','crm.claim')]" model="ir.model"/>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Buat RMA untuk menghasilkan nomor RMA pada dokumen Klaim.  Grup yang melakukan persetujuan ini adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','generate_rma'),('model','=','crm.claim')]" model="approval.hook"/>
+            <field name="approval_type">standard</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_rma_menolak_klaim">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval RMA')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','RMA 002 - Menolak Klaim')]" model="approval.items"/>
+            <field name="model" search="[('model','=','crm.claim')]" model="ir.model"/>
+            <field name="rule">a = False
+if obj.rma_number:
+  a = True
+result = a
+            </field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Tolak jika dokumen RMA telah memiliki nomor RMA. User yang melakukan persetujuan adalah Director.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','case_cancel'),('model','=','crm.claim')]" model="approval.hook"/>
+            <field name="approval_type">standard</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_rma_auto_retur_selesai">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval RMA')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','T&amp;C RMA 001 - Retur Selesai')]" model="approval.items"/>
+            <field name="model" search="[('model','=','crm.claim')]" model="ir.model"/>
+            <field name="rule">a = False
+b = False
+if obj.rma_number:
+  a = True
+group_ids = self.pool.get('res.groups').search(cr, uid, [('name','=','EMM Approval Sales Admin')])
+group_obj = self.pool.get('res.groups').browse(cr, uid, group_ids)
+user_list = []
+for group in group_obj:
+  for user in group.users:
+    user_list.append(user.id)
+if uid in user_list:
+  b = True
+result = a and b
+            </field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat mengakses tombol Selesai jika dokumen klaim memiliki nomor RMA.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','case_close'),('model','=','crm.claim')]" model="approval.hook"/>
+            <field name="approval_type">auto</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_rma_auto_menolak_klaim">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval RMA')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','T&amp;C RMA 002 - Menolak Klaim')]" model="approval.items"/>
+            <field name="model" search="[('model','=','crm.claim')]" model="ir.model"/>
+            <field name="rule">a = False
+group_ids = self.pool.get('res.groups').search(cr, uid, [('name','=','EMM Approval Sales Admin')])
+group_obj = self.pool.get('res.groups').browse(cr, uid, group_ids)
+user_list = []
+for group in group_obj:
+  for user in group.users:
+    user_list.append(user.id)
+if uid in user_list:
+  a = True
+result = a
+            </field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat mengakses tombol Tolak jika user yang melakukan adalah Sales/Admin.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','case_cancel'),('model','=','crm.claim')]" model="approval.hook"/>
+            <field name="approval_type">auto</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_rma_auto_konfirmasi_klaim">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval RMA')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','T&amp;C RMA 003 - Konfirmasi Klaim')]" model="approval.items"/>
+            <field name="model" search="[('model','=','crm.claim')]" model="ir.model"/>
+            <field name="rule">rma_ids = self.pool.get('crm.claim').search(cr, uid, [('serial_number','=',obj.serial_number),('state','=','open')])
+a = True
+rma_temp = []
+for rma_id in rma_ids:
+  if rma_id != obj.id:
+    rma_temp.append(rma_id)
+if rma_temp:
+  a = False
+result = a
+            </field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat melakukan Submit jika Serial Number yang di daftar kan tidak dalam proses klaim.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','case_open'),('model','=','crm.claim')]" model="approval.hook"/>
+            <field name="approval_type">auto</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_rma_auto_submit_klaim">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval RMA')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','T&amp;C RMA 004 - Submit Klaim')]" model="approval.items"/>
+            <field name="model" search="[('model','=','crm.claim')]" model="ir.model"/>
+            <field name="rule">a = False
+group_ids = self.pool.get('res.groups').search(cr, uid, [('name','=','EMM Approval Sales Admin')])
+group_obj = self.pool.get('res.groups').browse(cr, uid, group_ids)
+user_list = []
+for group in group_obj:
+  for user in group.users:
+    user_list.append(user.id)
+if uid in user_list:
+  a = True
+result = a
+            </field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat melakukan Submit jika user adalah grup Sales/Admin</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','case_open'),('model','=','crm.claim')]" model="approval.hook"/>
+            <field name="approval_type">auto</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_rma_auto_membuat_pengiriman">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval RMA')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','T&amp;C RMA 005 - Membuat Pengiriman')]" model="approval.items"/>
+            <field name="model" search="[('model','=','crm.claim')]" model="ir.model"/>
+            <field name="rule">claim_id = obj.id
+picking_ids = self.pool.get('stock.picking').search(cr, uid, [('claim_id','=',claim_id),('type','=','out')])
+a = True
+if picking_ids:
+  a = False
+result = a
+            </field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat mengakses Tombol Buat Pengiriman jika belum pernah dilakukan pengiriman sebelumnya.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','create_delivery'),('model','=','crm.claim')]" model="approval.hook"/>
+            <field name="approval_type">auto</field>
+        </record>
+
+        <!-- ############################### Purchase Order ################################# -->
+
+        <record model="approval.scheme" id="scheme_approval_po">
+            <field name="name">Scheme Approval Purchase Order</field>
+            <field name="model" search="[('model','=','purchase.order')]" model="ir.model"/>
+            <field name="filter">result = True
+            </field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_purchase_order_konfirmasi_po">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Purchase Order')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','PO 001 - Konfirmasi PO')]" model="approval.items"/>
+            <field name="model" search="[('model','=','purchase.order')]" model="ir.model"/>
+            <field name="rule">a = False
+if obj.amount_total >= 10000000:
+  a = True
+result = a
+            </field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Konfirmasi untuk melakukan konfirmasi pembelian. Grup yang melakukan persetujuan adalah Direktur.</field>
+            <field name="hash_code">result = obj.amount_total</field>
+            <field name="hook" search="[('method_name','=','wkf_confirm_order'),('model','=','purchase.order')]" model="approval.hook"/>
+            <field name="approval_type">standard</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_purchase_order_koreksi_manual">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Purchase Order')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','PO 002 - Koreksi Manual')]" model="approval.items"/>
+            <field name="model" search="[('model','=','purchase.order')]" model="ir.model"/>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Koreksi Manual. Grup yang memberikan persetujuan adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','picking_ok'),('model','=','purchase.order')]" model="approval.hook"/>
+            <field name="approval_type">standard</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_purchase_order_koreksi_manual_2">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Purchase Order')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','PO 003 - Koreksi Manual')]" model="approval.items"/>
+            <field name="model" search="[('model','=','purchase.order')]" model="ir.model"/>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Koreksi Manual. Grup yang memberikan persetujuan adalah Direktur.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','invoice_ok'),('model','=','purchase.order')]" model="approval.hook"/>
+            <field name="approval_type">standard</field>
+        </record>
+
+        <!-- ############################### Account Period ################################# -->
+
+        <record model="approval.scheme" id="scheme_approval_period">
+            <field name="name">Scheme Approval Account Period</field>
+            <field name="model" search="[('model','=','account.period')]" model="ir.model"/>
+            <field name="filter">result = True
+            </field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_account_period_auto_reopen_period">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Account Period')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','T&amp;C AP 001 - Re-Open Period')]" model="approval.items"/>
+            <field name="model" search="[('model','=','account.period')]" model="ir.model"/>
+            <field name="rule">a = False
+module_category = self.pool.get('ir.module.category').search(cr, uid, [('name','=','Accounting &amp; Finance')])
+group_ids = self.pool.get('res.groups').search(cr, uid, [('category_id','in',module_category),('name','=','Financial Manager')])
+group_obj = self.pool.get('res.groups').browse(cr, uid, group_ids)
+user_list = []
+for group in group_obj:
+  for user in group.users:
+    user_list.append(user.id)
+if uid in user_list:
+  a = True
+result = a
+            </field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat mengakses tombol Buka Kembali Periode grup Finance Manager</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','action_draft'),('model','=','account.period')]" model="approval.hook"/>
+            <field name="approval_type">auto</field>
+        </record>
+
+        <!-- ############################### Service Request ################################# -->
+
+        <record model="approval.scheme" id="scheme_approval_service">
+            <field name="name">Scheme Approval Service Request</field>
+            <field name="model" search="[('model','=','service.request')]" model="ir.model"/>
+            <field name="filter">result = True
+            </field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_service_batalkan_swo">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Service Request')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','SWO 001 - Batalkan SWO')]" model="approval.items"/>
+            <field name="model" search="[('model','=','service.request')]" model="ir.model"/>
+            <field name="rule">result = True</field>
+            <field name="approver" search="[('name','=','EMM Approval Sales Admin')]" model="res.groups"/>
+            <field name="description">Persetujuan saat user akan mengakses tombol Batal pada dokumen Servis. Grup yang melakukan persetujuan ini adalah Sales/Admin.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','cancel_sr'),('model','=','service.request')]" model="approval.hook"/>
+            <field name="approval_type">standard</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_service_auto_konfirmasi_swo">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Service Request')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','T&amp;C SWO 001 - Konfirmasi SWO')]" model="approval.items"/>
+            <field name="model" search="[('model','=','service.request')]" model="ir.model"/>
+            <field name="rule">a = False
+group_ids = self.pool.get('res.groups').search(cr, uid, [('name','=','EMM Approval Sales Admin')])
+group_obj = self.pool.get('res.groups').browse(cr, uid, group_ids)
+user_list = []
+for group in group_obj:
+  for user in group.users:
+    user_list.append(user.id)
+if uid in user_list:
+  a = True
+result = a
+            </field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat mengakses tombol Konfirmasi jika user adalah grup Sales/Admin</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','confirm_sr'),('model','=','service.request')]" model="approval.hook"/>
+            <field name="approval_type">auto</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_service_auto_tunda_swo">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Service Request')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','T&amp;C SWO 002 - Tunda SWO')]" model="approval.items"/>
+            <field name="model" search="[('model','=','service.request')]" model="ir.model"/>
+            <field name="rule">a = False
+group_ids = self.pool.get('res.groups').search(cr, uid, [('name','=','EMM Approval Sales Admin')])
+group_obj = self.pool.get('res.groups').browse(cr, uid, group_ids)
+user_list = []
+for group in group_obj:
+  for user in group.users:
+    user_list.append(user.id)
+if uid in user_list:
+  a = True
+result = a
+            </field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat mengakses tombol Tunda jika user adalah grup Sales/Admin</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','pending_sr'),('model','=','service.request')]" model="approval.hook"/>
+            <field name="approval_type">auto</field>
+        </record>
+
+        <record model="approval.scheme.line" id="line_service_auto_selesai_swo">
+            <field name="approval_scheme_id" search="[('name','=','Scheme Approval Service Request')]" model="approval.scheme"/>
+            <field name="approval_items_id" search="[('name','=','T&amp;C SWO 003 - Selesai SWO')]" model="approval.items"/>
+            <field name="model" search="[('model','=','service.request')]" model="ir.model"/>
+            <field name="rule">temp_consume_ids = [temp.id for temp in obj.spare_parts_consume]
+consume_ids = self.pool.get('stock.picking').search(cr, uid, [('id','in',temp_consume_ids),('state','=','done')], context=context)
+temp_invoice_ids = [temp.id for temp in obj.service_invoice]
+invoice_ids = self.pool.get('account.invoice').search(cr, uid, [('id','in',temp_invoice_ids),('state','=','paid')], context=context)
+temp_move_ids = [temp.id for temp in obj.spare_parts_consume_move]
+move_ids = self.pool.get('stock.move').search(cr, uid, [('id','in',temp_move_ids),('has_invoiced','=',True)], context=context)
+
+a = False
+b = False
+c = False
+d = False
+
+if len(temp_consume_ids) == 0 or len(temp_consume_ids) ==  len(consume_ids):
+  a = True
+if len(temp_invoice_ids) == 0 or len(temp_invoice_ids) == len(invoice_ids):
+  b = True
+if len(move_ids) == 0 or len(temp_move_ids) == len(move_ids):
+  c = True
+
+group_ids = self.pool.get('res.groups').search(cr, uid, [('name','=','EMM Approval Sales Admin')])
+group_obj = self.pool.get('res.groups').browse(cr, uid, group_ids)
+user_list = []
+for group in group_obj:
+  for user in group.users:
+    user_list.append(user.id)
+if uid in user_list:
+  d = True
+
+result = a and b and c and d
+            </field>
+            <field name="approver" search="[('name','=','EMM Approval Director')]" model="res.groups"/>
+            <field name="description">Dapat mengakses tombol Selesai jika tidak ada suku cadang di lokasi pickup atau transit, dan semua invoice telah terbayar.</field>
+            <field name="hash_code">result = True</field>
+            <field name="hook" search="[('method_name','=','done_sr'),('model','=','service.request')]" model="approval.hook"/>
+            <field name="approval_type">auto</field>
+        </record>
+
+    </data>
+</openerp>

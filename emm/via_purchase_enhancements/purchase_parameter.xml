@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Purchase parameter for purchase enhancements -->
+        <record id="purchase_parameter" model="code.category">
+            <field name="name">Purchase Enhancements</field>
+        </record>
+
+    </data>
+</openerp>

@@ -1,0 +1,1760 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="trial_balance" language="groovy" pageWidth="842" pageHeight="595" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isSummaryWithPageHeaderAndFooter="true">
+	<property name="ireport.zoom" value="1.9487171000000019"/>
+	<property name="ireport.x" value="108"/>
+	<property name="ireport.y" value="0"/>
+	<property name="via.crosstab.1.rowGroup.1.bucket.rtn_order"/>
+	<property name="via.crosstab.1.columnGroup.1.bucket.comparison_order"/>
+	<property name="via.crosstab.1.columnGroup.2.bucket.com_order"/>
+	<property name="via.crosstab.1.columnGroup.3.bucket.fields" value="true"/>
+	<property name="via.crosstab.1.style" value="8.6"/>
+	<style name="0" isBlankWhenNull="true"/>
+	<style name="1" style="0" fontSize="10" isBold="true">
+		<box bottomPadding="20"/>
+	</style>
+	<style name="2" style="0" hAlign="Left" vAlign="Top" fontSize="8">
+		<box leftPadding="1" rightPadding="1"/>
+	</style>
+	<style name="2.1" style="2" hAlign="Center" vAlign="Middle" isBold="true"/>
+	<style name="2.1.1" style="2.1">
+		<box>
+			<rightPen lineWidth="0.2"/>
+		</box>
+	</style>
+	<style name="2.2" style="2">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{decorator_bold}]]></conditionExpression>
+			<style isBold="true"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{decorator_italic}]]></conditionExpression>
+			<style isItalic="true"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{decorator_underline}]]></conditionExpression>
+			<style isUnderline="true"/>
+		</conditionalStyle>
+	</style>
+	<style name="2.2.1" style="2.2" hAlign="Right"/>
+	<style name="2.2.2" style="2.2">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{decorator_multi_parent} || $V{decorator_cycle_starter}]]></conditionExpression>
+			<style mode="Opaque" backcolor="#FF420E"/>
+		</conditionalStyle>
+	</style>
+	<style name="2.2.2.1" style="2.2.2" hAlign="Right"/>
+	<style name="8" style="0">
+		<box>
+			<topPen lineWidth="0.2"/>
+			<leftPen lineWidth="0.2"/>
+			<bottomPen lineWidth="0.2"/>
+			<rightPen lineWidth="0.2"/>
+		</box>
+	</style>
+	<style name="8.1" style="8"/>
+	<style name="8.2" style="8">
+		<box>
+			<topPen lineWidth="0.0"/>
+			<rightPen lineWidth="0.0"/>
+		</box>
+	</style>
+	<style name="8.3" style="8">
+		<box>
+			<topPen lineWidth="0.0"/>
+			<leftPen lineWidth="0.0"/>
+			<bottomPen lineWidth="0.0"/>
+		</box>
+	</style>
+	<style name="8.4" style="8">
+		<box>
+			<bottomPen lineWidth="0.0"/>
+		</box>
+	</style>
+	<style name="8.5" style="8">
+		<box>
+			<rightPen lineWidth="0.0"/>
+		</box>
+	</style>
+	<style name="8.6" style="8">
+		<box>
+			<topPen lineWidth="0.0"/>
+			<leftPen lineWidth="0.0"/>
+			<rightPen lineWidth="0.0"/>
+		</box>
+	</style>
+	<style name="99" style="0" vAlign="Bottom" fontSize="6"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="STOPWATCH" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[(new java.net.URLClassLoader(
+    ([new java.net.URL("file://" + $P{SUBREPORT_DIR})]
+    ).toArray(new java.net.URL[0]), getClass().getClassLoader()
+)).loadClass("Stopwatch").newInstance().start()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="VCD" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[(new java.net.URLClassLoader(
+    ([new java.net.URL("file://" + $P{SUBREPORT_DIR})]
+    ).toArray(new java.net.URL[0]), getClass().getClassLoader()
+)).loadClass("ValueChangeDetector").newInstance()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SHOW_STOPWATCH" class="java.lang.Boolean"/>
+	<parameter name="DATE_FORMAT_STRING_DEFAULT" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["d MMM yyyy"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DATE_FORMATTER_DEFAULT" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.text.SimpleDateFormat($P{DATE_FORMAT_STRING_DEFAULT})]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DATE_FORMAT_STRING_TIME_DEFAULT" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{DATE_FORMAT_STRING_DEFAULT} + " HH:mm:ss"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DATE_FORMATTER_TIME_DEFAULT" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.text.SimpleDateFormat($P{DATE_FORMAT_STRING_TIME_DEFAULT})]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DECIMAL_FORMAT_STRING_DEFAULT" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["#,##0.00;-#,##0.00"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DECIMAL_ROUNDING_MODE_DEFAULT" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["HALF_UP"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DECIMAL_FORMATTER_DEFAULT" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.text.DecimalFormat($P{DECIMAL_FORMAT_STRING_DEFAULT})]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DECIMAL_FORMAT_STRING_AMOUNT" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["#,##0;-#,##0"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DECIMAL_ROUNDING_MODE_AMOUNT" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["HALF_UP"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DECIMAL_FORMATTER_AMOUNT" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.text.DecimalFormat($P{DECIMAL_FORMAT_STRING_AMOUNT})]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DECIMAL_FORMAT_STRING_LEVEL" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["#,##0;-#,##0"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DECIMAL_ROUNDING_MODE_LEVEL" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["HALF_UP"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="DECIMAL_FORMATTER_LEVEL" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.text.DecimalFormat($P{DECIMAL_FORMAT_STRING_LEVEL})]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TODAY" class="java.util.Date" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.util.Date()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PRINTED_PAGE_FOOTER" class="java.util.Collection" isForPrompting="false">
+		<defaultValueExpression><![CDATA[[]]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SETTERS" class="java.lang.Object" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{DECIMAL_FORMATTER_DEFAULT}.setRoundingMode(java.math.RoundingMode.valueOf($P{DECIMAL_ROUNDING_MODE_DEFAULT})) == null
+&& $P{DECIMAL_FORMATTER_AMOUNT}.setRoundingMode(java.math.RoundingMode.valueOf($P{DECIMAL_ROUNDING_MODE_AMOUNT})) == null
+&& $P{DECIMAL_FORMATTER_LEVEL}.setRoundingMode(java.math.RoundingMode.valueOf($P{DECIMAL_ROUNDING_MODE_LEVEL})) == null
+/* Further setter can be added by this pattern: && $P{DECIMAL_FORMATTER_DEFAULT}.setXXX() == null */
+? null
+: null]]></defaultValueExpression>
+	</parameter>
+	<parameter name="OERP_USER" class="java.lang.String"/>
+	<parameter name="COMPANY_NAME" class="java.lang.String"/>
+	<parameter name="USE_INDENTATION" class="java.lang.Boolean"/>
+	<parameter name="NO_WRAP" class="java.lang.Boolean"/>
+	<parameter name="COMPANY_ID" class="java.lang.Long"/>
+	<parameter name="REPORTING_TREE_ID" class="java.lang.Long"/>
+	<parameter name="ACC_IDS" class="java.lang.String"/>
+	<parameter name="ACC_IDS_CLAUSE" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{ACC_IDS}.equals("NULL")
+? ""
+: "AND aml.account_id IN (" + $P{ACC_IDS} + ")"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="JOURNAL_IDS" class="java.lang.String"/>
+	<parameter name="JOURNAL_IDS_CLAUSE" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{JOURNAL_IDS}.equals("NULL")
+? ""
+: "AND aml.journal_id IN (" + $P{JOURNAL_IDS} + ")"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="JOURNAL_SIMULATION_CLAUSE" class="java.lang.String"/>
+	<parameter name="GAIN_OR_LOSS_ACC_ID" class="java.lang.Long"/>
+	<parameter name="DISPLAY_COMPARISON" class="java.lang.Boolean"/>
+	<parameter name="COMPARISON_LABEL" class="java.lang.String"/>
+	<parameter name="REFERENCE_LABEL" class="java.lang.String"/>
+	<parameter name="AS_OF_DATE_2_YR" class="java.lang.Integer"/>
+	<parameter name="AS_OF_DATE_2_MO" class="java.lang.Integer"/>
+	<parameter name="AS_OF_DATE_2_DY" class="java.lang.Integer"/>
+	<parameter name="FISCALYEAR_START_YR" class="java.lang.Integer"/>
+	<parameter name="FISCALYEAR_START_MO" class="java.lang.Integer"/>
+	<parameter name="FISCALYEAR_START_DY" class="java.lang.Integer"/>
+	<parameter name="FISCALYEAR_STOP_YR" class="java.lang.Integer"/>
+	<parameter name="FISCALYEAR_STOP_MO" class="java.lang.Integer"/>
+	<parameter name="FISCALYEAR_STOP_DY" class="java.lang.Integer"/>
+	<parameter name="FISCALYEAR_START_YR_2" class="java.lang.Integer"/>
+	<parameter name="FISCALYEAR_START_MO_2" class="java.lang.Integer"/>
+	<parameter name="FISCALYEAR_START_DY_2" class="java.lang.Integer"/>
+	<parameter name="FISCALYEAR_STOP_YR_2" class="java.lang.Integer"/>
+	<parameter name="FISCALYEAR_STOP_MO_2" class="java.lang.Integer"/>
+	<parameter name="FISCALYEAR_STOP_DY_2" class="java.lang.Integer"/>
+	<parameter name="FROM_DATE_2_YR" class="java.lang.Integer"/>
+	<parameter name="FROM_DATE_2_MO" class="java.lang.Integer"/>
+	<parameter name="FROM_DATE_2_DY" class="java.lang.Integer"/>
+	<parameter name="TO_DATE_2_YR" class="java.lang.Integer"/>
+	<parameter name="TO_DATE_2_MO" class="java.lang.Integer"/>
+	<parameter name="TO_DATE_2_DY" class="java.lang.Integer"/>
+	<parameter name="FROM_DATE_2_YR_2" class="java.lang.Integer"/>
+	<parameter name="FROM_DATE_2_MO_2" class="java.lang.Integer"/>
+	<parameter name="FROM_DATE_2_DY_2" class="java.lang.Integer"/>
+	<parameter name="TO_DATE_2_YR_2" class="java.lang.Integer"/>
+	<parameter name="TO_DATE_2_MO_2" class="java.lang.Integer"/>
+	<parameter name="TO_DATE_2_DY_2" class="java.lang.Integer"/>
+	<parameter name="FISCALYEAR_START" class="java.util.Date" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.util.Date($P{FISCALYEAR_START_YR} - 1900 , $P{FISCALYEAR_START_MO} - 1, $P{FISCALYEAR_START_DY})]]></defaultValueExpression>
+	</parameter>
+	<parameter name="FISCALYEAR_STOP" class="java.util.Date" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.util.Date($P{FISCALYEAR_STOP_YR} - 1900 , $P{FISCALYEAR_STOP_MO} - 1, $P{FISCALYEAR_STOP_DY})]]></defaultValueExpression>
+	</parameter>
+	<parameter name="FISCALYEAR_START_2" class="java.util.Date" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.util.Date($P{FISCALYEAR_START_YR_2} - 1900 , $P{FISCALYEAR_START_MO_2} - 1, $P{FISCALYEAR_START_DY_2})]]></defaultValueExpression>
+	</parameter>
+	<parameter name="FISCALYEAR_STOP_2" class="java.util.Date" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.util.Date($P{FISCALYEAR_STOP_YR_2} - 1900 , $P{FISCALYEAR_STOP_MO_2} - 1, $P{FISCALYEAR_STOP_DY_2})]]></defaultValueExpression>
+	</parameter>
+	<parameter name="AS_OF_DATE_2" class="java.util.Date" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.util.Date($P{AS_OF_DATE_2_YR} - 1900 , $P{AS_OF_DATE_2_MO} - 1, $P{AS_OF_DATE_2_DY})]]></defaultValueExpression>
+	</parameter>
+	<parameter name="FROM_DATE_2" class="java.util.Date" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.util.Date($P{FROM_DATE_2_YR} - 1900 , $P{FROM_DATE_2_MO} - 1, $P{FROM_DATE_2_DY})]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TO_DATE_2" class="java.util.Date" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.util.Date($P{TO_DATE_2_YR} - 1900 , $P{TO_DATE_2_MO} - 1, $P{TO_DATE_2_DY})]]></defaultValueExpression>
+	</parameter>
+	<parameter name="FROM_DATE_2_2" class="java.util.Date" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.util.Date($P{FROM_DATE_2_YR_2} - 1900 , $P{FROM_DATE_2_MO_2} - 1, $P{FROM_DATE_2_DY_2})]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TO_DATE_2_2" class="java.util.Date" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.util.Date($P{TO_DATE_2_YR_2} - 1900 , $P{TO_DATE_2_MO_2} - 1, $P{TO_DATE_2_DY_2})]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ACC_NAMES" class="java.lang.String"/>
+	<parameter name="JOURNAL_NAMES" class="java.lang.String"/>
+	<parameter name="FISCALYEAR_NAME" class="java.lang.String"/>
+	<parameter name="FISCALYEAR_NAME_2" class="java.lang.String"/>
+	<parameter name="COMPANY_CURRENCY_NAME" class="java.lang.String"/>
+	<parameter name="TARGET_MOVE" class="java.lang.String"/>
+	<parameter name="TARGET_MOVE_NAME" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[WITH RECURSIVE
+ company_tree AS (
+  SELECT *
+  FROM via_tree_node_level_tagger((SELECT
+                                    ARRAY_AGG((id,
+                                               CASE id
+                                                WHEN $P!{COMPANY_ID} THEN NULL
+                                                ELSE COALESCE(parent_id, -1)
+                                               END)::VIA_TREE_NODE)
+                                   FROM res_company))
+ ),
+ coa_tree_nodes AS (
+  SELECT id, parent_id
+  FROM ((SELECT aa.id, aa.parent_id
+         FROM account_account aa
+          INNER JOIN company_tree ct
+           ON aa.company_id = ct.id
+         WHERE
+          aa.parent_id IS NOT NULL
+          OR (aa.company_id = ct.id
+              AND ct.level = 0)
+        )
+        UNION ALL
+        (SELECT parent_id AS id, child_id AS parent_id
+         FROM account_account_consol_rel
+        )) tree_nodes
+ ),
+ unrolled_coa_tree AS (
+  SELECT *
+  FROM via_tree_node_level_tagger((SELECT
+                                    ARRAY_AGG((id, parent_id)::VIA_TREE_NODE)
+                                   FROM coa_tree_nodes))
+ ),
+ coa_tree_diagnostics AS (
+  WITH
+   multi_parent_nodes AS (
+    SELECT id
+    FROM unrolled_coa_tree
+    GROUP BY id
+    HAVING COUNT(DISTINCT parent_id) > 1
+   ),
+   cycle_starting_nodes AS (
+    SELECT DISTINCT node.id
+    FROM unrolled_coa_tree AS node
+     INNER JOIN unrolled_coa_tree AS node_subtree
+      ON (node_subtree.parent_left
+           BETWEEN node.parent_left AND node.parent_right
+          AND node_subtree.level > node.level
+          AND node.id = node_subtree.id)
+   ),
+   source_nodes AS (
+    SELECT
+     COALESCE(mpn.id, csn.id) AS id,
+     CASE WHEN mpn.id IS NULL THEN FALSE ELSE TRUE END AS multi_parent,
+     CASE WHEN csn.id IS NULL THEN FALSE ELSE TRUE END AS cycle_starter
+    FROM multi_parent_nodes mpn
+     FULL JOIN cycle_starting_nodes csn
+      ON mpn.id = csn.id
+   )
+  SELECT
+   src.id,
+   src.multi_parent,
+   src.cycle_starter,
+   ARRAY_AGG(DISTINCT uct_path.id) AS path
+  FROM source_nodes src
+   INNER JOIN unrolled_coa_tree uct
+    ON src.id = uct.id
+   INNER JOIN unrolled_coa_tree uct_path
+    ON (uct_path.parent_left <= uct.parent_left
+        AND uct_path.parent_right >= uct.parent_right)
+  GROUP BY
+   src.id,
+   src.multi_parent,
+   src.cycle_starter
+ ),
+ coa_tree_currency AS (
+  WITH
+   currency_rate AS (
+    SELECT
+     rate_for_use.currency_id,
+     rate_for_use.rate,
+     rate_for_use.name AS date_start,
+     LEAD((rate_for_use.name - '1 day'::INTERVAL)::DATE)
+      OVER (PARTITION BY rate_for_use.currency_id
+            ORDER BY rate_for_use.name ASC) AS date_stop
+    FROM (SELECT
+           rate.*
+          FROM (SELECT
+                 r.currency_id AS currency_id,
+                 r.name AS name,
+                 MAX(COALESCE(write_date, create_date)) AS timestamp
+                FROM res_currency_rate r
+                GROUP BY
+                 r.currency_id,
+                 r.name) latest_rate
+           INNER JOIN res_currency_rate rate
+            ON (latest_rate.currency_id,
+                latest_rate.name,
+                latest_rate.timestamp) = (rate.currency_id,
+                                          rate.name,
+                                          COALESCE(rate.write_date, rate.create_date))) rate_for_use
+     INNER JOIN res_currency currency
+      ON currency.id = rate_for_use.currency_id
+    ORDER BY
+     currency_id, date_start, date_stop
+   ),
+   coa_tree AS (
+    SELECT
+     tree.*,
+     com.currency_id AS currency_id,
+     ARRAY_AGG((com_curr_rate.date_start,
+                com_curr_rate.date_stop,
+                com_curr_rate.rate)::VIA_CURRENCY_RATE) AS currency_rates,
+     COALESCE(com.consolidation_exchange_rate,
+              com.currency_id) AS consolidating_currency_id,
+     ARRAY_AGG(CASE
+                WHEN com.consolidation_exchange_rate IS NULL
+                 THEN (com_curr_rate.date_start,
+                       com_curr_rate.date_stop,
+                       com_curr_rate.rate)::VIA_CURRENCY_RATE
+                ELSE (consol_curr_rate.date_start,
+                      consol_curr_rate.date_stop,
+                      consol_curr_rate.rate)::VIA_CURRENCY_RATE
+               END) AS consolidating_currency_rates,
+     CASE
+      WHEN aat.conversion_method = 'rpt_rate'
+       THEN '$P!{AS_OF_DATE_2_YR}-$P!{AS_OF_DATE_2_MO}-$P!{AS_OF_DATE_2_DY}'::DATE
+      ELSE NULL::DATE
+     END AS conversion_date
+    FROM unrolled_coa_tree tree
+     INNER JOIN account_account aa
+      ON tree.id = aa.id
+     INNER JOIN account_account_type aat
+      ON aa.user_type = aat.id
+     INNER JOIN res_company com
+      ON aa.company_id = com.id
+     LEFT JOIN currency_rate com_curr_rate
+      ON com.currency_id = com_curr_rate.currency_id
+     LEFT JOIN currency_rate consol_curr_rate
+      ON com.consolidation_exchange_rate = consol_curr_rate.currency_id
+    GROUP BY
+     tree.id,
+     tree.parent_id,
+     tree.level,
+     tree.parent_left,
+     tree.parent_right,
+     com.currency_id,
+     com.consolidation_exchange_rate,
+     aat.conversion_method
+   )
+  SELECT
+   node.id,
+   node.parent_id,
+   node.level,
+   node.parent_left,
+   node.parent_right,
+   node.conversion_date,
+   ARRAY_AGG((parent_node.level,
+              parent_node.currency_id,
+              parent_node.currency_rates,
+              parent_node.consolidating_currency_id,
+              parent_node.consolidating_currency_rates)::VIA_CURRENCY_LINK)
+    || (node.level,
+        node.currency_id,
+        node.currency_rates,
+        node.consolidating_currency_id,
+        node.consolidating_currency_rates)::VIA_CURRENCY_LINK AS rates_chain
+  FROM coa_tree node
+   LEFT JOIN coa_tree parent_node
+    ON (parent_node.parent_left < node.parent_left
+        AND parent_node.parent_right > node.parent_right)
+  GROUP BY
+   node.id,
+   node.parent_id,
+   node.level,
+   node.parent_left,
+   node.parent_right,
+   node.currency_id,
+   node.currency_rates,
+   node.consolidating_currency_id,
+   node.consolidating_currency_rates,
+   node.conversion_date
+ ),
+ journal_items AS (
+  SELECT
+   aml.*,
+   via_currency_converter(COALESCE(aml.debit, 0.0),
+                          acc_info.rates_chain,
+                          COALESCE(acc_info.conversion_date, aml.date)) AS top_level_debit,
+   via_currency_converter(COALESCE(aml.credit, 0.0),
+                          acc_info.rates_chain,
+                          COALESCE(acc_info.conversion_date, aml.date)) AS top_level_credit
+  FROM account_move_line aml
+   INNER JOIN account_move am
+    ON aml.move_id = am.id
+   INNER JOIN account_journal aj
+    ON aml.journal_id = aj.id
+   INNER JOIN (SELECT DISTINCT id, rates_chain, conversion_date
+               FROM coa_tree_currency) acc_info
+    ON acc_info.id = aml.account_id
+  WHERE
+   aml.date::DATE
+    BETWEEN '$P!{FISCALYEAR_START_YR}-$P!{FISCALYEAR_START_MO}-$P!{FISCALYEAR_START_DY}'
+     AND '$P!{TO_DATE_2_YR}-$P!{TO_DATE_2_MO}-$P!{TO_DATE_2_DY}'
+   $P!{JOURNAL_IDS_CLAUSE}
+   $P!{ACC_IDS_CLAUSE}
+   AND aml.state = 'valid'
+   AND (am.state = 'posted' OR '$P!{TARGET_MOVE}' = 'all')
+   $P!{JOURNAL_SIMULATION_CLAUSE}
+ ),
+ journal_items_cmp_1 AS (
+  SELECT
+   aml.*,
+   via_currency_converter(COALESCE(aml.debit, 0.0),
+                          acc_info.rates_chain,
+                          COALESCE(acc_info.conversion_date, aml.date)) AS top_level_debit,
+   via_currency_converter(COALESCE(aml.credit, 0.0),
+                          acc_info.rates_chain,
+                          COALESCE(acc_info.conversion_date, aml.date)) AS top_level_credit
+  FROM account_move_line aml
+   INNER JOIN account_move am
+    ON aml.move_id = am.id
+   INNER JOIN account_journal aj
+    ON aml.journal_id = aj.id
+   INNER JOIN (SELECT DISTINCT id, rates_chain, conversion_date
+               FROM coa_tree_currency) acc_info
+    ON acc_info.id = aml.account_id
+  WHERE
+   $P!{DISPLAY_COMPARISON}
+   AND aml.date::DATE
+    BETWEEN '$P!{FISCALYEAR_START_YR_2}-$P!{FISCALYEAR_START_MO_2}-$P!{FISCALYEAR_START_DY_2}'
+     AND '$P!{TO_DATE_2_YR_2}-$P!{TO_DATE_2_MO_2}-$P!{TO_DATE_2_DY_2}'
+   $P!{JOURNAL_IDS_CLAUSE}
+   $P!{ACC_IDS_CLAUSE}
+   AND aml.state = 'valid'
+   AND (am.state = 'posted' OR '$P!{TARGET_MOVE}' = 'all')
+   $P!{JOURNAL_SIMULATION_CLAUSE}
+ ),
+ axes AS (
+  SELECT
+   -- First axis
+   ctc.id AS acc_id,
+   ctc.parent_id AS acc_parent_id,
+   ctc.level AS acc_level,
+   ctc.parent_left AS acc_parent_left,
+   ctc.parent_right AS acc_parent_right,
+   -- Second axis
+   comparison_count AS comparison_id,
+   -- Third axis
+   company_tree.parent_left AS com_order,
+   company_tree.id AS com_id
+  FROM coa_tree_currency ctc,
+   company_tree,
+   GENERATE_SERIES(1,
+                   $P!{DISPLAY_COMPARISON}::INTEGER + 1,
+                   1) comparison_count
+ ),
+ data_points AS (
+  WITH
+   movement AS (
+    SELECT
+     ji.account_id AS acc_id,
+     ji.company_id AS com_id,
+     SUM(ji.debit) AS debit,
+     SUM(ji.credit) AS credit,
+     SUM(ji.top_level_debit) AS top_level_debit,
+     SUM(ji.top_level_credit) AS top_level_credit,
+     SUM(CASE
+          WHEN acc_info.conversion_date IS NULL -- This account uses transaction rate
+           THEN (via_currency_converter(COALESCE(ji.debit, 0.0) - COALESCE(ji.credit, 0.0),
+                                        acc_info.rates_chain,
+                                        '$P!{AS_OF_DATE_2_YR}-$P!{AS_OF_DATE_2_MO}-$P!{AS_OF_DATE_2_DY}'::DATE)
+                 - (ji.top_level_debit - ji.top_level_credit))
+          ELSE 0.0
+         END) AS unrealized_gain_or_loss,
+     COUNT(*) AS move_lines_count
+    FROM journal_items ji
+     INNER JOIN (SELECT DISTINCT id, rates_chain, conversion_date
+                 FROM coa_tree_currency) acc_info
+      ON acc_info.id = ji.account_id
+    WHERE ji.date::DATE
+     BETWEEN '$P!{FROM_DATE_2_YR}-$P!{FROM_DATE_2_MO}-$P!{FROM_DATE_2_DY}'
+      AND '$P!{TO_DATE_2_YR}-$P!{TO_DATE_2_MO}-$P!{TO_DATE_2_DY}'
+    GROUP BY
+     ji.account_id,
+     ji.company_id,
+     acc_info.rates_chain,
+     acc_info.conversion_date
+   ),
+   beginning_balance AS (
+    SELECT
+     ji.account_id AS acc_id,
+     ji.company_id AS com_id,
+     SUM(ji.debit) AS debit,
+     SUM(ji.credit) AS credit,
+     SUM(ji.top_level_debit) AS top_level_debit,
+     SUM(ji.top_level_credit) AS top_level_credit,
+     SUM(CASE
+          WHEN acc_info.conversion_date IS NULL -- This account uses transaction rate
+           THEN (via_currency_converter(COALESCE(ji.debit, 0.0) - COALESCE(ji.credit, 0.0),
+                                        acc_info.rates_chain,
+                                        '$P!{AS_OF_DATE_2_YR}-$P!{AS_OF_DATE_2_MO}-$P!{AS_OF_DATE_2_DY}'::DATE)
+                 - (ji.top_level_debit - ji.top_level_credit))
+          ELSE 0.0
+         END) AS unrealized_gain_or_loss,
+     NULL AS move_lines_count
+    FROM journal_items ji
+     INNER JOIN (SELECT DISTINCT id, rates_chain, conversion_date
+                 FROM coa_tree_currency) acc_info
+      ON acc_info.id = ji.account_id
+    WHERE date::DATE
+     BETWEEN '$P!{FISCALYEAR_START_YR}-$P!{FISCALYEAR_START_MO}-$P!{FISCALYEAR_START_DY}'
+      AND ('$P!{FROM_DATE_2_YR}-$P!{FROM_DATE_2_MO}-$P!{FROM_DATE_2_DY}'::DATE - '1 day'::INTERVAL)::DATE
+    GROUP BY
+     ji.account_id,
+     ji.company_id,
+     acc_info.rates_chain,
+     acc_info.conversion_date
+   )
+  SELECT
+   COALESCE(bb.acc_id, mv.acc_id) AS acc_id,
+   1 AS comparison_id,
+   COALESCE(bb.com_id, mv.com_id) AS com_id,
+   COALESCE(bb.top_level_debit, 0.0) AS bb_dr,
+   COALESCE(bb.top_level_credit, 0.0) AS bb_cr,
+   COALESCE(bb.unrealized_gain_or_loss, 0.0) AS bb_unrealized_gain_or_loss,
+   COALESCE(mv.top_level_debit, 0.0) AS dr,
+   COALESCE(mv.top_level_credit, 0.0) AS cr,
+   COALESCE(mv.unrealized_gain_or_loss, 0.0) AS unrealized_gain_or_loss,
+   COALESCE(mv.move_lines_count, 0) AS move_lines_count
+  FROM movement mv
+   FULL JOIN beginning_balance bb
+    ON mv.acc_id = bb.acc_id
+ ),
+ data_points_cmp_1 AS (
+  WITH
+   movement AS (
+    SELECT
+     ji.account_id AS acc_id,
+     ji.company_id AS com_id,
+     SUM(ji.debit) AS debit,
+     SUM(ji.credit) AS credit,
+     SUM(ji.top_level_debit) AS top_level_debit,
+     SUM(ji.top_level_credit) AS top_level_credit,
+     SUM(CASE
+          WHEN acc_info.conversion_date IS NULL -- This account uses transaction rate
+           THEN (via_currency_converter(COALESCE(ji.debit, 0.0) - COALESCE(ji.credit, 0.0),
+                                        acc_info.rates_chain,
+                                        '$P!{AS_OF_DATE_2_YR}-$P!{AS_OF_DATE_2_MO}-$P!{AS_OF_DATE_2_DY}'::DATE)
+                 - (ji.top_level_debit - ji.top_level_credit))
+          ELSE 0.0
+         END) AS unrealized_gain_or_loss,
+     COUNT(*) AS move_lines_count
+    FROM journal_items_cmp_1 ji
+     INNER JOIN (SELECT DISTINCT id, rates_chain, conversion_date
+                 FROM coa_tree_currency) acc_info
+      ON acc_info.id = ji.account_id
+    WHERE ji.date::DATE
+     BETWEEN '$P!{FROM_DATE_2_YR_2}-$P!{FROM_DATE_2_MO_2}-$P!{FROM_DATE_2_DY_2}'
+      AND '$P!{TO_DATE_2_YR_2}-$P!{TO_DATE_2_MO_2}-$P!{TO_DATE_2_DY_2}'
+    GROUP BY
+     ji.account_id,
+     ji.company_id,
+     acc_info.rates_chain,
+     acc_info.conversion_date
+   ),
+   beginning_balance AS (
+    SELECT
+     ji.account_id AS acc_id,
+     ji.company_id AS com_id,
+     SUM(ji.debit) AS debit,
+     SUM(ji.credit) AS credit,
+     SUM(ji.top_level_debit) AS top_level_debit,
+     SUM(ji.top_level_credit) AS top_level_credit,
+     SUM(CASE
+          WHEN acc_info.conversion_date IS NULL -- This account uses transaction rate
+           THEN (via_currency_converter(COALESCE(ji.debit, 0.0) - COALESCE(ji.credit, 0.0),
+                                        acc_info.rates_chain,
+                                        '$P!{AS_OF_DATE_2_YR}-$P!{AS_OF_DATE_2_MO}-$P!{AS_OF_DATE_2_DY}'::DATE)
+                 - (ji.top_level_debit - ji.top_level_credit))
+          ELSE 0.0
+         END) AS unrealized_gain_or_loss,
+     NULL AS move_lines_count
+    FROM journal_items_cmp_1 ji
+     INNER JOIN (SELECT DISTINCT id, rates_chain, conversion_date
+                 FROM coa_tree_currency) acc_info
+      ON acc_info.id = ji.account_id
+    WHERE date::DATE
+     BETWEEN '$P!{FISCALYEAR_START_YR_2}-$P!{FISCALYEAR_START_MO_2}-$P!{FISCALYEAR_START_DY_2}'
+      AND ('$P!{FROM_DATE_2_YR_2}-$P!{FROM_DATE_2_MO_2}-$P!{FROM_DATE_2_DY_2}'::DATE - '1 day'::INTERVAL)::DATE
+    GROUP BY
+     ji.account_id,
+     ji.company_id,
+     acc_info.rates_chain,
+     acc_info.conversion_date
+   )
+  SELECT
+   COALESCE(bb.acc_id, mv.acc_id) AS acc_id,
+   2 AS comparison_id,
+   COALESCE(bb.com_id, mv.com_id) AS com_id,
+   COALESCE(bb.top_level_debit, 0.0) AS bb_dr,
+   COALESCE(bb.top_level_credit, 0.0) AS bb_cr,
+   COALESCE(bb.unrealized_gain_or_loss, 0.0) AS bb_unrealized_gain_or_loss,
+   COALESCE(mv.top_level_debit, 0.0) AS dr,
+   COALESCE(mv.top_level_credit, 0.0) AS cr,
+   COALESCE(mv.unrealized_gain_or_loss, 0.0) AS unrealized_gain_or_loss,
+   COALESCE(mv.move_lines_count, 0) AS move_lines_count
+  FROM movement mv
+   FULL JOIN beginning_balance bb
+    ON mv.acc_id = bb.acc_id
+ ),
+ axes_data_points AS (
+  SELECT
+   axes.acc_id,
+   axes.acc_parent_id,
+   axes.acc_level,
+   axes.acc_parent_left,
+   axes.acc_parent_right,
+   axes.comparison_id,
+   axes.com_order,
+   axes.com_id,
+   -- Reference data
+   (CASE
+     WHEN aa.company_id = axes.com_id
+      THEN COALESCE(data_points.bb_dr, 0.0)
+     ELSE data_points.bb_dr
+    END) AS bb_dr,
+   (CASE
+     WHEN aa.company_id = axes.com_id
+      THEN COALESCE(data_points.bb_cr, 0.0)
+     ELSE data_points.bb_cr
+    END) AS bb_cr,
+   (CASE
+     WHEN aa.company_id = axes.com_id
+      THEN COALESCE(data_points.bb_unrealized_gain_or_loss, 0.0)
+     ELSE data_points.bb_unrealized_gain_or_loss
+    END) AS bb_unrealized_gain_or_loss,
+   (CASE
+     WHEN aa.company_id = axes.com_id
+      THEN COALESCE(data_points.dr, 0.0)
+     ELSE data_points.dr
+    END) AS dr,
+   (CASE
+     WHEN aa.company_id = axes.com_id
+      THEN COALESCE(data_points.cr, 0.0)
+     ELSE data_points.cr
+    END) AS cr,
+   (CASE
+     WHEN aa.company_id = axes.com_id
+      THEN COALESCE(data_points.unrealized_gain_or_loss, 0.0)
+     ELSE data_points.unrealized_gain_or_loss
+    END) AS unrealized_gain_or_loss,
+   data_points.move_lines_count AS move_lines_count,
+   -- Comparison 1
+   (CASE
+     WHEN aa.company_id = axes.com_id
+      THEN COALESCE(data_points_cmp_1.bb_dr, 0.0)
+     ELSE data_points_cmp_1.bb_dr
+    END) AS bb_dr_cmp_1,
+   (CASE
+     WHEN aa.company_id = axes.com_id
+      THEN COALESCE(data_points_cmp_1.bb_cr, 0.0)
+     ELSE data_points_cmp_1.bb_cr
+    END) AS bb_cr_cmp_1,
+   (CASE
+     WHEN aa.company_id = axes.com_id
+      THEN COALESCE(data_points_cmp_1.bb_unrealized_gain_or_loss, 0.0)
+     ELSE data_points_cmp_1.bb_unrealized_gain_or_loss
+    END) AS bb_unrealized_gain_or_loss_cmp_1,
+   (CASE
+     WHEN aa.company_id = axes.com_id
+      THEN COALESCE(data_points_cmp_1.dr, 0.0)
+     ELSE data_points_cmp_1.dr
+    END) AS dr_cmp_1,
+   (CASE
+     WHEN aa.company_id = axes.com_id
+      THEN COALESCE(data_points_cmp_1.cr, 0.0)
+     ELSE data_points_cmp_1.cr
+    END) AS cr_cmp_1,
+   (CASE
+     WHEN aa.company_id = axes.com_id
+      THEN COALESCE(data_points_cmp_1.unrealized_gain_or_loss, 0.0)
+     ELSE data_points_cmp_1.unrealized_gain_or_loss
+    END) AS unrealized_gain_or_loss_cmp_1,
+   data_points_cmp_1.move_lines_count AS move_lines_count_cmp_1
+  FROM axes
+   INNER JOIN account_account aa
+    ON aa.id = axes.acc_id
+   LEFT JOIN data_points
+    ON (axes.acc_id,
+        axes.comparison_id,
+        axes.com_id) = (data_points.acc_id,
+                        data_points.comparison_id,
+                        data_points.com_id)
+   LEFT JOIN data_points_cmp_1
+    ON (axes.acc_id,
+        axes.comparison_id,
+        axes.com_id) = (data_points_cmp_1.acc_id,
+                        data_points_cmp_1.comparison_id,
+                        data_points_cmp_1.com_id)
+ ),
+ coa_tree_calculated_sans_gain_loss(acc_id, acc_parent_id, acc_level, acc_parent_left, acc_parent_right,
+                                    comparison_id,
+                                    com_order, com_id,
+                                    bb_dr, bb_cr, bb_unrealized_gain_or_loss, dr, cr, unrealized_gain_or_loss, move_lines_count,
+                                    bb_dr_cmp_1, bb_cr_cmp_1, bb_unrealized_gain_or_loss_cmp_1, dr_cmp_1, cr_cmp_1, unrealized_gain_or_loss_cmp_1, move_lines_count_cmp_1) AS (
+  (SELECT
+    adp.acc_id,
+    adp.acc_parent_id,
+    adp.acc_level,
+    adp.acc_parent_left,
+    adp.acc_parent_right,
+    adp.comparison_id,
+    adp.com_order,
+    adp.com_id,
+    adp.bb_dr,
+    adp.bb_cr,
+    adp.bb_unrealized_gain_or_loss,
+    adp.dr,
+    adp.cr,
+    adp.unrealized_gain_or_loss,
+    adp.move_lines_count::NUMERIC,
+    adp.bb_dr_cmp_1,
+    adp.bb_cr_cmp_1,
+    adp.bb_unrealized_gain_or_loss_cmp_1,
+    adp.dr_cmp_1,
+    adp.cr_cmp_1,
+    adp.unrealized_gain_or_loss_cmp_1,
+    adp.move_lines_count_cmp_1::NUMERIC
+   FROM axes_data_points adp
+   WHERE adp.acc_level = (SELECT MAX(level)
+                          FROM coa_tree_currency)
+  ) UNION ALL (
+   WITH
+    frozen_coa_tree_calculated AS (
+     SELECT * FROM coa_tree_calculated_sans_gain_loss
+    ),
+    this_level_state AS (
+     SELECT
+      adp.acc_id,
+      adp.acc_parent_id,
+      adp.acc_level,
+      adp.acc_parent_left,
+      adp.acc_parent_right,
+      adp.comparison_id,
+      adp.com_order,
+      adp.com_id,
+      COALESCE(SUM(fctc.bb_dr) + COALESCE(adp.bb_dr, 0.0), adp.bb_dr) AS bb_dr,
+      COALESCE(SUM(fctc.bb_cr) + COALESCE(adp.bb_cr, 0.0), adp.bb_cr) AS bb_cr,
+      COALESCE(SUM(fctc.bb_unrealized_gain_or_loss) + COALESCE(adp.bb_unrealized_gain_or_loss, 0.0), adp.bb_unrealized_gain_or_loss) AS bb_unrealized_gain_or_loss,
+      COALESCE(SUM(fctc.dr) + COALESCE(adp.dr, 0.0), adp.dr) AS dr,
+      COALESCE(SUM(fctc.cr) + COALESCE(adp.cr, 0.0), adp.cr) AS cr,
+      COALESCE(SUM(fctc.unrealized_gain_or_loss) + COALESCE(adp.unrealized_gain_or_loss, 0.0), adp.unrealized_gain_or_loss) AS unrealized_gain_or_loss,
+      COALESCE(SUM(fctc.move_lines_count) + COALESCE(adp.move_lines_count, 0.0), adp.move_lines_count) AS move_lines_count,
+      COALESCE(SUM(fctc.bb_dr_cmp_1) + COALESCE(adp.bb_dr_cmp_1, 0.0), adp.bb_dr_cmp_1) AS bb_dr_cmp_1,
+      COALESCE(SUM(fctc.bb_cr_cmp_1) + COALESCE(adp.bb_cr_cmp_1, 0.0), adp.bb_cr_cmp_1) AS bb_cr_cmp_1,
+      COALESCE(SUM(fctc.bb_unrealized_gain_or_loss_cmp_1) + COALESCE(adp.bb_unrealized_gain_or_loss_cmp_1, 0.0), adp.bb_unrealized_gain_or_loss_cmp_1) AS bb_unrealized_gain_or_loss_cmp_1,
+      COALESCE(SUM(fctc.dr_cmp_1) + COALESCE(adp.dr_cmp_1, 0.0), adp.dr_cmp_1) AS dr_cmp_1,
+      COALESCE(SUM(fctc.cr_cmp_1) + COALESCE(adp.cr_cmp_1, 0.0), adp.cr_cmp_1) AS cr_cmp_1,
+      COALESCE(SUM(fctc.unrealized_gain_or_loss_cmp_1) + COALESCE(adp.unrealized_gain_or_loss_cmp_1, 0.0), adp.unrealized_gain_or_loss_cmp_1) AS unrealized_gain_or_loss_cmp_1,
+      COALESCE(SUM(fctc.move_lines_count_cmp_1) + COALESCE(adp.move_lines_count_cmp_1, 0.0), adp.move_lines_count_cmp_1) AS move_lines_count_cmp_1
+     FROM axes_data_points adp
+      LEFT JOIN frozen_coa_tree_calculated fctc
+       ON (adp.acc_level = fctc.acc_level - 1
+           AND adp.acc_parent_left < fctc.acc_parent_left
+           AND adp.acc_parent_right > fctc.acc_parent_right
+           AND adp.comparison_id = fctc.comparison_id
+           AND adp.com_id = fctc.com_id)
+     WHERE
+      adp.acc_level = (SELECT DISTINCT acc_level - 1
+                       FROM frozen_coa_tree_calculated)
+     GROUP BY
+      adp.acc_id,
+      adp.acc_parent_id,
+      adp.acc_level,
+      adp.acc_parent_left,
+      adp.acc_parent_right,
+      adp.comparison_id,
+      adp.com_order,
+      adp.com_id,
+      adp.bb_dr,
+      adp.bb_cr,
+      adp.bb_unrealized_gain_or_loss,
+      adp.dr,
+      adp.cr,
+      adp.unrealized_gain_or_loss,
+      adp.move_lines_count,
+      adp.bb_dr_cmp_1,
+      adp.bb_cr_cmp_1,
+      adp.bb_unrealized_gain_or_loss_cmp_1,
+      adp.dr_cmp_1,
+      adp.cr_cmp_1,
+      adp.unrealized_gain_or_loss_cmp_1,
+      adp.move_lines_count_cmp_1
+    )
+   SELECT
+    acc_id,
+    acc_parent_id,
+    acc_level,
+    acc_parent_left,
+    acc_parent_right,
+    comparison_id,
+    com_order,
+    com_id,
+    SUM(bb_dr) AS bb_dr,
+    SUM(bb_cr) AS bb_cr,
+    SUM(bb_unrealized_gain_or_loss) AS bb_unrealized_gain_or_loss,
+    SUM(dr) AS dr,
+    SUM(cr) AS cr,
+    SUM(unrealized_gain_or_loss) AS unrealized_gain_or_loss,
+    SUM(move_lines_count) AS move_lines_count,
+    SUM(bb_dr_cmp_1) AS bb_dr_cmp_1,
+    SUM(bb_cr_cmp_1) AS bb_cr_cmp_1,
+    SUM(bb_unrealized_gain_or_loss_cmp_1) AS bb_unrealized_gain_or_loss_cmp_1,
+    SUM(dr_cmp_1) AS dr_cmp_1,
+    SUM(cr_cmp_1) AS cr_cmp_1,
+    SUM(unrealized_gain_or_loss_cmp_1) AS unrealized_gain_or_loss_cmp_1,
+    SUM(move_lines_count_cmp_1) AS move_lines_count_cmp_1
+   FROM
+    ((SELECT
+       tls.acc_id,
+       tls.acc_parent_id,
+       tls.acc_level,
+       tls.acc_parent_left,
+       tls.acc_parent_right,
+       tls.comparison_id,
+       tls.com_order,
+       tls.com_id,
+       tls.bb_dr,
+       tls.bb_cr,
+       tls.bb_unrealized_gain_or_loss,
+       tls.dr,
+       tls.cr,
+       tls.unrealized_gain_or_loss,
+       tls.move_lines_count,
+       tls.bb_dr_cmp_1,
+       tls.bb_cr_cmp_1,
+       tls.bb_unrealized_gain_or_loss_cmp_1,
+       tls.dr_cmp_1,
+       tls.cr_cmp_1,
+       tls.unrealized_gain_or_loss_cmp_1,
+       tls.move_lines_count_cmp_1
+      FROM this_level_state tls
+     )
+     UNION ALL
+     (SELECT
+       tls.acc_id,
+       tls.acc_parent_id,
+       tls.acc_level,
+       tls.acc_parent_left,
+       tls.acc_parent_right,
+       tls.comparison_id,
+       tls.com_order,
+       tls.com_id,
+       SUM(consol_child.bb_dr) AS bb_dr,
+       SUM(consol_child.bb_cr) AS bb_cr,
+       SUM(consol_child.bb_unrealized_gain_or_loss) AS bb_unrealized_gain_or_loss,
+       SUM(consol_child.dr) AS dr,
+       SUM(consol_child.cr) AS cr,
+       SUM(consol_child.unrealized_gain_or_loss) AS unrealized_gain_or_loss,
+       SUM(tls.move_lines_count) AS move_lines_count,
+       SUM(consol_child.bb_dr_cmp_1) AS bb_dr_cmp_1,
+       SUM(consol_child.bb_cr_cmp_1) AS bb_cr_cmp_1,
+       SUM(consol_child.bb_unrealized_gain_or_loss_cmp_1) AS bb_unrealized_gain_or_loss_cmp_1,
+       SUM(consol_child.dr_cmp_1) AS dr_cmp_1,
+       SUM(consol_child.cr_cmp_1) AS cr_cmp_1,
+       SUM(consol_child.unrealized_gain_or_loss_cmp_1) AS unrealized_gain_or_loss_cmp_1,
+       SUM(tls.move_lines_count_cmp_1) AS move_lines_count_cmp_1
+      FROM this_level_state tls
+       INNER JOIN account_account aa
+        ON (tls.acc_id,
+            tls.com_id) = (aa.id,
+                           aa.company_id)
+       INNER JOIN company_tree ct
+        ON tls.com_id = ct.id
+       INNER JOIN this_level_state consol_child
+        ON (consol_child.acc_parent_left,
+            consol_child.comparison_id) = (tls.acc_parent_left,
+                                           tls.comparison_id)
+       INNER JOIN company_tree consol_ct
+        ON consol_child.com_id = consol_ct.id
+      WHERE
+       aa.type = 'consolidation'
+       AND consol_child.com_id != tls.com_id
+       AND ct.level = consol_ct.level - 1
+      GROUP BY
+       tls.acc_id,
+       tls.acc_parent_id,
+       tls.acc_level,
+       tls.acc_parent_left,
+       tls.acc_parent_right,
+       tls.comparison_id,
+       tls.com_order,
+       tls.com_id
+     )
+    ) consolidation_calculated
+   GROUP BY
+    acc_id,
+    acc_parent_id,
+    acc_parent_left,
+    acc_parent_right,
+    acc_level,
+    comparison_id,
+    com_order,
+    com_id
+  )
+ ),
+ currency_gain_or_loss_acc_info AS (
+  WITH currency_gain_or_loss_total AS (
+   SELECT
+    bb_unrealized_gain_or_loss,
+    unrealized_gain_or_loss,
+    bb_unrealized_gain_or_loss_cmp_1,
+    unrealized_gain_or_loss_cmp_1
+   FROM coa_tree_calculated_sans_gain_loss
+   WHERE
+    acc_parent_id IS NULL
+    AND com_id = $P!{COMPANY_ID}
+  )
+  SELECT
+   ctcsgl.acc_id,
+   ctcsgl.acc_parent_left,
+   ctcsgl.acc_parent_right,
+   (CASE
+     WHEN ctcsgl_datum.bb_unrealized_gain_or_loss >= 0.0
+      THEN ctcsgl_datum.bb_unrealized_gain_or_loss
+     ELSE 0.0
+    END) AS bb_unrealized_gain_or_loss_dr,
+   (CASE
+     WHEN ctcsgl_datum.bb_unrealized_gain_or_loss < 0.0
+      THEN -ctcsgl_datum.bb_unrealized_gain_or_loss
+     ELSE 0.0
+    END) AS bb_unrealized_gain_or_loss_cr,
+   (CASE
+     WHEN ctcsgl_datum.unrealized_gain_or_loss >= 0.0
+      THEN ctcsgl_datum.unrealized_gain_or_loss
+     ELSE 0.0
+    END) AS unrealized_gain_or_loss_dr,
+   (CASE
+     WHEN ctcsgl_datum.unrealized_gain_or_loss < 0.0
+      THEN -ctcsgl_datum.unrealized_gain_or_loss
+     ELSE 0.0
+    END) AS unrealized_gain_or_loss_cr,
+   (CASE
+     WHEN ctcsgl_datum.bb_unrealized_gain_or_loss_cmp_1 >= 0.0
+      THEN ctcsgl_datum.bb_unrealized_gain_or_loss_cmp_1
+     ELSE 0.0
+    END) AS bb_unrealized_gain_or_loss_dr_cmp_1,
+   (CASE
+     WHEN ctcsgl_datum.bb_unrealized_gain_or_loss_cmp_1 < 0.0
+      THEN -ctcsgl_datum.bb_unrealized_gain_or_loss_cmp_1
+     ELSE 0.0
+    END) AS bb_unrealized_gain_or_loss_cr_cmp_1,
+   (CASE
+     WHEN ctcsgl_datum.unrealized_gain_or_loss_cmp_1 >= 0.0
+      THEN ctcsgl_datum.unrealized_gain_or_loss_cmp_1
+     ELSE 0.0
+    END) AS unrealized_gain_or_loss_dr_cmp_1,
+   (CASE
+     WHEN ctcsgl_datum.unrealized_gain_or_loss_cmp_1 < 0.0
+      THEN -ctcsgl_datum.unrealized_gain_or_loss_cmp_1
+     ELSE 0.0
+    END) AS unrealized_gain_or_loss_cr_cmp_1
+  FROM coa_tree_calculated_sans_gain_loss ctcsgl
+   INNER JOIN currency_gain_or_loss_total ctcsgl_datum
+    ON TRUE
+  WHERE
+   ctcsgl.acc_id = $P!{GAIN_OR_LOSS_ACC_ID}
+   AND ctcsgl.com_id = $P!{COMPANY_ID}
+ ),
+ coa_tree_calculated AS (
+  SELECT
+   ctcsgl.acc_id,
+   ctcsgl.acc_parent_id,
+   ctcsgl.acc_level,
+   ctcsgl.acc_parent_left,
+   ctcsgl.acc_parent_right,
+   ctcsgl.comparison_id,
+   ctcsgl.com_order,
+   ctcsgl.com_id,
+   ctcsgl.bb_dr + COALESCE(SUM(bb_unrealized_gain_or_loss_dr), 0.0) AS bb_dr,
+   ctcsgl.bb_cr + COALESCE(SUM(bb_unrealized_gain_or_loss_cr), 0.0) AS bb_cr,
+   ctcsgl.dr + COALESCE(SUM(unrealized_gain_or_loss_dr), 0.0) AS dr,
+   ctcsgl.cr + COALESCE(SUM(unrealized_gain_or_loss_cr), 0.0) AS cr,
+   ctcsgl.move_lines_count,
+   ctcsgl.bb_dr_cmp_1 + COALESCE(SUM(bb_unrealized_gain_or_loss_dr_cmp_1), 0.0) AS bb_dr_cmp_1,
+   ctcsgl.bb_cr_cmp_1 + COALESCE(SUM(bb_unrealized_gain_or_loss_cr_cmp_1), 0.0) AS bb_cr_cmp_1,
+   ctcsgl.dr_cmp_1 + COALESCE(SUM(unrealized_gain_or_loss_dr_cmp_1), 0.0) AS dr_cmp_1,
+   ctcsgl.cr_cmp_1 + COALESCE(SUM(unrealized_gain_or_loss_cr_cmp_1), 0.0) AS cr_cmp_1,
+   ctcsgl.move_lines_count_cmp_1
+  FROM coa_tree_calculated_sans_gain_loss ctcsgl
+   LEFT JOIN currency_gain_or_loss_acc_info cgolai
+    ON (ctcsgl.acc_parent_left <= cgolai.acc_parent_left
+        AND ctcsgl.acc_parent_right >= cgolai.acc_parent_right)
+  GROUP BY
+   ctcsgl.acc_id,
+   ctcsgl.acc_parent_id,
+   ctcsgl.acc_level,
+   ctcsgl.acc_parent_left,
+   ctcsgl.acc_parent_right,
+   ctcsgl.comparison_id,
+   ctcsgl.com_order,
+   ctcsgl.com_id,
+   ctcsgl.bb_dr,
+   ctcsgl.bb_cr,
+   ctcsgl.dr,
+   ctcsgl.cr,
+   ctcsgl.move_lines_count,
+   ctcsgl.bb_dr_cmp_1,
+   ctcsgl.bb_cr_cmp_1,
+   ctcsgl.dr_cmp_1,
+   ctcsgl.cr_cmp_1,
+   ctcsgl.move_lines_count_cmp_1
+ ),
+ reporting_tree_axes AS (
+  SELECT
+   -- First axis
+   rtn.id AS rtn_id,
+   rtn.parent_id AS rtn_parent_id,
+   rtn.level AS rtn_level,
+   rtn.parent_left AS rtn_parent_left,
+   rtn.parent_right AS rtn_parent_right,
+   -- Second axis
+   comparison_count AS comparison_id,
+   -- Third axis
+   company_tree.parent_left AS com_order,
+   company_tree.id AS com_id
+  FROM via_reporting_tree_node rtn,
+   company_tree,
+   GENERATE_SERIES(1,
+                   $P!{DISPLAY_COMPARISON}::INTEGER + 1,
+                   1) comparison_count
+  WHERE
+   rtn.tree_id = $P!{REPORTING_TREE_ID}
+ ),
+ reporting_tree_data_points AS (
+  SELECT
+   rtn.id AS rtn_id,
+   calculated_tree.comparison_id,
+   calculated_tree.com_id,
+   SUM(CASE
+        WHEN curr.rounding = 0 THEN 0.0
+        ELSE ROUND(calculated_tree.bb_dr * atn.multiplier / curr.rounding) * curr.rounding
+       END) AS bb_dr,
+   SUM(CASE
+        WHEN curr.rounding = 0 THEN 0.0
+        ELSE ROUND(calculated_tree.bb_cr * atn.multiplier / curr.rounding) * curr.rounding
+       END) AS bb_cr,
+   SUM(CASE
+        WHEN curr.rounding = 0 THEN 0.0
+        ELSE ROUND(calculated_tree.dr * atn.multiplier / curr.rounding) * curr.rounding
+       END) AS dr,
+   SUM(CASE
+        WHEN curr.rounding = 0 THEN 0.0
+        ELSE ROUND(calculated_tree.cr * atn.multiplier / curr.rounding) * curr.rounding
+       END) AS cr,
+   SUM(calculated_tree.move_lines_count) AS move_lines_count,
+   SUM(CASE
+        WHEN curr.rounding = 0 THEN 0.0
+        ELSE ROUND(calculated_tree.bb_dr_cmp_1 * atn.multiplier / curr.rounding) * curr.rounding
+       END) AS bb_dr_cmp_1,
+   SUM(CASE
+        WHEN curr.rounding = 0 THEN 0.0
+        ELSE ROUND(calculated_tree.bb_cr_cmp_1 * atn.multiplier / curr.rounding) * curr.rounding
+       END) AS bb_cr_cmp_1,
+   SUM(CASE
+        WHEN curr.rounding = 0 THEN 0.0
+        ELSE ROUND(calculated_tree.dr_cmp_1 * atn.multiplier / curr.rounding) * curr.rounding
+       END) AS dr_cmp_1,
+   SUM(CASE
+        WHEN curr.rounding = 0 THEN 0.0
+        ELSE ROUND(calculated_tree.cr_cmp_1 * atn.multiplier / curr.rounding) * curr.rounding
+       END) AS cr_cmp_1,
+   SUM(calculated_tree.move_lines_count_cmp_1) AS move_lines_count_cmp_1
+  FROM via_reporting_tree_node rtn
+   INNER JOIN via_account_tree_node atn
+    ON rtn.id = atn.node_id
+   INNER JOIN account_account aa
+    ON atn.account_id = aa.id
+   INNER JOIN res_company com
+    ON com.id = aa.company_id
+   INNER JOIN res_currency curr
+    ON curr.id = com.currency_id
+   INNER JOIN coa_tree_calculated calculated_tree
+    ON atn.account_id = calculated_tree.acc_id
+  WHERE
+   rtn.tree_id = $P!{REPORTING_TREE_ID}
+  GROUP BY
+   rtn.id,
+   calculated_tree.comparison_id,
+   calculated_tree.com_id
+ ),
+ reporting_tree_axes_data_points AS (
+  SELECT
+   rta.rtn_id,
+   rta.rtn_parent_id,
+   rta.rtn_level,
+   rta.rtn_parent_left,
+   rta.rtn_parent_right,
+   rta.comparison_id,
+   rta.com_order,
+   rta.com_id,
+   rtdp.bb_dr,
+   rtdp.bb_cr,
+   rtdp.dr,
+   rtdp.cr,
+   rtdp.move_lines_count,
+   rtdp.bb_dr_cmp_1,
+   rtdp.bb_cr_cmp_1,
+   rtdp.dr_cmp_1,
+   rtdp.cr_cmp_1,
+   rtdp.move_lines_count_cmp_1
+  FROM reporting_tree_axes rta
+   LEFT JOIN reporting_tree_data_points rtdp
+    ON (rta.rtn_id,
+        rta.comparison_id,
+        rta.com_id) = (rtdp.rtn_id,
+                       rtdp.comparison_id,
+                       rtdp.com_id)
+ ),
+ reporting_tree_calculated(rtn_id, rtn_parent_id, rtn_level, rtn_parent_left, rtn_parent_right,
+                           comparison_id,
+                           com_order, com_id,
+                           bb_dr, bb_cr, dr, cr, move_lines_count,
+                           bb_dr_cmp_1, bb_cr_cmp_1, dr_cmp_1, cr_cmp_1, move_lines_count_cmp_1) AS (
+  (SELECT
+    rtadp.rtn_id,
+    rtadp.rtn_parent_id,
+    rtadp.rtn_level,
+    rtadp.rtn_parent_left,
+    rtadp.rtn_parent_right,
+    rtadp.comparison_id,
+    rtadp.com_order,
+    rtadp.com_id,
+    rtadp.bb_dr,
+    rtadp.bb_cr,
+    rtadp.dr,
+    rtadp.cr,
+    rtadp.move_lines_count,
+    rtadp.bb_dr_cmp_1,
+    rtadp.bb_cr_cmp_1,
+    rtadp.dr_cmp_1,
+    rtadp.cr_cmp_1,
+    rtadp.move_lines_count_cmp_1
+   FROM reporting_tree_axes_data_points rtadp
+   WHERE rtadp.rtn_level = (SELECT MAX(rtn_level)
+                            FROM reporting_tree_axes)
+  ) UNION ALL (
+   WITH
+    frozen_reporting_tree_calculated AS (
+     SELECT * FROM reporting_tree_calculated
+    )
+   SELECT
+    rtadp.rtn_id,
+    rtadp.rtn_parent_id,
+    rtadp.rtn_level,
+    rtadp.rtn_parent_left,
+    rtadp.rtn_parent_right,
+    rtadp.comparison_id,
+    rtadp.com_order,
+    rtadp.com_id,
+    (CASE
+      WHEN (NOT rtn.dummy_node) AND rtn.calculation = 'sum'
+       THEN COALESCE(SUM(CASE
+                          WHEN frtc_rtn.dummy_node = TRUE THEN NULL
+                          ELSE frtc.bb_dr
+                         END) + COALESCE(rtadp.bb_dr, 0.0),
+                     rtadp.bb_dr)
+      ELSE rtadp.bb_dr
+     END) AS bb_dr,
+    (CASE
+      WHEN (NOT rtn.dummy_node) AND rtn.calculation = 'sum'
+       THEN COALESCE(SUM(CASE
+                          WHEN frtc_rtn.dummy_node = TRUE THEN NULL
+                          ELSE frtc.bb_cr
+                         END) + COALESCE(rtadp.bb_cr, 0.0),
+                     rtadp.bb_cr)
+      ELSE rtadp.bb_cr
+     END) AS bb_cr,
+    (CASE
+      WHEN (NOT rtn.dummy_node) AND rtn.calculation = 'sum'
+       THEN COALESCE(SUM(CASE
+                          WHEN frtc_rtn.dummy_node = TRUE THEN NULL
+                          ELSE frtc.dr
+                         END) + COALESCE(rtadp.dr, 0.0),
+                     rtadp.dr)
+      ELSE rtadp.dr
+     END) AS dr,
+    (CASE
+      WHEN (NOT rtn.dummy_node) AND rtn.calculation = 'sum'
+       THEN COALESCE(SUM(CASE
+                          WHEN frtc_rtn.dummy_node = TRUE THEN NULL
+                          ELSE frtc.cr
+                         END) + COALESCE(rtadp.cr, 0.0),
+                     rtadp.cr)
+      ELSE rtadp.cr
+     END) AS cr,
+    (CASE
+      WHEN (NOT rtn.dummy_node) AND rtn.calculation = 'sum'
+       THEN COALESCE(SUM(CASE
+                          WHEN frtc_rtn.dummy_node = TRUE THEN NULL
+                          ELSE frtc.move_lines_count
+                         END) + COALESCE(rtadp.move_lines_count, 0.0),
+                     rtadp.move_lines_count)
+      ELSE rtadp.move_lines_count
+     END) AS move_lines_count,
+    (CASE
+      WHEN (NOT rtn.dummy_node) AND rtn.calculation = 'sum'
+       THEN COALESCE(SUM(CASE
+                          WHEN frtc_rtn.dummy_node = TRUE THEN NULL
+                          ELSE frtc.bb_dr_cmp_1
+                         END) + COALESCE(rtadp.bb_dr_cmp_1, 0.0),
+                     rtadp.bb_dr_cmp_1)
+      ELSE rtadp.bb_dr_cmp_1
+     END) AS bb_dr_cmp_1,
+    (CASE
+      WHEN (NOT rtn.dummy_node) AND rtn.calculation = 'sum'
+       THEN COALESCE(SUM(CASE
+                          WHEN frtc_rtn.dummy_node = TRUE THEN NULL
+                          ELSE frtc.bb_cr_cmp_1
+                         END) + COALESCE(rtadp.bb_cr_cmp_1, 0.0),
+                     rtadp.bb_cr_cmp_1)
+      ELSE rtadp.bb_cr_cmp_1
+     END) AS bb_cr_cmp_1,
+    (CASE
+      WHEN (NOT rtn.dummy_node) AND rtn.calculation = 'sum'
+       THEN COALESCE(SUM(CASE
+                          WHEN frtc_rtn.dummy_node = TRUE THEN NULL
+                          ELSE frtc.dr_cmp_1
+                         END) + COALESCE(rtadp.dr_cmp_1, 0.0),
+                     rtadp.dr_cmp_1)
+      ELSE rtadp.dr_cmp_1
+     END) AS dr_cmp_1,
+    (CASE
+      WHEN (NOT rtn.dummy_node) AND rtn.calculation = 'sum'
+       THEN COALESCE(SUM(CASE
+                          WHEN frtc_rtn.dummy_node = TRUE THEN NULL
+                          ELSE frtc.cr_cmp_1
+                         END) + COALESCE(rtadp.cr_cmp_1, 0.0),
+                     rtadp.cr_cmp_1)
+      ELSE rtadp.cr_cmp_1
+     END) AS cr_cmp_1,
+    (CASE
+      WHEN (NOT rtn.dummy_node) AND rtn.calculation = 'sum'
+       THEN COALESCE(SUM(CASE
+                          WHEN frtc_rtn.dummy_node = TRUE THEN NULL
+                          ELSE frtc.move_lines_count_cmp_1
+                         END) + COALESCE(rtadp.move_lines_count_cmp_1, 0.0),
+                     rtadp.move_lines_count_cmp_1)
+      ELSE rtadp.move_lines_count_cmp_1
+     END) AS move_lines_count_cmp_1
+   FROM reporting_tree_axes_data_points rtadp
+    INNER JOIN via_reporting_tree_node rtn
+     ON rtadp.rtn_id = rtn.id
+    LEFT JOIN frozen_reporting_tree_calculated frtc
+     ON (rtadp.rtn_level = frtc.rtn_level - 1
+         AND rtadp.rtn_parent_left < frtc.rtn_parent_left
+         AND rtadp.rtn_parent_right > frtc.rtn_parent_right
+         AND rtadp.comparison_id = frtc.comparison_id
+         AND rtadp.com_id = frtc.com_id)
+    LEFT JOIN via_reporting_tree_node frtc_rtn
+     ON frtc.rtn_id = frtc_rtn.id
+   WHERE
+    rtadp.rtn_level = (SELECT DISTINCT rtn_level - 1
+                       FROM frozen_reporting_tree_calculated)
+   GROUP BY
+    rtadp.rtn_id,
+    rtadp.rtn_parent_id,
+    rtadp.rtn_level,
+    rtadp.rtn_parent_left,
+    rtadp.rtn_parent_right,
+    rtadp.comparison_id,
+    rtadp.com_order,
+    rtadp.com_id,
+    rtn.dummy_node,
+    rtn.calculation,
+    rtadp.bb_dr,
+    rtadp.bb_cr,
+    rtadp.dr,
+    rtadp.cr,
+    rtadp.move_lines_count,
+    rtadp.bb_dr_cmp_1,
+    rtadp.bb_cr_cmp_1,
+    rtadp.dr_cmp_1,
+    rtadp.cr_cmp_1,
+    rtadp.move_lines_count_cmp_1
+  )
+ ),
+ reporting_tree_dummy_nodes_calculated AS (
+  SELECT
+   rtc.rtn_id,
+   rtc.rtn_parent_id,
+   rtc.rtn_level,
+   rtc.rtn_parent_left,
+   rtc.rtn_parent_right,
+   rtc.comparison_id,
+   rtc.com_order,
+   rtc.com_id,
+   (CASE
+     WHEN rtn.dummy_node AND rtn.calculation = 'sum'
+      THEN COALESCE(SUM(associates.bb_dr) + COALESCE(rtc.bb_dr, 0.0), rtc.bb_dr)
+     ELSE rtc.bb_dr
+    END) AS bb_dr,
+   (CASE
+     WHEN rtn.dummy_node AND rtn.calculation = 'sum'
+      THEN COALESCE(SUM(associates.bb_cr) + COALESCE(rtc.bb_cr, 0.0), rtc.bb_cr)
+     ELSE rtc.bb_cr
+    END) AS bb_cr,
+   (CASE
+     WHEN rtn.dummy_node AND rtn.calculation = 'sum'
+      THEN COALESCE(SUM(associates.dr) + COALESCE(rtc.dr, 0.0), rtc.dr)
+     ELSE rtc.dr
+    END) AS dr,
+   (CASE
+     WHEN rtn.dummy_node AND rtn.calculation = 'sum'
+      THEN COALESCE(SUM(associates.cr) + COALESCE(rtc.cr, 0.0), rtc.cr)
+     ELSE rtc.cr
+    END) AS cr,
+   (CASE
+     WHEN rtn.dummy_node AND rtn.calculation = 'sum'
+      THEN COALESCE(SUM(associates.move_lines_count) + COALESCE(rtc.move_lines_count, 0.0), rtc.move_lines_count)
+     ELSE rtc.move_lines_count
+    END) AS move_lines_count,
+   (CASE
+     WHEN rtn.dummy_node AND rtn.calculation = 'sum'
+      THEN COALESCE(SUM(associates.bb_dr_cmp_1) + COALESCE(rtc.bb_dr_cmp_1, 0.0), rtc.bb_dr_cmp_1)
+     ELSE rtc.bb_dr_cmp_1
+    END) AS bb_dr_cmp_1,
+   (CASE
+     WHEN rtn.dummy_node AND rtn.calculation = 'sum'
+      THEN COALESCE(SUM(associates.bb_cr_cmp_1) + COALESCE(rtc.bb_cr_cmp_1, 0.0), rtc.bb_cr_cmp_1)
+     ELSE rtc.bb_cr_cmp_1
+    END) AS bb_cr_cmp_1,
+   (CASE
+     WHEN rtn.dummy_node AND rtn.calculation = 'sum'
+      THEN COALESCE(SUM(associates.dr_cmp_1) + COALESCE(rtc.dr_cmp_1, 0.0), rtc.dr_cmp_1)
+     ELSE rtc.dr_cmp_1
+    END) AS dr_cmp_1,
+   (CASE
+     WHEN rtn.dummy_node AND rtn.calculation = 'sum'
+      THEN COALESCE(SUM(associates.cr_cmp_1) + COALESCE(rtc.cr_cmp_1, 0.0), rtc.cr_cmp_1)
+     ELSE rtc.cr_cmp_1
+    END) AS cr_cmp_1,
+   (CASE
+     WHEN rtn.dummy_node AND rtn.calculation = 'sum'
+      THEN COALESCE(SUM(associates.move_lines_count_cmp_1) + COALESCE(rtc.move_lines_count_cmp_1, 0.0), rtc.move_lines_count_cmp_1)
+     ELSE rtc.move_lines_count_cmp_1
+    END) AS move_lines_count_cmp_1
+  FROM reporting_tree_calculated rtc
+   INNER JOIN via_reporting_tree_node rtn
+    ON rtc.rtn_id = rtn.id
+   LEFT JOIN via_reporting_tree_node_rel rtn_rel
+    ON rtc.rtn_id = rtn_rel.node_id
+   LEFT JOIN reporting_tree_calculated associates
+    ON (rtn_rel.associate_id,
+        rtc.comparison_id,
+        rtc.com_id) = (associates.rtn_id,
+                       associates.comparison_id,
+                       associates.com_id)
+  GROUP BY
+   rtc.rtn_id,
+   rtc.rtn_parent_id,
+   rtc.rtn_level,
+   rtc.rtn_parent_left,
+   rtc.rtn_parent_right,
+   rtc.comparison_id,
+   rtc.com_order,
+   rtc.com_id,
+   rtn.dummy_node,
+   rtn.calculation,
+   rtc.bb_dr,
+   rtc.bb_cr,
+   rtc.dr,
+   rtc.cr,
+   rtc.move_lines_count,
+   rtc.bb_dr_cmp_1,
+   rtc.bb_cr_cmp_1,
+   rtc.dr_cmp_1,
+   rtc.cr_cmp_1,
+   rtc.move_lines_count_cmp_1
+ ),
+ reporting_tree_diagnostics AS (
+  SELECT
+   id,
+   COALESCE(SUM(multi_parent), 0) > 0 AS multi_parent,
+   COALESCE(SUM(cycle_starter), 0) > 0 AS cycle_starter
+  FROM ((SELECT
+          rtn.id,
+          SUM(ctd.multi_parent::INTEGER) AS multi_parent,
+          SUM(ctd.cycle_starter::INTEGER) AS cycle_starter
+         FROM via_reporting_tree_node rtn
+          LEFT JOIN via_account_tree_node atn
+           ON rtn.id = atn.node_id
+          LEFT JOIN coa_tree_diagnostics ctd
+           ON atn.account_id = ANY (ctd.path)
+         WHERE
+          rtn.tree_id = $P!{REPORTING_TREE_ID}
+         GROUP BY
+          rtn.id
+        )
+        UNION ALL
+        (SELECT DISTINCT
+          rtn.id,
+          1 AS multi_parent,
+          NULL::BIGINT AS cycle_starter
+         FROM via_reporting_tree_node rtn
+          INNER JOIN via_account_tree_node atn
+           ON rtn.id = atn.node_id
+          INNER JOIN (SELECT
+                       atn.account_id
+                      FROM via_reporting_tree_node rtn
+                       INNER JOIN via_account_tree_node atn
+                        ON rtn.id = atn.node_id
+                      WHERE
+                       rtn.tree_id = $P!{REPORTING_TREE_ID}
+                      GROUP BY
+                       atn.account_id
+                      HAVING
+                       COUNT(rtn.id) > 1) acc_ids
+           ON atn.account_id = acc_ids.account_id
+        )) t
+  GROUP BY
+   id
+ )
+SELECT
+ rtn.bold AS decorator_bold,
+ rtn.underline AS decorator_underline,
+ rtn.italic AS decorator_italic,
+ rtn.blank_line AS decorator_blank_line,
+ rtn.title_line AS decorator_title_line,
+ rtd.multi_parent AS decorator_multi_parent,
+ rtd.cycle_starter AS decorator_cycle_starter,
+ rtn.sequence AS rtn_order,
+ rtdnc.comparison_id AS comparison_order,
+ (CASE rtdnc.comparison_id
+   WHEN 1 THEN '$P!{REFERENCE_LABEL}'
+   WHEN 2 THEN '$P!{COMPARISON_LABEL}'
+   ELSE NULL
+  END) AS comparison_label,
+ rtdnc.com_order AS com_order,
+ com.name AS com_name,
+ ((CASE rtd.multi_parent
+   WHEN TRUE THEN '[M]'
+   ELSE ''
+  END)
+  || (CASE rtd.cycle_starter
+       WHEN TRUE THEN '[C]'
+       ELSE ''
+      END)
+  || (CASE rtd.multi_parent OR rtd.cycle_starter
+       WHEN TRUE THEN ' '
+       ELSE ''
+      END)
+  || (CASE
+       WHEN $P!{USE_INDENTATION}
+        THEN
+         LPAD(rtn.name,
+              (4 * (rtn.level
+                    - FIRST_VALUE(rtn.level) OVER (ORDER BY rtn.level ASC))
+               + LENGTH(rtn.name))::INTEGER)
+       ELSE rtn.name
+      END)) AS rtn_name,
+ rtn.level AS rtn_level,
+ (CASE rtdnc.comparison_id
+   WHEN 1 THEN rtdnc.bb_dr - rtdnc.bb_cr
+   WHEN 2 THEN rtdnc.bb_dr_cmp_1 - rtdnc.bb_cr_cmp_1
+   ELSE NULL
+  END) AS bb,
+ (CASE rtdnc.comparison_id
+   WHEN 1 THEN rtdnc.dr
+   WHEN 2 THEN rtdnc.dr_cmp_1
+   ELSE NULL
+  END) AS dr,
+ (CASE rtdnc.comparison_id
+   WHEN 1 THEN rtdnc.cr
+   WHEN 2 THEN rtdnc.cr_cmp_1
+   ELSE NULL
+  END) AS cr,
+ (CASE rtdnc.comparison_id
+   WHEN 1 THEN rtdnc.dr - rtdnc.cr
+   WHEN 2 THEN rtdnc.dr_cmp_1 - rtdnc.cr_cmp_1
+   ELSE NULL
+  END) AS mv,
+ (CASE rtdnc.comparison_id
+   WHEN 1 THEN rtdnc.bb_dr - rtdnc.bb_cr + rtdnc.dr - rtdnc.cr
+   WHEN 2 THEN rtdnc.bb_dr_cmp_1 - rtdnc.bb_cr_cmp_1 + rtdnc.dr_cmp_1 - rtdnc.cr_cmp_1
+   ELSE NULL
+  END) AS eb,
+ (CASE rtdnc.comparison_id
+   WHEN 1 THEN rtdnc.move_lines_count
+   WHEN 2 THEN rtdnc.move_lines_count_cmp_1
+   ELSE NULL
+  END) AS move_lines_count
+FROM reporting_tree_dummy_nodes_calculated rtdnc
+ INNER JOIN via_reporting_tree_node rtn
+  ON rtn.id = rtdnc.rtn_id
+ INNER JOIN reporting_tree_diagnostics rtd
+  ON rtd.id = rtn.id
+ INNER JOIN res_company com
+  ON com.id = rtdnc.com_id]]>
+	</queryString>
+	<field name="decorator_bold" class="java.lang.Boolean"/>
+	<field name="decorator_underline" class="java.lang.Boolean"/>
+	<field name="decorator_italic" class="java.lang.Boolean"/>
+	<field name="decorator_blank_line" class="java.lang.Boolean"/>
+	<field name="decorator_title_line" class="java.lang.Boolean"/>
+	<field name="decorator_multi_parent" class="java.lang.Boolean"/>
+	<field name="decorator_cycle_starter" class="java.lang.Boolean"/>
+	<field name="rtn_order" class="java.math.BigDecimal"/>
+	<field name="comparison_order" class="java.math.BigDecimal"/>
+	<field name="comparison_label" class="java.lang.String"/>
+	<field name="com_order" class="java.math.BigDecimal"/>
+	<field name="com_name" class="java.lang.String"/>
+	<field name="rtn_name" class="java.lang.String"/>
+	<field name="rtn_level" class="java.math.BigDecimal"/>
+	<field name="bb" class="java.math.BigDecimal"/>
+	<field name="dr" class="java.math.BigDecimal"/>
+	<field name="cr" class="java.math.BigDecimal"/>
+	<field name="mv" class="java.math.BigDecimal"/>
+	<field name="eb" class="java.math.BigDecimal"/>
+	<pageHeader>
+		<band height="20" splitType="Prevent">
+			<textField isStretchWithOverflow="true">
+				<reportElement style="1" x="0" y="0" width="401" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["Company Name: " + $P{COMPANY_NAME} + "\n"
++ "Report Name: " + "General Ledger/Trial Balance" + "\n"
++ "Currency: " + $P{COMPANY_CURRENCY_NAME} + "\n"
++ "Fiscal Year: " + $P{FISCALYEAR_NAME} + " (" + $P{DATE_FORMATTER_DEFAULT}.format($P{FISCALYEAR_START}) + " \u2013 " + $P{DATE_FORMATTER_DEFAULT}.format($P{FISCALYEAR_STOP}) + ")" + "\n"
++ "Move Date: " + $P{DATE_FORMATTER_DEFAULT}.format($P{FROM_DATE_2}) + " \u2013 " + $P{DATE_FORMATTER_DEFAULT}.format($P{TO_DATE_2}) + "\n"
++ "Move Status: " + $P{TARGET_MOVE_NAME} + "\n"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="1" stretchType="RelativeToTallestObject" x="401" y="0" width="401" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["Accounts: " + $P{ACC_NAMES} + "\n"
++ "\n"
++ "Journals: " + $P{JOURNAL_NAMES} + "\n"
++ (!$P{DISPLAY_COMPARISON}
+   ? ""
+   : "\n"
+     + "Fiscal Year Comparison: " + $P{FISCALYEAR_NAME_2} + " (" + $P{DATE_FORMATTER_DEFAULT}.format($P{FISCALYEAR_START_2}) + " \u2013 " + $P{DATE_FORMATTER_DEFAULT}.format($P{FISCALYEAR_STOP_2}) + ")" + "\n"
+     + "Move Date Comparison: " + $P{DATE_FORMATTER_DEFAULT}.format($P{FROM_DATE_2_2}) + " \u2013 " + $P{DATE_FORMATTER_DEFAULT}.format($P{TO_DATE_2_2}) + "\n")]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="30" splitType="Prevent">
+			<frame>
+				<reportElement style="8.5" stretchType="RelativeToTallestObject" x="0" y="0" width="152" height="30">
+					<property name="via.crosstab.1.header" value=""/>
+				</reportElement>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="2.1" stretchType="RelativeToTallestObject" x="0" y="0" width="152" height="30"/>
+					<textElement/>
+					<textFieldExpression><![CDATA["Account"]]></textFieldExpression>
+				</textField>
+			</frame>
+			<frame>
+				<reportElement style="8.4" stretchType="RelativeToTallestObject" x="152" y="0" width="445" height="10">
+					<property name="via.crosstab.1.columnGroup.1"/>
+				</reportElement>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="2.1" stretchType="RelativeToTallestObject" x="0" y="0" width="445" height="10"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$V{comparison_label}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<frame>
+				<reportElement style="8.1" stretchType="RelativeToTallestObject" x="152" y="10" width="445" height="10">
+					<property name="via.crosstab.1.columnGroup.2"/>
+				</reportElement>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="2.1" stretchType="RelativeToTallestObject" x="0" y="0" width="445" height="10"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$V{com_name}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<frame>
+				<reportElement style="8.2" positionType="Float" stretchType="RelativeToTallestObject" x="152" y="20" width="445" height="10">
+					<property name="via.crosstab.1.columnGroup.3"/>
+				</reportElement>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="2.1.1" stretchType="RelativeToTallestObject" x="0" y="0" width="89" height="10"/>
+					<textElement/>
+					<textFieldExpression><![CDATA["Beginning Balance"]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="2.1.1" stretchType="RelativeToTallestObject" x="89" y="0" width="89" height="10"/>
+					<textElement/>
+					<textFieldExpression><![CDATA["Debit"]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="2.1.1" stretchType="RelativeToTallestObject" x="178" y="0" width="89" height="10"/>
+					<textElement/>
+					<textFieldExpression><![CDATA["Credit"]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="2.1.1" stretchType="RelativeToTallestObject" x="267" y="0" width="89" height="10"/>
+					<textElement/>
+					<textFieldExpression><![CDATA["Movement"]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="2.1.1" stretchType="RelativeToTallestObject" x="356" y="0" width="89" height="10"/>
+					<textElement/>
+					<textFieldExpression><![CDATA["Ending Balance"]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="10" splitType="Prevent">
+			<frame>
+				<reportElement style="8.3" stretchType="RelativeToTallestObject" x="0" y="0" width="152" height="10">
+					<property name="via.crosstab.1.rowGroup.1"/>
+					<printWhenExpression><![CDATA[!$V{decorator_blank_line}]]></printWhenExpression>
+				</reportElement>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="2.2.2" stretchType="RelativeToTallestObject" x="0" y="0" width="133" height="10">
+						<property name="via.duplicate.1.printWhenExpression" value="$P{NO_WRAP}"/>
+						<property name="via.duplicate.1.isStretchWithOverflow" value="false"/>
+						<printWhenExpression><![CDATA[!$P{NO_WRAP}]]></printWhenExpression>
+					</reportElement>
+					<textElement/>
+					<textFieldExpression><![CDATA[$V{rtn_name}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="2.2.2.1" stretchType="RelativeToTallestObject" x="133" y="0" width="19" height="10"/>
+					<textElement/>
+					<textFieldExpression><![CDATA[$V{rtn_level} == null ? null : $P{DECIMAL_FORMATTER_LEVEL}.format($V{rtn_level})]]></textFieldExpression>
+				</textField>
+			</frame>
+			<frame>
+				<reportElement stretchType="RelativeToTallestObject" x="152" y="0" width="445" height="10">
+					<property name="via.crosstab.1.cell"/>
+				</reportElement>
+				<frame>
+					<reportElement style="8.3" stretchType="RelativeToTallestObject" x="0" y="0" width="89" height="10"/>
+					<textField isStretchWithOverflow="true">
+						<reportElement style="2.2.1" stretchType="RelativeToTallestObject" x="0" y="0" width="89" height="10">
+							<printWhenExpression><![CDATA[!$V{decorator_title_line} && !$V{decorator_blank_line}]]></printWhenExpression>
+						</reportElement>
+						<textElement/>
+						<textFieldExpression><![CDATA[$V{bb} == null ? null : $P{DECIMAL_FORMATTER_AMOUNT}.format($V{bb})]]></textFieldExpression>
+					</textField>
+				</frame>
+				<frame>
+					<reportElement style="8.3" stretchType="RelativeToTallestObject" x="89" y="0" width="89" height="10"/>
+					<textField isStretchWithOverflow="true">
+						<reportElement style="2.2.1" stretchType="RelativeToTallestObject" x="0" y="0" width="89" height="10">
+							<printWhenExpression><![CDATA[!$V{decorator_title_line} && !$V{decorator_blank_line}]]></printWhenExpression>
+						</reportElement>
+						<textElement/>
+						<textFieldExpression><![CDATA[$V{dr} == null ? null : $P{DECIMAL_FORMATTER_AMOUNT}.format($V{dr})]]></textFieldExpression>
+					</textField>
+				</frame>
+				<frame>
+					<reportElement style="8.3" stretchType="RelativeToTallestObject" x="178" y="0" width="89" height="10"/>
+					<textField isStretchWithOverflow="true">
+						<reportElement style="2.2.1" stretchType="RelativeToTallestObject" x="0" y="0" width="89" height="10">
+							<printWhenExpression><![CDATA[!$V{decorator_title_line} && !$V{decorator_blank_line}]]></printWhenExpression>
+						</reportElement>
+						<textElement/>
+						<textFieldExpression><![CDATA[$V{cr} == null ? null : $P{DECIMAL_FORMATTER_AMOUNT}.format($V{cr})]]></textFieldExpression>
+					</textField>
+				</frame>
+				<frame>
+					<reportElement style="8.3" stretchType="RelativeToTallestObject" x="267" y="0" width="89" height="10"/>
+					<textField isStretchWithOverflow="true">
+						<reportElement style="2.2.1" stretchType="RelativeToTallestObject" x="0" y="0" width="89" height="10">
+							<printWhenExpression><![CDATA[!$V{decorator_title_line} && !$V{decorator_blank_line}]]></printWhenExpression>
+						</reportElement>
+						<textElement/>
+						<textFieldExpression><![CDATA[$V{mv} == null ? null : $P{DECIMAL_FORMATTER_AMOUNT}.format($V{mv})]]></textFieldExpression>
+					</textField>
+				</frame>
+				<frame>
+					<reportElement style="8.3" stretchType="RelativeToTallestObject" x="356" y="0" width="89" height="10"/>
+					<textField isStretchWithOverflow="true">
+						<reportElement style="2.2.1" stretchType="RelativeToTallestObject" x="0" y="0" width="89" height="10">
+							<printWhenExpression><![CDATA[!$V{decorator_title_line} && !$V{decorator_blank_line}]]></printWhenExpression>
+						</reportElement>
+						<textElement/>
+						<textFieldExpression><![CDATA[$V{eb} == null ? null : $P{DECIMAL_FORMATTER_AMOUNT}.format($V{eb})]]></textFieldExpression>
+					</textField>
+				</frame>
+			</frame>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="20" splitType="Prevent">
+			<printWhenExpression><![CDATA[$P{PRINTED_PAGE_FOOTER}.indexOf($V{PAGE_NUMBER}) == -1
+? $P{PRINTED_PAGE_FOOTER}.add($V{PAGE_NUMBER})
+: false]]></printWhenExpression>
+			<textField evaluationTime="Report">
+				<reportElement style="99" x="0" y="0" width="364" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA["Printed by " + $P{OERP_USER}
++ " on " + $P{DATE_FORMATTER_TIME_DEFAULT}.format($P{TODAY})
++ ($P{SHOW_STOPWATCH}
+   ? String.format(" in %.3fs", $P{STOPWATCH}.stop().computeDeltaMs().deltaMs / 1000.0)
+   : "")]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="99" x="364" y="0" width="75" height="20"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Strictly Confidential]]></text>
+			</staticText>
+			<textField>
+				<reportElement style="99" x="697" y="0" width="80" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER} + " of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement style="99" x="777" y="0" width="25" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

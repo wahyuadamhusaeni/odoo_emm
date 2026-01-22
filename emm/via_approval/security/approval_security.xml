@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+
+    <record model="res.groups" id="approval_super_user">
+     	<field name="name">Approval / Super User</field>
+    </record>
+
+    <record model="res.groups" id="approval_user">
+     	<field name="name">Approval / User</field>
+    </record>
+
+  </data>
+</openerp>

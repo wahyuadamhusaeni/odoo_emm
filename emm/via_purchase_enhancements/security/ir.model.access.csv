@@ -1,0 +1,4 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"purchase_order_type_all","purchase_order_type all","model_purchase_order_type","",1,0,0,0
+"purchase_order_type_manager","purchase_order_type manager","model_purchase_order_type","purchase.group_purchase_manager",1,1,1,1
+"purchase_info_all","purchase_info_all","model_purchase_info",,1,1,1,1

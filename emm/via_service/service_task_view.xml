@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!-- Assign Service Task Form View -->
+
+        <record id="view_assign_service_task_form" model="ir.ui.view">
+            <field name="name">view.assign.service.task.form</field>
+            <field name="model">service.task.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Service Task" version="7.0">
+                    <div>
+                        <label for="task_name"/>
+                        <field name="task_name" required="True"/>
+                    </div>
+                    <group col="4" colspan="4">
+                        <field name="start_date" required="True"/>
+                        <field name="end_date" required="True"/>
+                        <field name="deadline" required="True"/>
+                        <field name="planned_hours"/>
+                    </group>
+                    <group col="4" colspan="4">
+                        <field name="employee_category" widget="many2many_tags"/>
+                        <field name="sr_skill_set" widget="many2many_tags"/>
+                        <field name="limit"/>
+                        <button name="search_employee" string="Search Employee" type="object" context="{'employee_category': employee_category, 'sr_skill_set': sr_skill_set, 'limit': limit}"/>
+                    </group>
+                    <label for="service_employee_id"/>
+                    <field name="service_employee_id" nolabel="1" colspan="4" domain="[('user_id','!=',False)]">
+                        <tree string="Service Employee" editable="bottom" create="false">
+                            <field name="name_related" readonly="True"/>
+                            <field name="job_id" readonly="True"/>
+                            <field name="available_date" readonly="True"/>
+                            <field name="available_duration" readonly="True"/>
+                            <field name="hit" readonly="True"/>
+                            <field name="user_id" readonly="True"/>
+                            <button name="show_employee" string="Show Employee" icon="gtk-find" type="object"/>
+                        </tree>
+                    </field>
+                    <button name="create_service_task" string="Create" type="object" context="{'hr_employee': service_employee_id}"/>
+                    <button string="Cancel" special="cancel"/>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</openerp>

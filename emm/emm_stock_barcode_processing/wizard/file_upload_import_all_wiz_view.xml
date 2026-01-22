@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_form_file_upload_import_all_wiz_1">
+            <field name="name">File Upload and Import for Stock Modules</field>
+            <field name="model">file.upload.import.all.wiz</field>
+            <field name="arch" type="xml">
+                <form string="File Upload and Import for all Active Configuration" version="7.0">
+                    <group colspan="2" string="Click Process execute the following configurations:">
+                        <field name="config_ids" nolabel="1">
+                            <tree>
+                                <field name="name"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <footer>
+                        <button name="execute" string="Process" type="object" class="oe_highlight"/>
+                        or
+                        <button special="cancel" string="Cancel" class="oe_link"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_form_file_upload_import_all_wiz_2">
+            <field name="name">File Upload and Import for Stock Modules Result</field>
+            <field name="model">file.upload.import.all.wiz</field>
+            <field name="arch" type="xml">
+                <form string="File Upload and Import for all Active Configuration" version="7.0">
+                    <field name="run_logs" attrs="{'invisible': [('run_logs', '=', [(6, False, [])])]}"/>
+                    <separator string="No file has been processed." attrs="{'invisible': [('run_logs', '!=', [(6, False, [])])]}"/>
+                    <footer>
+                        <button name="close" string="Close" type="object" class="oe_highlight"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_file_upload_import_all_wiz" model="ir.actions.act_window">
+            <field name="name">All Active File Upload</field>
+            <field name="res_model">file.upload.import.all.wiz</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="view_form_file_upload_import_all_wiz_1"/>
+        </record>
+
+        <menuitem string="All Active File Upload"
+            action="action_file_upload_import_all_wiz"
+            id="menu_file_upload_import_all_wiz"
+            parent="stock.menu_stock_products_moves"
+            sequence="8"/>
+    </data>
+</openerp>

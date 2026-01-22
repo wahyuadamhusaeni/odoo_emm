@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_sale_assign_payment" model="ir.ui.view">
+            <field name="name">Sales Payment Assignment</field>
+            <field name="model">via.assign.payment</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Payment Information" version="7.0">
+                    <sheet>
+                        <group colspan="4" col="16">
+                            <field name="date"/>
+                            <field name="partner_id" invisible="(context.get('invoice_id', False) or context.get('order_id', False))"/>
+                            <field name="order_id" invisible="(context.get('invoice_id', False) or context.get('partner_id', False))"/>
+                            <field name="company_id"/>
+                            <field name= "payment_holding_account" invisible="1"/>
+                            <field name="payment_assign_journal" required="1" domain="[('type', 'not in', ('bank', 'cash')), '|', ('company_id', '=', company_id), ('company_id', '=', False)]"/>
+                        </group>
+                        <separator string="Available Payment" colspan="4"/>
+                        <field name="transaction_lines" mode="tree" colspan="4" nolabel="1"  on_change="onchange_trx_lines(transaction_lines, payment_lines)">
+                            <tree string="" editable="top">
+                                <field name="move_line_id" context="{'view_mode': 'tree', 'tree_view_ref': 'via_payment_management.via_view_move_line_tree_wiz', 'search_view_ref': 'via_payment_management.via_view_move_line_search_wiz'}" on_change="onchange_move_line_id(move_line_id)" domain="[('move_id.state', '=', 'posted'), ('reconcile_id', '=', False), ('credit', '>', 0.0), ('account_id', '=', parent.payment_holding_account)]"/>
+                                <field name="account_id" readonly="1"/>
+                                <field name="date" readonly="1"/>
+                                <field name="currency_id" readonly="1"/>
+                                <field name="debit" readonly="1"/>
+                                <field name="credit" readonly="1"/>
+                                <field name="amount_residual" readonly="1"/>
+                                <field name="amount_to_use"/>
+                                <field name="reconcile_partial_id" readonly="1"/>
+                            </tree>
+                        </field>
+                        <separator string="Invoice Details" colspan="4"/>
+                        <field name="payment_lines" mode="tree" colspan="4" nolabel="1"  on_change="onchange_payment_lines(transaction_lines, payment_lines)">
+                            <tree string="" editable="top">
+                                <field name="invoice_id"/>
+                                <field name="date_invoice" readonly="1"/>
+                                <field name="date_due" readonly="1"/>
+                                <field name="name" readonly="1"/>
+                                <field name="account_id" readonly="1"/>
+                                <field name="currency_id" readonly="1"/>
+                                <field name="amount_total" readonly="1"/>
+                                <field name="residual" readonly="1" sum="Total"/>
+                                <field name="amount_to_pay" sum="To Pay"/>
+                                <field name="state" readonly="1"/>
+                            </tree>
+                        </field>
+                        <newline/>
+                        <group colspan="4" col="6" attrs="{'invisible': [('with_writeoff', '!=', 'with_writeoff')]}">
+                            <label string="" colspan="4" width = "200"/>
+                            <field name="with_writeoff" invisible="1"/>
+                            <field name="writeoff_amount"/>
+                            <newline/>
+                            <label string="" colspan="4" width = "200"/>
+                            <field name="writeoff_acc_id" attrs="{'required':[('with_writeoff','=','with_writeoff')]}"  domain="[('type','not in', ('view','consolidation','closed')), '|', ('company_id', '=', company_id), ('company_id', '=', False)]"/>
+                            <newline/>
+                            <label string="" colspan="4" width = "200"/>
+                            <field name="comment" attrs="{'required':[('with_writeoff','=','with_writeoff')]}"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="assign_payment" string="Assign" type="object" class="oe_highlight"/>
+                        or
+                        <button special="cancel" string="Cancel" class="oe_link"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</openerp>

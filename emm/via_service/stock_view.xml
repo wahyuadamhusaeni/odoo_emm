@@ -1,0 +1,145 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!-- Location Area Form View -->
+
+        <record id="view_location_area_form" model="ir.ui.view">
+            <field name="name">view.location.area.form</field>
+            <field name="model">stock.location</field>
+            <field name="inherit_id" ref="stock.view_location_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="usage" position="after">
+                    <field name="usage_type" attrs="{'invisible':[('usage','not in',('internal'))]}"/>
+                </field>
+            </field>
+        </record>
+
+        <!-- Internal Moves Service Tree View -->
+
+        <record id="view_stock_picking_service" model="ir.ui.view">
+            <field name="name">stock.picking.service.tree</field>
+            <field name="model">stock.picking</field>
+            <field name="arch" type="xml">
+                <tree colors="blue:state == 'draft';grey:state == 'cancel';red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
+                    <field name="name"/>
+                    <field name="backorder_id"/>
+                    <field name="origin"/>
+                    <field name="date"/>
+                    <field name="min_date"/>
+                    <field name="invoice_state"/>
+                    <field name="stock_journal_id" widget="selection"/>
+                    <field name="state"/>
+                    <field name="picking_svc_type"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Internal Moves Service Request Action -->
+
+        <act_window id="stock_picking_service_action"
+            name="SR Internal Moves"
+            res_model="stock.picking"
+            view_id="view_stock_picking_service"
+            view_type="form"
+            view_mode="tree,form"
+            domain="[('type','=','internal'),('picking_svc_type','in',['request','pickup','consume','return'])]"/>
+
+        <menuitem action="stock_picking_service_action" id="menu_stock_picking_service" parent="stock.menu_stock_warehouse_mgmt"/>
+
+        <!-- <record id="view_stock_picking_simple_service" model="ir.ui.view">
+            <field name="name">stock.picking.simple.service.form</field>
+            <field name="model">stock.picking</field>
+            <field name="arch" type="xml">
+                <form string="Internal Picking List" version="7.0">
+                <header>
+                    <button name="draft_force_assign" states="draft" string="Confirm" type="object" class="oe_highlight" groups="base.group_user"/>
+                    <button name="draft_validate" states="draft" string="Confirm &amp; Transfer" type="object" class="oe_highlight" groups="base.group_user"/>
+                    <button name="force_assign" states="confirmed" string="Force Availability" type="object" class="oe_highlight" groups="base.group_user"/>
+                    <button name="action_process" states="assigned" string="Confirm &amp; Transfer" groups="stock.group_stock_user" type="object" class="oe_highlight"/>
+                    <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel Transfer" groups="base.group_user"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,assigned,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
+                </header>
+                <sheet>
+                    <h1>
+                        <field name="name" class="oe_inline" attrs="{'invisible': [('name','=','/')]}" readonly="1"/>
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="partner_id" on_change="onchange_partner_in(partner_id)"/>
+                            <field name="backorder_id" readonly="1" attrs="{'invisible': [('backorder_id','=',False)]}"/>
+                            <field name="origin" placeholder="e.g. PO0032" class="oe_inline"/>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                            <field name="min_date" readonly="1" attrs="{'invisible': [('min_date','=',False)]}"/>
+                            <field name="date_done" groups="base.group_no_one"/>
+                        </group>
+                    </group>
+                    <field name="move_lines" context="{'address_in_id': partner_id, 'form_view_ref':'view_move_picking_form', 'tree_view_ref':'view_move_picking_tree', 'picking_svc_type': 'internal'}"/>
+                    <field name="note" placeholder="Add an internal note..." class="oe_inline"/>
+                </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_stock_picking_out_simple_service" model="ir.ui.view">
+            <field name="name">stock.picking.out.simple.service.form</field>
+            <field name="model">stock.picking.out</field>
+            <field name="arch" type="xml">
+                <form string="Internal Picking List" version="7.0">
+                <header>
+                    <button name="draft_force_assign" states="draft" string="Confirm" type="object" class="oe_highlight" groups="base.group_user"/>
+                    <button name="draft_validate" states="draft" string="Confirm &amp; Deliver" type="object" class="oe_highlight"/>
+                    <button name="action_assign" states="confirmed" string="Check Availability" type="object" class="oe_highlight"/>
+                    <button name="force_assign" states="confirmed" string="Force Availability" type="object" class="oe_highlight" groups="base.group_user"/>
+                    <button name="action_process" states="assigned" string="Deliver" type="object" class="oe_highlight"/>
+                    <button name="button_cancel" states="assigned,confirmed,draft" string="Cancel Transfer" groups="base.group_user"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,assigned,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
+                </header>
+                <sheet>
+                    <h1>
+                        <field name="name" class="oe_inline" attrs="{'invisible': [('name','=','/')]}" readonly="1"/>
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="partner_id" on_change="onchange_partner_in(partner_id)"/>
+                            <field name="backorder_id" readonly="1" attrs="{'invisible': [('backorder_id','=',False)]}"/>
+                            <field name="origin" placeholder="e.g. PO0032" class="oe_inline"/>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                            <field name="min_date" readonly="1" attrs="{'invisible': [('min_date','=',False)]}"/>
+                            <field name="date_done" string="Date of Delivery" groups="base.group_no_one"/>
+                        </group>
+                    </group>
+                    <field name="move_lines" context="{'address_out_id': partner_id, 'picking_svc_type': 'out', 'form_view_ref':'view_move_picking_form', 'tree_view_ref':'view_move_picking_tree'}"/>
+                    <field name="note" placeholder="Add an internal note..." class="oe_inline"/>
+                </sheet>
+                </form>
+            </field>
+        </record> -->
+
+        <!-- Stock Moves Wizard Tree View -->
+
+        <record id="view_stock_move_wizard" model="ir.ui.view">
+            <field name="name">stock.move.wizard.tree</field>
+            <field name="model">stock.move.wizard</field>
+            <field name="arch" type="xml">
+                <tree string="Stock Move">
+                    <field name="product_id"/>
+                    <field name="name"/>
+                    <field name="product_qty"/>
+                    <field name="product_uom"/>
+                    <field name="price_unit"/>
+                    <field name="total_price"/>
+                    <field name="location_id"/>
+                    <field name="location_dest_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</openerp>

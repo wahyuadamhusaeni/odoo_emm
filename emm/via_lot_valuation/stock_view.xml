@@ -1,0 +1,80 @@
+<openerp>
+    <data>
+        <!-- Inherit Stock Location to view the valuation account always visible -->
+        <record id="view_stock_valuation_account_form" model="ir.ui.view">
+            <field name="name">stock.location.form</field>
+            <field name="model">stock.location</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="stock.view_location_form" />
+            <field name="arch" type="xml">
+                <field name="valuation_in_account_id" position="attributes">
+                    <attribute name="attrs">{}</attribute>
+                </field>
+                <field name="valuation_in_account_id" position="attributes">
+                    <attribute name="attrs">{}</attribute>
+                </field>
+            </field>
+        </record>
+
+        <!-- Added Cost Price Per Unit, Update button in the Production Lot -->
+        <record model="ir.ui.view" id="stock_production_lot_form_view">
+            <field name="name">stock.production.lot.form</field>
+            <field name="model">stock.production.lot</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="stock.view_production_lot_form" />
+            <field name="arch" type="xml">
+                <field name="ref" position="after">
+                    <group colspan="2" groups="account.group_account_invoice, account.group_account_user, acount.group_account_manager">
+                        <label for="cost_price_per_unit"/>
+                        <div>
+                            <field name="cost_price_per_unit" nolabel="1" class="oe_inline"/>
+                            <button name="%(action_lot_create_revaluation)d" string="Update" type="action" class="oe_link"/>
+                        </div>
+                    </group>
+                </field>
+                <field name="product_id" position="attributes">
+                    <attribute name='on_change'>onchange_product_id(product_id)</attribute>
+                </field>
+            </field>
+        </record>
+
+        <!-- Inherited Internal Picking's view to make the lot mandatory when cost method is lot based -->
+        <record id="view_picking_lot_inherit_form" model="ir.ui.view">
+            <field name="name">tock.picking.internal.lot.inherit.form</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_picking_form" />
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="prodlot_id" position="before">
+                    <field name="cost_method" invisible="1" />
+                </field>
+            </field>
+        </record>
+
+        <!-- Inherited Outgoing Picking's view to make the lot mandatory when cost method is lot based -->
+        <record id="view_picking_out_lot_inherit_form" model="ir.ui.view">
+            <field name="name">stock.picking.out.lot.inherit.form</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_out_form" />
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="/form/notebook/page[@string='Products']/field[@name='move_lines']/form[@string='Stock Moves']/group[@col='4'][2]/field[@name='prodlot_id']" position="before">
+                    <field name="cost_method" invisible="1" />
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Inherited Incoming Picking's view to make the lot mandatory when cost method is lot based -->
+        <record id="view_picking_in_lot_inherit_form" model="ir.ui.view">
+            <field name="name">stock.picking.in.lot.inherit.form</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_in_form" />
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="/form/notebook/page[@string='General Information']/field[@name='move_lines']/form[@string='Stock Moves']/group[@col='4'][2]/field[@name='prodlot_id']" position="before">
+                    <field name="cost_method" invisible="1" />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

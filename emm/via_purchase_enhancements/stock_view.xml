@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="stock_picking_in_inherit_via_purchase" model="ir.ui.view">
+            <field name="name">Enhanced Incoming Picking</field>
+            <field name="model">stock.picking</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="stock.view_picking_in_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/notebook/page/field[@name='move_lines']/form/group/field[@name='location_dest_id']" position="after">
+                    <group colspan="2" col="4">
+                        <separator string="PO Info" colspan="4" />
+                        <field name="purchase_line_id" invisible="1"/>
+                        <field name="po_line_desc" colspan="4" />
+                        <field name="po_line_note" colspan="4" />
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+       <record id="stock_move_via_purchase" model="ir.ui.view">
+            <field name="name">stock.move.via.form</field>
+            <field name="model">stock.move</field>
+            <field name="type">form</field>
+            <field name="priority">20</field>
+            <field name="inherit_id" ref="stock.view_move_form"/>
+            <field name="arch" type="xml">
+                <group string="Traceability" position="inside">
+                    <label string="PO Description" for="po_line_desc"/>
+                    <div>
+                        <field name="po_line_desc" colspan="4"/>
+                    </div>
+                    <label string="PO Notes" for="po_line_note"/>
+                    <div>
+                        <field name="po_line_note" colspan="4"/>
+                    </div>
+                </group>
+            </field>
+        </record>
+
+<!--DS20121228 enable purchase line id on stock move form
+to allow warehouse manager update link between stock move and purchase order line
+-->
+        <record id="view_move_form_stock_move_purchase_via_purchase" model="ir.ui.view">
+            <field name="name">stock.move.via.form3</field>
+            <field name="model">stock.move</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="purchase.stock_move_purchase" />
+            <field name="arch" type="xml">
+                    <field name="purchase_line_id" position="attributes">
+                        <attribute name="readonly">0</attribute>
+                        <attribute name="groups">stock.group_stock_manager</attribute>
+                    </field>
+            </field>
+        </record>
+    </data>
+</openerp>

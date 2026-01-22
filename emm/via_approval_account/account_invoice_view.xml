@@ -1,0 +1,144 @@
+<?xml version="1.0"?>
+<openerp>
+<data>
+
+<record id="account_invoice_form_approval" model="ir.ui.view">
+    <field name="name">Account Invoice Form Approval</field>
+    <field name="model">account.invoice</field>
+    <field name="inherit_id" ref="account.invoice_form"/>
+    <field name="arch" type="xml">
+        <field name="number" position="after">
+            <field name="auto_approval_func" invisible="1"/>
+            <field name="auto_approval" invisible="1"/>
+        </field>
+        <button name="invoice_open" states="draft" position="replace">
+            <button name="invoice_open" states="draft" string="Validate" class="oe_highlight" groups="base.group_user" type="object"/>
+        </button>
+        <button name="invoice_open" states="proforma2" position="replace">
+            <button name="invoice_open" states="proforma2" string="Validate" groups="base.group_user" type="object"/>
+        </button>
+        <button name="invoice_cancel" position="replace">
+            <button name="invoice_cancel" states="draft,proforma2,open" string="Cancel Invoice" groups="base.group_no_one" type="object"/>
+        </button>
+        <button string="Refund Invoice" position="replace">
+            <button name="account_invoice_refund" type="object" string="Refund Invoice" states="open,proforma2,paid" groups="base.group_user"/>
+        </button>
+        <button string="Re-Open" position="replace">
+            <button name="account_state_open" type="object" string="Re-Open" groups="account.group_account_invoice" attrs="{'invisible':['|', ('state','&lt;&gt;','paid'), ('reconciled', '=', True)]}" help="This button only appears when the state of the invoice is 'paid' (showing that it has been fully reconciled) and auto-computed boolean 'reconciled' is False (depicting that it's not the case anymore). In other words, the invoice has been dereconciled and it does not fit anymore the 'paid' state. You should press this button to re-open it and let it continue its normal process after having resolved the eventual exceptions it may have created."/>
+        </button>
+        <page string="Payments" position="after"/>
+            <notebook>
+                <page string="Approval" groups="base.group_user">
+                    <form string="Approval List">
+                        <separator colspan="4" string="Approval List"/>
+                        <group col="4" colspan="4">
+                            <field name="approval_list" nolabel="1">
+                                <tree string="Approval List" editable="bottom">
+                                    <field name="approval_items_id" on_change="approval_items_id_change(approval_items_id)" domain="[('model','=','account.invoice')]"/>
+                                    <field name="description"/>
+                                    <field name="approver" invisible="1"/>
+                                    <field name="user" invisible="1"/>
+                                    <field name="approver_user_show" attrs="{'readonly': [('approver_user','!=',False)]}" class="oe_highlight" on_change="approval_user_show_change(approver_user_show)" domain="[('id','in',user[0][2])]"/>
+                                    <field name="approver_user" invisible="1" on_change="approval_user_change(approver_user)"/>
+                                    <field name="visibility" invisible="1"/>
+                                    <field name="state"/>
+                                    <field name="user_filter"/>
+                                    <button name="approve" icon="gtk-apply" string="Approve" type="object" attrs="{'invisible': ['|',('visibility','=',False),('state','in',['na','approved','reject','ignore'])]}"/>
+                                    <button name="reject" icon="gtk-cancel" string="Reject" type="object" attrs="{'invisible': ['|',('visibility','=',False),('state','in',['na','approved','reject','ignore'])]}"/>
+                                    <button name="ignore" icon="gtk-close" string="Ignore" type="object" groups="via_approval.approval_super_user"/>
+                                    <button name="view" icon="gtk-find" string="View" type="object"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </form>
+                </page>
+            </notebook>
+    </field>
+</record>
+
+<record id="account_invoice_supplier_form_approval" model="ir.ui.view">
+    <field name="name">Account Invoice Supplier Form Approval</field>
+    <field name="model">account.invoice</field>
+    <field name="inherit_id" ref="account.invoice_supplier_form"/>
+    <field name="arch" type="xml">
+        <field name="number" position="after">
+            <field name="auto_approval_func" invisible="1"/>
+            <field name="auto_approval" invisible="1"/>
+        </field>
+        <button name="invoice_open" position="replace">
+            <button name="invoice_open" states="draft" string="Validate" class="oe_highlight" groups="base.group_user" type="object"/>
+        </button>
+        <button name="invoice_cancel" position="replace">
+            <button name="invoice_cancel" states="draft,proforma2" string="Cancel Invoice" groups="account.group_account_invoice" type="object"/>
+        </button>
+        <button string="Ask Refund" position="replace">
+            <button name="account_invoice_refund" type="object" string="Ask Refund" states="open,paid" groups="account.group_account_invoice"/>
+        </button>
+        <button string="Re-Open" position="replace">
+            <button name="account_state_open" type="object" string="Re-Open" groups="account.group_account_invoice" attrs="{'invisible':['|', ('state','&lt;&gt;','paid'), ('reconciled', '=', True)]}" help="This button only appears when the state of the invoice is 'paid' (showing that it has been fully reconciled) and auto-computed boolean 'reconciled' is False (depicting that it's not the case anymore). In other words, the invoice has been dereconciled and it does not fit anymore the 'paid' state. You should press this button to re-open it and let it continue its normal process after having resolved the eventual exceptions it may have created."/>
+        </button>
+        <page string="Payments" position="after"/>
+            <notebook>
+                <page string="Approval" groups="base.group_user">
+                    <form string="Approval List">
+                        <separator colspan="4" string="Approval List"/>
+                        <group col="4" colspan="4">
+                            <field name="approval_list" nolabel="1">
+                                <tree string="Approval List" editable="bottom">
+                                    <field name="approval_items_id" on_change="approval_items_id_change(approval_items_id)" domain="[('model','=','account.invoice')]"/>
+                                    <field name="description"/>
+                                    <field name="approver" invisible="1"/>
+                                    <field name="user" invisible="1"/>
+                                    <field name="approver_user_show" attrs="{'readonly': [('approver_user','!=',False)]}" class="oe_highlight" on_change="approval_user_show_change(approver_user_show)" domain="[('id','in',user[0][2])]"/>
+                                    <field name="approver_user" invisible="1" on_change="approval_user_change(approver_user)"/>
+                                    <field name="visibility" invisible="1"/>
+                                    <field name="state"/>
+                                    <button name="approve" icon="gtk-apply" string="Approve" type="object" attrs="{'invisible': ['|',('visibility','=',False),('state','in',['na','approved','reject','ignore'])]}"/>
+                                    <button name="reject" icon="gtk-cancel" string="Reject" type="object" attrs="{'invisible': ['|',('visibility','=',False),('state','in',['na','approved','reject','ignore'])]}"/>
+                                    <button name="ignore" icon="gtk-close" string="Ignore" type="object" groups="via_approval.approval_super_user"/>
+                                    <button name="view" icon="gtk-find" string="View" type="object"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </form>
+                </page>
+            </notebook>
+    </field>
+</record>
+
+<record id="account_period_form_approval" model="ir.ui.view">
+    <field name="name">Account Period Form Approval</field>
+    <field name="model">account.period</field>
+    <field name="inherit_id" ref="account.view_account_period_form"/>
+    <field name="arch" type="xml">
+        <field name="name" position="before">
+            <field name="auto_approval_func" invisible="1"/>
+            <field name="auto_approval" invisible="1"/>
+        </field>
+        <sheet position="inside">
+            <separator colspan="4" string="Approval List"/>
+            <group col="4" colspan="4">
+                <field name="approval_list" nolabel="1">
+                    <tree string="Approval List" editable="bottom">
+                        <field name="approval_items_id" on_change="approval_items_id_change(approval_items_id)" domain="[('model','=','account.period')]"/>
+                        <field name="description"/>
+                        <field name="approver" invisible="1"/>
+                        <field name="user" invisible="1"/>
+                        <field name="approver_user_show" attrs="{'readonly': [('approver_user','!=',False)]}" class="oe_highlight" on_change="approval_user_show_change(approver_user_show)" domain="[('id','in',user[0][2])]"/>
+                        <field name="approver_user" invisible="1" on_change="approval_user_change(approver_user)"/>
+                        <field name="visibility" invisible="1"/>
+                        <field name="state"/>
+                        <field name="user_filter"/>
+                        <button name="approve" icon="gtk-apply" string="Approve" type="object" attrs="{'invisible': ['|',('visibility','=',False),('state','in',['na','approved','reject','ignore'])]}"/>
+                        <button name="reject" icon="gtk-cancel" string="Reject" type="object" attrs="{'invisible': ['|',('visibility','=',False),('state','in',['na','approved','reject','ignore'])]}"/>
+                        <button name="ignore" icon="gtk-close" string="Ignore" type="object" groups="via_approval.approval_super_user"/>
+                        <button name="view" icon="gtk-find" string="View" type="object"/>
+                    </tree>
+                </field>
+            </group>
+        </sheet>
+    </field>
+</record>
+
+</data>
+</openerp>

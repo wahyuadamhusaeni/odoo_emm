@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="product_pricelist_search" model="ir.ui.view">
+            <field name="name">Product Per Pricelist</field>
+            <field name="model">product.search</field>
+            <field name="arch" type="xml">
+                <form string="Product Search" version="7.0" save="false">
+                    <group string="Product Search" colspan="4">
+                        <field name="product"/>
+                        <field name="partner" on_change="onchange_partner(partner)"/>
+                        <field name="product_pricelist" attrs="{'readonly':[('partner', '!=',False)]}"/>
+                    </group>
+
+                    <group string="Product Result" colspan="4">
+                         <field name="product_result" readonly="1" nolabel="1">
+                            <tree string="Product Result">
+                                <field name="product"/>
+                                <field name="min_qty"/>
+                                <field name="uom_id"/>
+                                <field name="pricelist_id"/>
+                                <field name="date_start"/>
+                                <field name="date_end"/>
+                                <field name="currency_id"/>
+                                <field name="price"/>
+                            </tree>
+                         </field>
+                    </group>
+                    <footer>
+                        <button name="search_pricelist" string="Search" type="object" class="oe_highlight"/>
+                        <button name="clear_parameter" string="Clear" type="object"/>
+                    </footer>
+                </form>
+
+            </field>
+        </record>
+
+        <record id="product_pricelist_action" model="ir.actions.act_window">
+            <field name="name">Products Per Pricelist</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.search</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="emm_product_enhancements.product_pricelist_search"/>
+            <field name="target">inline</field>
+        </record>
+
+        <menuitem name="Product Per Pricelist" action="emm_product_enhancements.product_pricelist_action"
+            id="emm_product_pricelist" parent="base.menu_product"/>
+    </data>
+</openerp>

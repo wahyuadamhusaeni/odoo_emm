@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_account_invoice_inherit_form_refund">
+            <field name="name">VIA Account Invoice Refund Enhanced Invoice Form</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="model">account.invoice</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@string='Payments']/field[@name='payment_ids']" position="after">
+                    <separator colspan="4" string="Refund Invoices"/>
+                    <field name="refund_invoices" colspan="4" nolabel="1">  
+                        <tree string="Refund Invoices">
+                            <field name="invoice_refund_id"/>
+                            <field name="date_invoice"/>
+                            <field name="number" />
+                            <field name="partner_id" />
+                            <field name="amount_untaxed"/>
+                            <field name="refund_type"/>
+                        </tree>
+                    </field>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

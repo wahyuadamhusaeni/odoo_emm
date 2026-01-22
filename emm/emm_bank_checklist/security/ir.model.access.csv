@@ -1,0 +1,9 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+"bank_checklist_all","bank_checklist all","model_bank_checklist",,1,0,0,0
+"bank_checklist_line_all","bank_checklist_line all","model_bank_checklist_line",,1,0,0,0
+"bank_checklist_manager","bank_checklist manager","model_bank_checklist","group_bank_manager",1,1,1,0
+"bank_checklist_invoicing","bank_checklist invoicing","model_bank_checklist","group_bank_invoicing",1,1,1,0
+"bank_checklist_accountant","bank_checklist accountant","model_bank_checklist","group_bank_accountant",1,1,1,0
+"bank_checklist_line_manager","bank_checklist_line manager","model_bank_checklist_line","group_bank_manager",1,1,1,1
+"bank_checklist_line_invoicing","bank_checklist_line invoicing","model_bank_checklist_line","group_bank_invoicing",1,1,1,1
+"bank_checklist_line_accountant","bank_checklist_line accountant","model_bank_checklist_line","group_bank_accountant",1,1,1,1

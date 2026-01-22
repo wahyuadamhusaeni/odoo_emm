@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Scheduler created for valuating the stock -->
+        <record id="cron_valuation_process" model="ir.cron">
+            <field name="name">Run Valuation scheduler</field>
+            <field eval="True" name="active"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field eval="True" name="doall"/>
+            <field eval="'lot.valuation'" name="model"/>
+            <field eval="'valuate_all_stock'" name="function"/>
+            <field eval="'()'" name="args"/>
+        </record>
+
+        <!-- Domain for Valuation Journal -->
+        <record id="valuation_journal_data" model="default.domain">
+            <field name="name">Valuation Journal</field>
+            <field name="domain_code">valuation_journal</field>
+            <field name="domain">[('type', '=', 'general')]</field>
+        </record>
+    </data>
+</openerp>

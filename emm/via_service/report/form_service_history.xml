@@ -1,0 +1,468 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data noupdate="1">
+        <record id="service_history_template" model="via.form.templates">
+            <field name="name">Service History</field>
+            <field name="model_id" ref="model_service_request"/>
+            <field name="multi">True</field>
+            <field eval="False" name="company_id"/>
+            <field name="tags"><![CDATA[]]></field>
+            <field name="engine">mako</field>
+            <field name="webkit_header" ref="via_report_webkit.ir_header_webkit_plain_a4p"/>
+            <field name="template"><![CDATA[
+                <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+
+<!--
+################################################################################
+Nomor Template  : FRMSR01
+Versi Template  : v1
+Revisi Template : 1 Desember 2014
+Copyright       : PT. Vikasa Infinity Anugrah (www.infi-nity.com)
+Deskripsi:
+    Template untuk Service Request
+Log:
+################################################################################
+-->
+
+<%import math%>
+
+<!--
+####################################################
+# PENGATURAN KERTAS DAN JUMLAH KOPI                #
+####################################################
+-->
+<%no_of_copies = 1%>
+<%front_max_page_lines = 20%>
+<%max_page_lines = 58%>
+<%last_max_page_lines = 48%>
+<%wrong_document_state = []%>
+<%font_size = 13%>
+<%row_height = 17%>
+<%page_width = 793%>
+<%page_height = 1158%>
+
+<!--
+####################################################
+# PENGATURAN DEBUG                                 #
+####################################################
+-->
+<%show_debug_box=False%>
+
+<!--
+####################################################
+# BANNER                                           #
+####################################################
+-->
+<%banner_height = 80%>
+
+<!--
+####################################################
+# ITEM HEADER                                      #
+####################################################
+-->
+<%user_id_width = 396%>
+<%task_id_width = page_width - user_id_width%>
+<%task_header_border = 1%>
+<%task_desc_height = 25%>
+<%max_desc_line_chars = 125%>
+
+<!--
+####################################################
+# TAIL                                             #
+####################################################
+-->
+<%tail_gap = 15%>
+<%tail_height = 15%>
+<%tail_audit_width = page_width / 2%>
+<%tail_page_width = page_width - tail_audit_width%>
+
+<!--
+##########################################################################################
+# Task Ordering is by date_start, this controls whether it is ASC (False) or DESC (True) #
+##########################################################################################
+-->
+<%reverse_sort = True%>
+
+<head>
+<style type="text/css">
+
+body.base {
+    font-size: ${font_size}px;
+    font-family: Sans-Serif;
+    margin: 0px;
+    height:${page_height}px;
+    width:${page_width}px;
+%if show_debug_box:
+    border:1px solid green;
+%endif
+}
+
+td.banner {
+%if show_debug_box:
+    border: 1px solid yellow;
+%endif
+    height: ${banner_height}px;
+    width: ${page_width}px;
+    font-weight:bold;
+    text-align: right;
+    vertical-align: top;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+td.user_id {
+%if show_debug_box:
+    border: 1px solid purple;
+%endif
+    height:${row_height}px;
+    width:${user_id_width}px;
+    text-align: left;
+    vertical-align: top;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+td.task_id {
+%if show_debug_box:
+    border: 1px solid red;
+%endif
+    height:${row_height}px;
+    width:${task_id_width}px;
+    text-align: right;
+    vertical-align: top;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+td.date {
+%if show_debug_box:
+    border: 1px solid blue;
+%endif
+    height:${row_height}px;
+    width:${page_width}px;
+    text-align: right;
+    vertical-align: top;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+td.task_desc_header {
+%if show_debug_box:
+    border: 1px solid grey;
+%endif
+    height:${task_desc_height}px;
+    width:${page_width}px;
+    text-align: left;
+    vertical-align: bottom;
+    text-overflow: ellipsis;
+    border-bottom: ${task_header_border}px solid black;
+    overflow: hidden;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+td.task_desc {
+%if show_debug_box:
+    border: 1px solid magenta;
+%endif
+    height:${row_height}px;
+    width:${page_width}px;
+    text-align: left;
+    vertical-align: bottom;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+td.filler{
+%if show_debug_box:
+    border: 1px solid blue;
+%endif
+    width: ${page_width}px;
+}
+
+table.tail {
+%if show_debug_box:
+    border: 1px solid blue;
+%endif
+    width: ${page_width}px;
+    text-align: left;
+    font-family: Sans-Serif;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    border-spacing: 0px;
+    border-collapse: collapse;
+    table-layout: auto;
+}
+
+td.tail_audit {
+%if show_debug_box:
+    border: 1px solid yellow;
+%endif
+    height: ${tail_height}px;
+    width: ${tail_audit_width}px;
+    text-align: left;
+    vertical-align: bottom;
+    font-size: 9px;
+    font-family: Sans-Serif;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-wrap:break-word;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+td.tail_page {
+%if show_debug_box:
+    border: 1px solid magenta;
+%endif
+    height: ${tail_height}px;
+    width: ${tail_page_width}px;
+    text-align: right;
+    vertical-align: bottom;
+    font-size: 9px;
+    font-family: Sans-Serif;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-wrap:break-word;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+td.tail_audit {
+%if show_debug_box:
+    border: 1px solid yellow;
+%endif
+    height: ${tail_height}px;
+    width: ${tail_audit_width}px;
+    text-align: left;
+    vertical-align: bottom;
+    font-size: 9px;
+    font-family: Sans-Serif;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-wrap:break-word;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+td.tail_gap {
+%if show_debug_box:
+    border: 1px solid cyan;
+%endif
+    height: ${tail_gap}px;
+    width: ${tail_page_width}px;
+    text-align: right;
+    vertical-align: bottom;
+    font-size: 9px;
+    font-family: Sans-Serif;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-wrap:break-word;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+table {
+    border: 0px;
+    padding: 0px;
+    border-spacing: 0px;
+    border-collapse: collapse;
+    border-color: white;
+}
+
+td {
+    padding: 0px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+</style>
+</head>
+<!-- Task header consist of 1 blank line, User/Task ID line, Date Line, Task Description Title with border -->
+<%task_header_height = 3 * row_height + task_desc_height + task_header_border%>
+<%max_filler_height = page_height - banner_height - tail_height - tail_gap%>
+
+<body class="base">
+%for doc in objects:
+    %if doc.state in []:
+        <% wrong_document_state.append('%s: %s' % (doc.name, doc.state)) %>
+    %else:
+        <%list_task = []%>
+
+        <!-- storing to memory -->
+        %for line in sorted(doc.service_task, key=lambda t: t.date_start, reverse=reverse_sort):
+            <%task_data = {}%>
+            <%task_data.update({'user_id': line.user_id and line.user_id.name or ''})%>
+            <%task_data.update({'id': str(line.id) or ''})%>
+            <%task_data.update({'name': strip_name(line.name, maxlen=40) or ''})%>
+            <%task_data.update({'date_start': line.date_start and formatDate(line.date_start, format='%d %b %Y') or ''})%>
+            <%task_data.update({'date_end': line.date_end and formatDate(line.date_end, format='%d %b %Y') or ''})%>
+
+            <%desc_line_print = text_wrap(line.description, max_desc_line_chars)%>
+            <%task_data.update({'desc_lines': desc_line_print or []})%>
+            <%list_task.append(task_data)%>
+        %endfor
+
+        <!-- pagination -->
+        <%pages = []%>
+        <%filler = max_filler_height%>
+        <%_page = {} %>
+        <%_page.update({'items': []})%>
+        %for _task in list_task:
+            %if filler < task_header_height:
+                <%_page.update({'filler': filler})%>
+                <%pages.append(_page)%>
+                <%_page = {} %>
+                <%_page.update({'items': []})%>
+                <%filler = max_filler_height%>
+            %endif
+
+            <%filler -= task_header_height%>
+            <%_item = _task.copy()%>
+            <%_desc_lines = _item.pop('desc_lines', [])%>
+
+            %while len(_desc_lines):
+                <!-- max number of line that this page can take from the desc_lines -->
+                <%_page_line = int(min([len(_desc_lines), round(math.floor(filler / row_height))]))%>
+
+                <%filler -= _page_line * row_height%>
+                <%_item.update({'desc_lines': _desc_lines[:_page_line]})%>
+                <%_desc_lines = _desc_lines[_page_line:]%>
+
+                <!-- There are still lines, do a page break -->
+                %if len(_desc_lines):
+                    <%_page.get('items').append(_item)%>
+                    <%_page.update({'filler': filler})%>
+                    <%pages.append(_page)%>
+                    <%_page = {} %>
+                    <%_page.update({'items': []})%>
+                    <%filler = max_filler_height%>
+                    <%_item = {}%>
+                %endif
+            %endwhile
+            <%_page.get('items').append(_item)%>
+        %endfor
+        <%_page.update({'filler': filler})%>
+        <%pages.append(_page)%>
+
+        <%current_page = 1%>
+        <%total_page = len(pages)%>
+        %for _page in pages:
+<table>
+    <tr>
+        <td>
+            <table>
+                <tr>
+                    <td class="banner">
+                        <span style="font-size:25px;">SERVICE HISTORY TASK</span><br><br>
+                        Nomor SWO. ${doc.name or '' | entity}<br>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+            %for _item in _page.get('items', []):
+                %if _item.get('id', False):
+    <tr><td class="task_desc"><!-- empty line --></td></tr>
+    <tr>
+        <td>
+            <table>
+                <tr>
+                    <td class="user_id">
+                        <span style="font-weight:bold;">Teknisi : </span>
+                        ${_item.get('user_id', '') | entity}
+                    </td>
+                    <td class="task_id">
+                        Task ID. ${_item.get('id', '') | entity} - ${_item.get('name', '') | entity}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="date" colspan="2">
+                        Tanggal Pengerjaan: ${_item.get('date_start', '') | entity} s/d ${_item.get('date_end', '') | entity}
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td class="task_desc_header">
+            <b>TINDAKAN:</b>
+        </td>
+    </tr>
+                %endif
+                %for _line in _item.get('desc_lines', []):
+    <tr>
+        <td class="task_desc">
+                    ${_line != 'False' and  _line or '' | entity}
+        </td>
+    </tr>
+                %endfor
+            %endfor
+    <tr>
+        <td class="filler" style="height:${_page.get('filler', 0) | entity}px"></td>
+    </tr>
+    <tr>
+        <td>
+            <table class="tail">
+            <tr><td class="tail_gap"></td><td class="tail_gap"></td></tr>
+            <tr>
+                <td class="tail_audit">
+                    Dicetak oleh ${user.name or '-' |entity } pada ${time.strftime('%d %h %Y %r')}
+                </td>
+                <td class="tail_page" >
+                    Hal ${current_page} dari ${total_page}
+                </td>
+            </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+            %if current_page < total_page:
+<p style="page-break-after:always; margin: 0px;"></p>
+            %endif
+            <%current_page += 1%>
+        %endfor
+    %endif
+%endfor
+</body>
+</html>
+]]></field>
+        </record>
+
+        <function model="via.form.templates" name="activate"
+            eval="[ ref('service_history_template') ], " />
+    </data>
+</openerp>
